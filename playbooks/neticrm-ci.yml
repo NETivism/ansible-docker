@@ -1,0 +1,26 @@
+# neticrm-ci playbook
+#
+# This will build up lastest neticrm in Drupal 7 and running test.
+#
+# example usage:
+#   ansible-playbook -c local neticrm-ci.yml
+#
+# dependencies:
+#   docker
+#   git
+#   /home directory permission
+
+- hosts: local
+  remote_user: root
+  tasks:
+  - stat: path=/home/neticrm-ci
+    register: p
+  - name: Clone lastest docker-neticrm-ci  
+    command: /usr/bin/git clone https://github.com/NETivism/docker-neticrm-ci.git /home/neticrm-ci
+    when: p.stat.isdir is not defined
+
+  - name: Pull lastest docker-neticrm-ci
+    command: /usr/bin/git pull https://github.com/NETivism/docker-neticrm-ci.git chdir=/home/neticrm-ci
+
+  - name: Install neticrm-ci using docker
+    shell: ./docker-start.sh > /tmp/neticrm-ci.log chdir=/home/neticrm-ci executable=/bin/bash
