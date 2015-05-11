@@ -1,0 +1,13 @@
+---
+# Install the latest Docker and associated packages, ref: https://www.debian-administration.org/article/696/A_brief_introduction_to_using_docker
+- hosts: all
+  tasks:
+  - name: Install LXC
+    # http://docs.ansible.com/apt_module.html
+    apt: name=lxc
+    sudo_user: root
+
+  - name : Fetch the latest docker
+    # http://docs.ansible.com/command_module.html
+    command: curl -sSL https://get.docker.com/ | sh
+    sudo_user: root

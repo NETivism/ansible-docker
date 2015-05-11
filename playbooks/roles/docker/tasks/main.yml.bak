@@ -1,0 +1,34 @@
+---
+# Install the latest Docker and associated packages, ref: https://www.debian-administration.org/article/696/A_brief_introduction_to_using_docker
+- name: Install LXC
+  # http://docs.ansible.com/apt_module.html
+  apt: name=lxc
+  sudo_user: root
+
+- name : Fetch the latest docker
+  # http://docs.ansible.com/get_url_module.html
+  get_url: url=https://get.docker.com dest=/tmp
+  sudo_user: root
+
+- name: Move docker to /usr/local/bin directory
+  # http://docs.ansible.com/file_module.html
+  file: path=/usr/local/bin/docker mode=0755
+  sudo_user: root
+
+- name: Create a symbolic link to docker
+  # http://docs.ansible.com/file_module.html
+  file: src=/usr/local/bin/docker dest=/usr/bin/docker state=link
+  sudo_user: root
+
+- name: Start docker daemon
+  shell: docker -d
+  sudo_user: root
+
+- name: Fetch docker-sh repository
+  # http://docs.ansible.com/git_module.html
+  git: repo=https://github.com/NETivism/docker-sh.git dest=/home/gloomcheng/docker-sh accept_hostkey=yes
+  #sudo_user: root
+
+- name: Deploy a site
+  shell: /home/gloomcheng/docker-sh/docker-start.sh -d "{{ DOMAIN }}" -w "{{ PORT_WWW }}" -m "{{ PORT_DB }}" -r "{{ REPOS }}" -p "{{ PASSWD }}"
+  sudo_user: root

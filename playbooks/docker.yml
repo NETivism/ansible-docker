@@ -1,0 +1,8 @@
+---
+# file: docker.yml
+- hosts: all
+  sudo: yes
+  sudo_user: gloomcheng
+
+  roles:
+    - docker
