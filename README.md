@@ -1,6 +1,7 @@
 # Building a Server and deploying Application using Ansible Playbooks.
 
-This will use Ansible to open docker based site on remote machine.
+This repos will use Ansible to open docker based web site container on remote machine.
+Remote machine will have nginx proxy in front of container
 
 ## Directory Layout
 
