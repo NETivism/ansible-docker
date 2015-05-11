@@ -1,5 +1,7 @@
 # Building a Server and deploying Application using Ansible Playbooks.
 
+This will use Ansible to open docker based site on remote machine.
+
 ## Directory Layout
 
 production                # inventory file for production servers
