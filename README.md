@@ -59,6 +59,8 @@ roles/
 
 1. Create a site
 <pre>ansible-playbook -k -i {inventory} playbooks/docker.yml --user=gloomcheng --ask-sudo-pass --extra-vars "DOMAIN={example.com} PORT_WWW={8001} PORT_DB={10001} REPOS={netivism/docker-wheezy-php55} PASSWD={db1234}" --tags=start</pre>
+
+2. Restart a site
 <pre>ansible-playbook -k -i {inventory} playbooks/docker.yml --user=gloomcheng --ask-sudo-pass --extra-vars "DOMAIN={example.com}" --tags=restart</pre>
 
 ## Note
