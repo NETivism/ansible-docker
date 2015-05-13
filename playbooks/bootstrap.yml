@@ -2,22 +2,31 @@
 # Install the latest Docker and associated packages, ref: https://www.debian-administration.org/article/696/A_brief_introduction_to_using_docker
 - hosts: all
   tasks:
+  - name: Install LXC
+    # http://docs.ansible.com/apt_module.html
+    apt: name=lxc
+    sudo: yes
+
+  - name: Install GIT
+    apt: name=git
+    sudo: yes
+
+  - name: Install Nginx
+    apt: name=nginx
+    sudo: yes
+
   - name: Check docker exist
     # http://docs.ansible.com/stat_module.html
     stat: path=/etc/init.d/docker
     register: docker_service
 
-  - name: Install LXC
-    # http://docs.ansible.com/apt_module.html
-    apt: name=lxc
-    sudo_user: root
-
   - name: Fetch the latest docker
     # http://docs.ansible.com/command_module.html
     command: curl -sSL https://get.docker.com/ | sh
-    sudo_user: root
+    sudo: yes
     when: docker_service.stat.exists == False
 
-  - name: Install Nginx
-    apt: name=nginx
-    sudo_user: root
+  - name: Clone docker-sh git repository
+    # http://docs.ansible.com/git_module.html
+    git: repo=https://github.com/NETivism/docker-sh.git dest=/var/ansible/docker-sh accept_hostkey=yes
+    sudo: yes
