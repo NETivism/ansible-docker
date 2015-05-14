@@ -1,6 +1,13 @@
 ---
-  - name: Write nginx.conf
+  - name: Add Nginx vhost configuration file
     # http://docs.ansible.com/template_module.html
-    template: src=templates/nginx.conf.js dest=/etc/nginx/nginx.conf
+    template: src=nginx.conf.j2 dest=/etc/nginx/sites-available/{{ DOMAIN }}
+    sudo: yes
     notify:
-      - restrat nginx
+      - Restart Nginx
+
+  - name: Link Nginx vhost configuration file in site-enabled
+    action: file src=/etc/nginx/sites-available/{{ DOMAIN }} dest=/etc/nginx/sites-enabled/{{ DOMAIN }} state=link
+    sudo: yes
+    notify:
+      - Restart Nginx

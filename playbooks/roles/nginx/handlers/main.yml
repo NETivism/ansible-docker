@@ -1,3 +1,4 @@
 ---
-  - name: restart nginx
-    action: service name=nginx pattern=/etc/init.d/nginx state=restarted enabled=yes
+  - name: Restart Nginx
+    # http://docs.ansible.com/service_module.html
+    service: name=nginx state=restarted
