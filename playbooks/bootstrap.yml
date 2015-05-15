@@ -30,3 +30,30 @@
     # http://docs.ansible.com/git_module.html
     git: repo=https://github.com/NETivism/docker-sh.git dest=/var/ansible/docker-sh accept_hostkey=yes
     sudo: yes
+
+  - name: Check the docker repository directory exist
+    # http://docs.ansible.com/stat_module.html
+    stat: path=/var/ansible/docker
+    register: docker_repo_dir
+
+  - name: Create the directory for docker repository
+    # http://docs.ansible.com/file_module.html
+    file: path=/var/ansible/docker owner=root group=root mode=0755 state=directory
+    sudo: yes
+    when: docker_repo_dir.stat.exists == False
+
+  - name: Check the directory for place sites and databases exist
+    # http://docs.ansible.com/stat_module.html
+    stat: path=/var/www/sites
+    register: sites_dir
+    stat: path=/var/lib/mysql/sites
+    register: dbs_dir
+
+  - name: Create the directory for place sites and databases
+    # http://docs.ansible.com/file_module.html
+    file: path=/var/www/sites owner=www-data group=www-data mode=0755 state=directory
+    sudo: yes
+    when: sites_dir.stat.exists == False
+    file: path=/var/lib/mysql/sites owner=mysql group=mysql mode=0755 state=directory
+    sudo: yes
+    when: dbs_dir.stat.exists == False

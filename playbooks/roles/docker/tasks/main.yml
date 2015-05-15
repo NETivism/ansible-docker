@@ -1,13 +1,13 @@
 ---
 # Deploy a site.
 - name: Deploy a site
-  shell: /var/ansible/docker-sh/docker-start.sh -d "{{ DOMAIN }}" -w "{{ PORT_WWW }}" -m "{{ PORT_DB }}" -r "{{ REPOS }}" -p "{{ PASSWD }}"
+  shell: /var/ansible/docker-sh/docker-start.sh -d {{ DOMAIN }} -w {{ PORT_WWW }} -m {{ PORT_DB }} -r {{ REPOS }} -p {{ PASSWD }}
   sudo: yes
   tags:
     - start
 
 - name: Restart a site
-  shell: /home/gloomcheng/docker-sh/docker-start.sh -d "{{ DOMAIN }}"
+  shell: /home/gloomcheng/docker-sh/docker-start.sh -d {{ DOMAIN }}
   sudo: yes
   tags:
     - restart
