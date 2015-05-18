@@ -33,12 +33,12 @@
 
   - name: Check the docker repository directory exist
     # http://docs.ansible.com/stat_module.html
-    stat: path=/var/ansible/docker
+    stat: path=/etc/ansible/docker
     register: docker_repo_dir
 
   - name: Create the directory for docker repository
     # http://docs.ansible.com/file_module.html
-    file: path=/var/ansible/docker owner=root group=root mode=0755 state=directory
+    file: path=/etc/ansible/docker owner=root group=root mode=0755 state=directory
     sudo: yes
     when: docker_repo_dir.stat.exists == False
 
