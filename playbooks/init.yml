@@ -1,0 +1,13 @@
+---
+# Initial linode image and create remote user account for ansible.
+- hosts: all
+  tasks:
+  - name: Create a user account for remote login
+    # http://docs.ansible.com/user_module.html
+    user: name=answerable groups="sudo" comment="Ansible User"
+    sudo: yes
+
+  - name: Set up authorized_keys for the deploy user
+    # http://docs.ansible.com/authorized_key_module.html
+    authorized_key: user=answerable key="{{ lookup('file', '../public_keys/id_rsa.pub') }}" state=present
+    sudo: yes

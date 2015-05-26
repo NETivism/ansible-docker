@@ -1,5 +1,7 @@
 # Ignore files
+*.pub
 *.bak
+public_keys
 20150402.yml
 production
 stage

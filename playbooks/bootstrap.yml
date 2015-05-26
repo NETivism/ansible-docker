@@ -1,6 +1,6 @@
 ---
 # Install the latest Docker and associated packages, ref: https://www.debian-administration.org/article/696/A_brief_introduction_to_using_docker
-- hosts: all
+- hosts: '{{ target }}'
   tasks:
   - name: Install LXC
     # http://docs.ansible.com/apt_module.html
