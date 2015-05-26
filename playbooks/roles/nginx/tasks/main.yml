@@ -1,7 +1,7 @@
 ---
   - name: Add Nginx vhost configuration file
     # http://docs.ansible.com/template_module.html
-    template: src=nginx.conf.j2 dest=/etc/nginx/sites-available/{{ DOMAIN }}
+    template: src=neticrm.conf.j2 dest=/etc/nginx/sites-available/{{ DOMAIN }}
     sudo: yes
     tags:
       - start
