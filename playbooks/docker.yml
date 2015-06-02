@@ -1,6 +1,6 @@
 ---
 # file: docker.yml
-- hosts: all
+- hosts: '{{ target }}'
 
   roles:
     - docker
