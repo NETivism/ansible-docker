@@ -1,57 +1,77 @@
 ---
-# Install the latest Docker and associated packages, ref: https://www.debian-administration.org/article/696/A_brief_introduction_to_using_docker
+# Install the Docker and associated packages, ref: http://stackoverflow.com/questions/29083638/docker-io-has-no-installation-candidated
 - hosts: '{{ target }}'
+  remote_user: deploy
+  sudo: yes
   tasks:
-  - name: Add jessie backport
-    # http://docs.ansible.com/apt_repository_module.html
-    apt_repository: repo='deb http://http.debian.net/debian jessie-backports main' state=present
-    sudo: yes
-
-  - name: Run the equivalent of "apt-get update" as a separate step
+  - name: Make sure apt-transport-https is installed
     # http://docs.ansible.com/apt_module.html
-    apt: update_cache=yes
-    sudo: yes
+    apt:
+      pkg: "apt-transport-https"
+      state: installed
 
-  - name: Install docker.io package
-    apt: name=docker.io
-    sudo: yes
+  - name: Add Docker repository key
+    # http://docs.ansible.com/apt_key_module.html
+    apt_key:
+      id: "36A1D7869245C8950F966E92D8576A8BA88D21E9"
+      keyserver: "hkp://keyserver.ubuntu.com:80"
+      state: present
+
+  - name: Add Docker repository and update apt cache
+    # http://docs.ansible.com/apt_repository_module.html
+    apt_repository:
+      repo: "deb http://get.docker.io/ubuntu docker main"
+      update_cache: yes
+      state: present
+
+  - name: Install lxc-docker
+    apt:
+      pkg: "lxc-docker"
+      state: installed
+  
+  - name: Install pip
+    apt:
+      pkg: "{{ item }}"
+      state: installed
+    with_items:
+      - python-dev
+      - python-pip
+
+  - name: Install Docker-py
+    # http://docs.ansible.com/pip_module.html
+    pip:
+      name: docker-py
 
   - name: Install GIT
-    apt: name=git
-    sudo: yes
+    apt: 
+      pkg: "git"
+      state: installed
 
   - name: Install Nginx
-    apt: name=nginx
-    sudo: yes
+    apt:
+      pkg: "nginx"
+      state: installed
 
   - name: Clone docker-sh git repository
     # http://docs.ansible.com/git_module.html
-    git: repo=https://github.com/NETivism/docker-sh.git dest=/var/ansible/docker-sh accept_hostkey=yes
-    sudo: yes
-
-  - name: Check the docker repository directory exist
-    # http://docs.ansible.com/stat_module.html
-    stat: path=/etc/ansible/docker
-    register: docker_repo_dir
+    git: repo=https://github.com/NETivism/docker-sh.git dest=/etc/ansible/docker-sh accept_hostkey=yes
 
   - name: Create the directory for docker repository
     # http://docs.ansible.com/file_module.html
     file: path=/etc/ansible/docker owner=root group=root mode=0755 state=directory
-    sudo: yes
-    when: docker_repo_dir.stat.exists == False
-
-  - name: Check the directory for place sites and databases exist
-    # http://docs.ansible.com/stat_module.html
-    stat: path=/var/www/sites
-    register: sites_dir
-    stat: path=/var/lib/mysql/sites
-    register: dbs_dir
 
   - name: Create the directory for place sites and databases
     # http://docs.ansible.com/file_module.html
-    file: path=/var/www/sites owner=www-data group=www-data mode=0755 state=directory
-    sudo: yes
-    when: sites_dir.stat.exists == False
-    file: path=/var/lib/mysql/sites owner=mysql group=mysql mode=0755 state=directory
-    sudo: yes
-    when: dbs_dir.stat.exists == False
+    file:
+      path: "{{ item }}"
+      mode: 0755
+      state: directory
+    with_items:
+      - "/var/www/sites"
+      - "/var/lib/mysql"
+      - "/var/lib/mysql/sites"
+
+  - name: Make sure docker is running
+    service:
+      name: docker
+      state: started

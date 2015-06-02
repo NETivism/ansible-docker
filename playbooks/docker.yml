@@ -1,7 +1,8 @@
 ---
 # file: docker.yml
 - hosts: '{{ target }}'
-
+  remote_user: deploy
+  sudo: yes
   roles:
     - docker
     - nginx
