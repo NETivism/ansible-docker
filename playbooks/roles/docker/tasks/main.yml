@@ -1,13 +1,16 @@
 ---
-# Deploy a site.
+# Create a docker container and deploy a site.
+- name: Checkout docker-sh repo from github
+  git: repo=https://github.com/NETivism/docker-sh.git dest=/etc/ansible/docker-sh accept_hostkey=yes
+  tags:
+    - start
+
 - name: Deploy a site
-  shell: /etc/ansible/docker-sh/docker-start.sh -d {{ DOMAIN }} -w {{ PORT_WWW }} -m {{ PORT_DB }} -r {{ REPOS }} -p {{ PASSWD }}
-  sudo: yes
+  shell: ./docker-start.sh -d {{ DOMAIN }} -w {{ PORT_WWW }} -m {{ PORT_DB }} -r {{ REPOS }} chdir=/etc/ansible/docker-sh
   tags:
     - start
 
 - name: Restart a site
-  shell: /etc/ansible/docker-sh/docker-start.sh -d {{ DOMAIN }}
-  sudo: yes
+  shell: ./docker-start.sh -d {{ DOMAIN }} chdir=/etc/ansible/docker-sh
   tags:
     - restart

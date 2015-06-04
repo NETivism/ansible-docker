@@ -2,7 +2,6 @@
 *.pub
 *.bak
 public_keys
-20150402.yml
 init.yml
 production
 stage

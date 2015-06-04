@@ -37,11 +37,6 @@
       - python-dev
       - python-pip
 
-  - name: Install Docker-py
-    # http://docs.ansible.com/pip_module.html
-    pip:
-      name: docker-py
-
   - name: Install GIT
     apt: 
       pkg: "git"
@@ -49,8 +44,18 @@
 
   - name: Install Nginx
     apt:
-      pkg: "nginx"
+      pkg: "{{ item }}"
       state: installed
+    with_items"
+      - nginx-full
+      - nginx
+
+  - name: Install MySQL
+    apt:
+      pkg: "{{ item }}"
+      state: installed
+    with_items:
+      - mysql-client
 
   - name: Clone docker-sh git repository
     # http://docs.ansible.com/git_module.html
@@ -68,8 +73,7 @@
       state: directory
     with_items:
       - "/var/www/sites"
-      - "/var/lib/mysql"
-      - "/var/lib/mysql/sites"
+      - "/var/mysql/sites"
 
   - name: Make sure docker is running
     service:
