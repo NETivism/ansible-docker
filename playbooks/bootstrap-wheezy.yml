@@ -17,6 +17,11 @@
   - name: Install Nginx
     apt: name=nginx
 
+  - name : Copy Nginx configuration files
+    # http://docs.ansible.com/copy_module.html
+    copy: src=../nginx_conf/drupal.conf dest=/etc/nginx/drupal.conf owner=root group=root mode=0644
+    copy: src=../nginx_conf/neticrm.conf dest=/etc/nginx/neticrm.conf owner=root group=root mode=0644
+
   - name: Check docker exist
     # http://docs.ansible.com/stat_module.html
     stat: path=/etc/init.d/docker

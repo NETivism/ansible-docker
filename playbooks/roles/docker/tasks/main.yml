@@ -6,11 +6,11 @@
     - start
 
 - name: Deploy a site
-  shell: ./docker-start.sh -d {{ DOMAIN }} -w {{ PORT_WWW }} -m {{ PORT_DB }} -r {{ REPOS }} chdir=/etc/ansible/docker-sh
+  shell: ./docker-start.sh -d {{ domain }} -w {{ port_www }} -m {{ port_db }} -r {{ repos }} chdir=/etc/ansible/docker-sh
   tags:
     - start
 
 - name: Restart a site
-  shell: ./docker-start.sh -d {{ DOMAIN }} chdir=/etc/ansible/docker-sh
+  shell: ./docker-start.sh -d {{ domain }} chdir=/etc/ansible/docker-sh
   tags:
     - restart
