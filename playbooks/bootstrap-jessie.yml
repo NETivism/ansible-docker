@@ -54,6 +54,7 @@
     # http://docs.ansible.com/copy_module.html
     copy: src=../nginx_conf/drupal.conf dest=/etc/nginx/drupal.conf owner=root group=root mode=0644
     copy: src=../nginx_conf/neticrm.conf dest=/etc/nginx/neticrm.conf owner=root group=root mode=0644
+    copy: src=../nginx_conf/php.conf dest=/etc/nginx/php.conf owner=root group=root mode=0644
 
   - name: Install MySQL
     apt:
