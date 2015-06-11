@@ -2,6 +2,6 @@ server {
   listen 80;
   server_name {{ domain  }};
   root /var/www/sites/{{ domain }};
-  set $port {{ port_www }}
+  set $port {{ port_www }};
   include /etc/nginx/{{ type }}.conf;
 }
