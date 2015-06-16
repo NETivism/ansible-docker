@@ -1,0 +1,19 @@
+# create user
+  - name: create deployment user
+    user: name={{deployer}} createhome=yes state=present groups=sudo
+    register: newuser
+  - name: generate random password for user only on creation
+    shell: /usr/sbin/usermod -p $(openssl rand -base64 20 | openssl passwd -1 -stdin) {{deployer}}
+    when: newuser.changed
+
+# deployer is a host variable, where it's possible to set the name of the user you'll ssh in as 
+  - name: create .ssh directory
+    file: path=/home/{{deployer}}/.ssh owner={{deployer}} group={{deployer}} mode=700 state=directory
+
+# This is a way to drop an authorized_keys file into the deployer's ssh directory, to make logging in easier. 
+  - name: deploy access ssh-key to user's authorized keys file
+    copy: src=authorized_keys dest=/home/{{deployer}}/.ssh/authorized_keys
+
+  - name: change owner of created authorized_keys
+    file: path=/home/{{deployer}}/.ssh/authorized_keys owner={{deployer}} group={{deployer}} mode=400
+

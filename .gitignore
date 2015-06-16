@@ -5,3 +5,4 @@ public_keys
 init.yml
 production
 stage
+authorized_keys
