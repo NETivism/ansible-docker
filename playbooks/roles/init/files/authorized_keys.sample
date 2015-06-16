@@ -1,1 +1,2 @@
-# Your ssh public keys go in here and will be deployed for easy login
+# Copy authorized_keys.sample to authorized_keys
+# Add your ssh public keys to authorized_keys for easy login
