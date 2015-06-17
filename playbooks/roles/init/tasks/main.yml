@@ -1,6 +1,6 @@
 # create user
   - name: create deployment user
-    user: name={{deployer}} createhome=yes state=present groups=sudo
+    user: name={{deployer}} createhome=yes state=present
     register: newuser
   - name: generate random password for user only on creation
     shell: /usr/sbin/usermod -p $(openssl rand -base64 20 | openssl passwd -1 -stdin) {{deployer}}
@@ -16,4 +16,12 @@
 
   - name: change owner of created authorized_keys
     file: path=/home/{{deployer}}/.ssh/authorized_keys owner={{deployer}} group={{deployer}} mode=400
+
+  - name: sudoers add
+    lineinfile: 
+      dest=/etc/sudoers.d/{{deployer}} owner=root group=root mode=0440
+      line="{{deployer}} ALL=(ALL) NOPASSWD:ALL"
+      state=present
+      create=yes
+      validate='visudo -cf %s'
 
