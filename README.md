@@ -59,16 +59,31 @@ roles/
 
 ### Bootstrap a server
 
-<pre>ansible-playbook -k -i production playbooks/bootstrap.yml --user={remote-user-account} --ask-sudo-pass</pre>
+0. Put your public key into task related file
+```
+cat ~/.ssh/id_rsa.pub >> playbooks/roles/init/files/authorized_keys
+```
+
+1. Initialize ansible user in remote server(need root password)
+```
+ansible-playbook -k init.yml --extra-vars="target=your-host deployer=remote-user-name"
+```
+
+2. Install package we need(use another user)
+```
+ansible-playbook -i production playbooks/bootstrap.yml --user={remote-user-account} --ask-sudo-pass
+```
 
 ### Site releated commands
 
 1. Create a site
-<pre>ansible-playbook -k -i {inventory} playbooks/docker.yml --user={remote-user-account} --ask-sudo-pass --extra-vars "DOMAIN={example.com} PORT_WWW={8001} PORT_DB={10001} REPOS={netivism/docker-wheezy-php55} PASSWD={db1234}" --tags=start</pre>
+```
+ansible-playbook -k -i {inventory} playbooks/docker.yml --user={remote-user-account} --ask-sudo-pass --extra-vars "DOMAIN={example.com} PORT_WWW={8001} PORT_DB={10001} REPOS={netivism/docker-wheezy-php55} PASSWD={db1234}" --tags=start
+```
 
 2. Restart a site
-<pre>ansible-playbook -k -i {inventory} playbooks/docker.yml --user={remote-user-account} --ask-sudo-pass --extra-vars "DOMAIN={example.com}" --tags=restart</pre>
 
-## Note
+```
+ansible-playbook -k -i {inventory} playbooks/docker.yml --user={remote-user-account} --ask-sudo-pass --extra-vars "DOMAIN={example.com}" --tags=restart
+```
 
-1. Add host to /etc/ansible/hosts
