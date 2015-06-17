@@ -46,11 +46,11 @@
     apt:
       pkg: "{{ item }}"
       state: installed
-    with_items"
+    with_items:
       - nginx-full
       - nginx
 
-  - name : Copy Nginx configuration files
+  - name: Copy Nginx configuration files
     # http://docs.ansible.com/copy_module.html
     copy: src=../nginx_conf/drupal.conf dest=/etc/nginx/drupal.conf owner=root group=root mode=0644
     copy: src=../nginx_conf/neticrm.conf dest=/etc/nginx/neticrm.conf owner=root group=root mode=0644
