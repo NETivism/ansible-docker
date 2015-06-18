@@ -16,6 +16,7 @@
     action: file src=/etc/nginx/sites-available/{{ domain }} dest=/etc/nginx/sites-enabled/{{ domain }} state=link
     sudo: yes
     notify:
-      - Restart Nginx
+      - validate nginx
+      - reload nginx
     tags:
       - start

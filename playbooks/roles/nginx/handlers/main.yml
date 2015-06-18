@@ -1,4 +1,10 @@
 ---
-  - name: Restart Nginx
+  - name: validate nginx
+    shell: nginx -t
+
+  - name: restart nginx
     # http://docs.ansible.com/service_module.html
     service: name=nginx state=restarted
+
+  - name: reload nginx
+    service: name=nginx state=reloaded
