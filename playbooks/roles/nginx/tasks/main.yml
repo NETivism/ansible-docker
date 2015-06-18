@@ -1,9 +1,9 @@
 ---
   - name: Copy desired nginx config file
     sudo: yes
-    copy: src=drupal.conf dest=/etc/nginx/drupal.conf owner=root group=root mode=0644
-    copy: src=neticrm.conf dest=/etc/nginx/neticrm.conf owner=root group=root mode=0644
-    copy: src=php.conf dest=/etc/nginx/php.conf owner=root group=root mode=0644
+    copy: 
+      src={{type}}.conf dest=/etc/nginx/{{type}}.conf owner=root group=root mode=0644
+      validate='nginx -t'
 
   - name: Add Nginx vhost configuration file
     # http://docs.ansible.com/template_module.html
