@@ -6,7 +6,14 @@
     - start
 
 - name: Deploy a site
+  
   shell: ./docker-start.sh -d {{ domain }} -w {{ port_www }} -m {{ port_db }} -r {{ repos }} -v {{ mount }} -u {{ dbname }} -p {{ passwd }} chdir=/etc/ansible/docker-sh
+  when: mount is defined
+  tags:
+    - start
+
+  shell: ./docker-start.sh -d {{ domain }} -w {{ port_www }} -m {{ port_db }} -r {{ repos }} -u {{ dbname }} -p {{ passwd }} chdir=/etc/ansible/docker-sh
+  when: mount is not defined
   tags:
     - start
 
