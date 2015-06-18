@@ -1,4 +1,8 @@
 ---
+  - name: Nginx should be started
+    sudo: yes
+    service: name=nginx state=started enabled=yes
+
   - name: Copy desired nginx config file
     sudo: yes
     copy: src={{type}}.conf dest=/etc/nginx/{{type}}.conf owner=root group=root mode=0644
