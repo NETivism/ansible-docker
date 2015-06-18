@@ -7,6 +7,7 @@
   - name: Make sure apt-transport-https is installed
     # http://docs.ansible.com/apt_module.html
     apt:
+      update_cache: yes
       pkg: "apt-transport-https"
       state: installed
 
@@ -21,7 +22,6 @@
     # http://docs.ansible.com/apt_repository_module.html
     apt_repository:
       repo: "deb http://get.docker.io/ubuntu docker main"
-      update_cache: yes
       state: present
 
   - name: Install lxc-docker
