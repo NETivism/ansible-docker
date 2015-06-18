@@ -5,6 +5,8 @@
   - name: restart nginx
     # http://docs.ansible.com/service_module.html
     service: name=nginx state=restarted
+      validate="nginx -t -c /etc/nginx/nginx.conf"
 
   - name: reload nginx
     service: name=nginx state=reloaded
+      validate="nginx -t -c /etc/nginx/nginx.conf"
