@@ -85,3 +85,12 @@
     service:
       name: docker
       state: started
+
+  - name: Install other packages we need
+    apt:
+      pkg: "{{ item }}"
+      state: installed
+    with_items:
+      - pwgen
+      - vim
+    
