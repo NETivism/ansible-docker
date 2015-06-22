@@ -5,13 +5,13 @@
   tags:
     - start
 
-- name: Deploy a site
-  
+- name: Deploy a site with mount
   shell: ./docker-start.sh -d {{ domain }} -w {{ port_www }} -m {{ port_db }} -r {{ repos }} -v {{ mount }} -u {{ dbname }} -p {{ passwd }} chdir=/etc/ansible/docker-sh
   when: mount is defined
   tags:
     - start
 
+- name: Deploy a site without mount
   shell: ./docker-start.sh -d {{ domain }} -w {{ port_www }} -m {{ port_db }} -r {{ repos }} -u {{ dbname }} -p {{ passwd }} chdir=/etc/ansible/docker-sh
   when: mount is not defined
   tags:
