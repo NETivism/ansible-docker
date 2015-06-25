@@ -88,3 +88,12 @@
       - pwgen
       - vim
     
+  - name: Install Python Pip
+  # use easy_install because of python bug http://stackoverflow.com/questions/27341064/how-do-i-fix-importerror-cannot-import-name-incompleteread
+    easy_install:
+      name: pip
+
+  - name: Install Docker-py
+    pip:
+      name: docker-py
+      state: present

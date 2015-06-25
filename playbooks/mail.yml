@@ -1,0 +1,37 @@
+---
+# Mail Server from docker container
+- hosts: "{{ target }}"
+  remote_user: answerable
+  sudo: yes
+  tasks: 
+  - name: Make sure docker is running
+    service:
+      name: docker
+      state: started
+
+  - name: Create /var/vmail if not exists
+    file: 
+      path: /var/vmail
+      state: directory
+      mode: 0755
+
+  - name: Start smtp / imap container
+    docker:
+      name: dovecot
+      image: jimyhuang/docker-postfix-dovecot 
+      pull: always
+      ports:
+      - "993:993"
+      - "587:587"
+      env:
+        MAILNAME: "{{ mailname }}"
+        MAILADDR: "{{ mailaddr }}"
+        TZ: "Asia/Taipei"
+      volumes:
+      - /etc/postfix
+      - /etc/ssl
+      - /etc/opendkim
+      - /etc/dovecot
+      - /var/vmail:/home/vmail
+      - /var/vmail/log:/var/log
+      command: /init.sh
