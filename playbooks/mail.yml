@@ -8,14 +8,18 @@
     service:
       name: docker
       state: started
+    tags:
+      - start
 
   - name: Create /var/vmail if not exists
     file: 
       path: /var/vmail
       state: directory
       mode: 0755
+    tags:
+      - start
 
-  - name: Start smtp / imap container
+  - name: Start container
     docker:
       name: dovecot
       image: jimyhuang/docker-postfix-dovecot 
@@ -35,3 +39,14 @@
       - /var/vmail:/home/vmail
       - /var/vmail/log:/var/log
       command: /init.sh
+    tags:
+      - start 
+
+  - name: Stop remove container
+    docker:
+      name: dovecot
+      image: jimyhuang/docker-postfix-dovecot
+      state: absent
+    tags:
+      - stop 
+
