@@ -22,8 +22,11 @@
   - name: Start container
     docker:
       name: dovecot
-      image: jimyhuang/docker-postfix-dovecot 
+      image: netivism/docker-postfix-dovecot 
       pull: always
+      expose:
+       - 993
+       - 587
       ports:
       - "993:993"
       - "587:587"
@@ -45,7 +48,7 @@
   - name: Stop remove container
     docker:
       name: dovecot
-      image: jimyhuang/docker-postfix-dovecot
+      image: netivism/docker-postfix-dovecot
       state: absent
     tags:
       - stop 
