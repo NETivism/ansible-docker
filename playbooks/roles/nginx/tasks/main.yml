@@ -1,6 +1,6 @@
 ---
   - name: Nginx should be started
-    service: name=nginx state=started enabled=yes
+    service: name=nginx state=started
     sudo: yes
 
   - name: Copy desired nginx config file

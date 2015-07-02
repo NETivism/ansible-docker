@@ -50,6 +50,9 @@
       - nginx-full
       - nginx
 
+  - name: Make sure nginx started when os boot
+    service: name=nginx state=started enable=yes
+
   - name: Install MySQL
     apt:
       pkg: "{{ item }}"
