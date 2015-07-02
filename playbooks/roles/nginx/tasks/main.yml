@@ -21,6 +21,17 @@
     sudo: yes
     notify:
       - validate nginx
-      - reload nginx
     tags:
       - start
+
+  - name: Reload nginx
+    sudo: yes
+    service: name=nginx state=reloaded
+    tags:
+      - start
+      
+  - name: Reload nginx
+    sudo: yes
+    service: name=nginx state=reloaded
+    tags:
+      - reload
