@@ -1,0 +1,43 @@
+- hosts: "{{ target }}"                                                                    
+  remote_user: answerable                                                                  
+  sudo: yes                                                                                
+  roles:                                                                                   
+  - firewall
+  tasks:
+  - name: Disallow root login by sshd
+    lineinfile:
+      dest: /etc/ssh/sshd_config
+      regexp: "^PermitRootLogin"
+      line: "PermitRootLogin no"
+
+  - name: Allow specify group login in ssh
+    lineinfile:
+      dest: /etc/ssh/sshd_config
+      regexp: "{{ item.regexp }}"
+      line: "{{ item.line }}"
+    with_items:
+      - { regexp: '^## Group', line: '## Group' }
+      - { regexp: '^AllowGroups', line: 'AllowGroups www-data answerable' }
+
+  - name: Deny specify group login in ssh
+    lineinfile:
+      dest: /etc/ssh/sshd_config
+      regexp: "{{ item.regexp }}"
+      line: "{{ item.line }}"
+    with_items:
+      - { regexp: '^## Deny by ip', line: '## Deny by ip' }
+      - { regexp: '^Match Address \*', line: 'Match Address *,!106.185.32.129 User answerable' }
+      - { regexp: '^  DenyUsers answerable', line: '  DenyUsers answerable' }
+
+  - name: Disallow answerable login by password
+    lineinfile:
+      dest: /etc/ssh/sshd_config
+      regexp: "{{ item.regexp }}"
+      line: "{{ item.line }}"
+    with_items:
+      - { regexp: '^## Answerable specify config', line: '## Answerable specify config' }
+      - { regexp: '^Match User answerable', line: 'Match User answerable' }
+      - { regexp: '^  PasswordAuthentication', line: '  PasswordAuthentication no' }
+
+  - name: Reload SSHD 
+    service: name=sshd state=reloaded
