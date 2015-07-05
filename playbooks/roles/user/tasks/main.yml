@@ -1,0 +1,92 @@
+---
+- name: Check if user exists
+  shell: /usr/bin/getent passwd {{ item }} > /dev/null && echo "" || echo {{ item }}
+  with_items: "{{ user_ssh }}"
+  register: tmpvar
+  tags:
+    - useradd
+
+- shell: echo {{ item.stdout }}
+  with_items: "{{ tmpvar.results }}"
+  register: user_exists
+  when: item.stdout != ""
+  tags:
+    - useradd
+
+- shell: echo {{ item }}
+  with_items: "{{ user_ssh }}"
+  register: user_exists
+  tags:
+    - passwd
+
+# Add a user with a bash shell, appending the group 'www-data' and 'developer' to the user's groups
+- name: Create ssh group
+  group: name=userssh state=present
+  tags:
+    - useradd
+
+- name: Create sftp group
+  group: name=usersftp state=present
+  tags:
+    - useradd
+
+- name: Random passwords
+  shell: openssl rand -base64 20
+  with_items: "{{ user_exists.results }}"
+  register: user_passwd
+  tags:
+    - useradd
+    - passwd
+
+- name: Encryped passwords
+  shell: mkpasswd --method=SHA-512 {{ item.stdout }}
+  with_items: "{{ user_passwd.results }}"
+  register: encryped_passwd
+  tags:
+    - useradd
+    - passwd
+
+- name: Add users
+  user: name={{ item.0.stdout }} state=present group=userssh groups=www-data comment=ansible password={{ item.1.stdout }}
+  with_together: 
+    - "{{ user_exists.results }}"
+    - "{{ encryped_passwd.results }}"
+  tags:
+    - useradd
+
+- name: Change password
+  user: name={{ item.0.stdout }} state=present comment=ansible password={{ item.1.stdout }}
+  with_together: 
+    - "{{ user_exists.results }}"
+    - "{{ encryped_passwd.results }}"
+  tags:
+    - passwd
+
+- name: Display random password
+  debug: 
+    msg: |
+      {% set comma = joiner(",") %}
+      {% for item in user_passwd.results -%}
+        {% set idx = loop.index - 1 %} {{ comma() }} {{ user_exists.results[idx].stdout }}=>{{ item.stdout }}
+      {%- endfor %}
+  tags:
+    - useradd
+    - passwd
+
+#- name: List all user account
+#  command: awk -F'[/:]' '{if ($3 >= 1000 && $3 != 65534) print $1}' /etc/passwd
+#  register: result
+
+#- name: Create user account
+  # http://docs.ansible.com/user_module.html
+  #user:
+  #  name: '{{ user }}'
+  #  password: '{{ password }}'
+  #  shell: '/bin/bash'
+  #  groups: www-data
+  #  append: yes
+  #tags:
+  #  - create
+
+#- debug: msg='{{ result.stdout }}'
+#  # http://docs.ansible.com/debug_module.html
