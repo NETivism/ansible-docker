@@ -1,7 +1,7 @@
-- hosts: "{{ target }}"                                                                    
-  remote_user: answerable                                                                  
-  sudo: yes                                                                                
-  roles:                                                                                   
+- hosts: "{{ target }}"
+  remote_user: answerable
+  sudo: yes
+  roles:
   - firewall
   tasks:
   - name: Disallow root login by sshd
@@ -39,5 +39,5 @@
       - { regexp: '^Match User answerable', line: 'Match User answerable' }
       - { regexp: '^  PasswordAuthentication', line: '  PasswordAuthentication no' }
 
-  - name: Reload SSHD 
+  - name: Reload SSHD
     service: name=sshd state=reloaded
