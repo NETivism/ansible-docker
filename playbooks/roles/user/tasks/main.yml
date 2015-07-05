@@ -1,7 +1,7 @@
 ---
 - name: Check if user exists
   shell: /usr/bin/getent passwd {{ item }} > /dev/null && echo "" || echo {{ item }}
-  with_items: "{{ user_ssh }}"
+  with_items: "{{ user_ssh }} + {{ user_sftp }}"
   register: tmpvar
   tags:
     - useradd
@@ -12,12 +12,6 @@
   when: item.stdout != ""
   tags:
     - useradd
-
-- shell: echo {{ item }}
-  with_items: "{{ user_ssh }}"
-  register: user_exists
-  tags:
-    - passwd
 
 # Add a user with a bash shell, appending the group 'www-data' and 'developer' to the user's groups
 - name: Create ssh group
@@ -33,60 +27,51 @@
 - name: Random passwords
   shell: openssl rand -base64 20
   with_items: "{{ user_exists.results }}"
+  when: item.changed
   register: user_passwd
   tags:
     - useradd
-    - passwd
 
 - name: Encryped passwords
   shell: mkpasswd --method=SHA-512 {{ item.stdout }}
   with_items: "{{ user_passwd.results }}"
+  when: item.stdout is defined
   register: encryped_passwd
   tags:
     - useradd
-    - passwd
 
 - name: Add users
-  user: name={{ item.0.stdout }} state=present group=userssh groups=www-data comment=ansible password={{ item.1.stdout }}
+  user: name={{ item.0.stdout }} state=present group=userssh comment=ansible password={{ item.1.stdout }} shell=/bin/bash
   with_together: 
     - "{{ user_exists.results }}"
     - "{{ encryped_passwd.results }}"
+  when: item.0.stdout is defined
   tags:
     - useradd
 
-- name: Change password
-  user: name={{ item.0.stdout }} state=present comment=ansible password={{ item.1.stdout }}
-  with_together: 
-    - "{{ user_exists.results }}"
-    - "{{ encryped_passwd.results }}"
+- name: Limit SFTP user
+  user: name={{ item }} state=present group=usersftp groups=usersftp comment=ansible shell=/bin/sh
+  with_items: "{{ user_sftp }}"
   tags:
-    - passwd
+    - useradd
 
-- name: Display random password
+- name: Display generated password
   debug: 
     msg: |
       {% set comma = joiner(",") %}
-      {% for item in user_passwd.results -%}
-        {% set idx = loop.index - 1 %} {{ comma() }} {{ user_exists.results[idx].stdout }}=>{{ item.stdout }}
+      {% for item in user_exists.results -%}
+        {% if item.stdout is defined %}{% set idx = loop.index - 1 %} {{ comma() }} {{ item.stdout }}=>{{ user_passwd.results[idx].stdout }}{% endif %}
       {%- endfor %}
   tags:
     - useradd
+
+# change password
+- name: Encryped password from variable
+  shell: mkpasswd --method=SHA-512 {{ pass }}
+  register: password
+  tags:
     - passwd
-
-#- name: List all user account
-#  command: awk -F'[/:]' '{if ($3 >= 1000 && $3 != 65534) print $1}' /etc/passwd
-#  register: result
-
-#- name: Create user account
-  # http://docs.ansible.com/user_module.html
-  #user:
-  #  name: '{{ user }}'
-  #  password: '{{ password }}'
-  #  shell: '/bin/bash'
-  #  groups: www-data
-  #  append: yes
-  #tags:
-  #  - create
-
-#- debug: msg='{{ result.stdout }}'
-#  # http://docs.ansible.com/debug_module.html
+- name: Change user password for {{ username }}
+  user: name={{ user }} state=present password={{ password.stdout }}
+  tags:
+    - passwd
