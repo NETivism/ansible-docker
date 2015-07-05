@@ -17,7 +17,7 @@
       line: "{{ item.line }}"
     with_items:
       - { regexp: '^## Group', line: '## Group' }
-      - { regexp: '^AllowGroups', line: 'AllowGroups www-data answerable' }
+      - { regexp: '^AllowGroups', line: 'AllowGroups userssh usersftp answerable' }
 
   - name: Deny specify group login in ssh
     lineinfile:
@@ -38,6 +38,20 @@
       - { regexp: '^## Answerable specify config', line: '## Answerable specify config' }
       - { regexp: '^Match User answerable', line: 'Match User answerable' }
       - { regexp: '^  PasswordAuthentication', line: '  PasswordAuthentication no' }
+
+  - name: Force sftp group login only by sftp
+    lineinfile:
+      dest: /etc/ssh/sshd_config
+      regexp: "{{ item.regexp }}"
+      line: "{{ item.line }}"
+    with_items:
+      - { regexp: '^## SFTP', line: '## SFTP' }
+      - { regexp: '^Match Group usersftp', line: 'Match Group usersftp' }
+      - { regexp: '^  ChrootDirectory %h', line: '  ChrootDirectory %h' }
+      - { regexp: '^  ForceCommand internal-sftp', line: '  ForceCommand internal-sftp' }
+      - { regexp: '^  AllowTcpForwarding no', line: '  AllowTcpForwarding no' }
+      - { regexp: '^  X11Forwarding no', line: '  X11Forwarding no' }
+    
 
   - name: Reload SSHD
     service: name=sshd state=reloaded

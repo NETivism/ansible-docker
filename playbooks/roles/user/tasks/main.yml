@@ -55,6 +55,17 @@
   tags:
     - useradd
 
+- name: Change sftp home to root owner for jail
+  # https://wiki.archlinux.org/index.php/SFTP_chroot
+  file:
+    path: "/home/{{ item }}"
+    state: directory
+    owner: root
+    group: root
+  with_items: "{{ user_sftp }}"
+  tags:
+    - useradd
+
 - name: Display generated password
   debug: 
     msg: |
