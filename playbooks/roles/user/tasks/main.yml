@@ -1,6 +1,6 @@
 ---
 - name: Check if user exists
-  shell: /usr/bin/getent passwd {{ item }} > /dev/null && echo "" || echo {{ item }}
+  shell: /usr/bin/getent passwd {{ item.name }} > /dev/null && echo "" || echo {{ item.name }}
   with_items: "{{ user_ssh }} + {{ user_sftp }}"
   register: tmpvar
   tags:
@@ -50,7 +50,7 @@
     - useradd
 
 - name: Limit SFTP user
-  user: name={{ item }} state=present group=usersftp groups=usersftp comment=ansible shell=/bin/sh
+  user: name={{ item.name }} state=present group=usersftp groups=usersftp comment=ansible shell=/bin/sh
   with_items: "{{ user_sftp }}"
   tags:
     - useradd
@@ -58,13 +58,40 @@
 - name: Change sftp home to root owner for jail
   # https://wiki.archlinux.org/index.php/SFTP_chroot
   file:
-    path: "/home/{{ item }}"
+    path: "/home/{{ item.name }}"
     state: directory
     owner: root
     group: root
   with_items: "{{ user_sftp }}"
   tags:
     - useradd
+
+- name: Website link for ssh user
+  file:
+    src: /var/www/sites/{{ item.website }}
+    dest: "/home/{{ item.name }}/{{ item.website }}"
+    state: link
+  when: item.website|default("") != ""
+  with_items: "{{ user_ssh }}"
+  tags:
+    - useradd
+    - addsite
+
+- name: Website dir for sftp user
+  file:
+    path: "/home/{{ item.name }}/{{ item.website }}"
+    state: directory
+  when: item.website|default("") != ""
+  with_items: "{{ user_sftp }}"
+  tags:
+    - useradd
+    - addsite
+- shell: mount --bind /var/www/sites/{{ item.website }} /home/{{ item.name }}/{{ item.website }}
+  when: item.website|default("") != ""
+  with_items: "{{ user_sftp }}"
+  tags:
+    - useradd
+    - addsite
 
 - name: Display generated password
   debug: 
