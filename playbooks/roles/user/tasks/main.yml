@@ -5,6 +5,7 @@
   register: tmpvar
   tags:
     - useradd
+    - lock
 
 - shell: echo {{ item.stdout }}
   with_items: "{{ tmpvar.results }}"
@@ -12,6 +13,16 @@
   when: item.stdout != ""
   tags:
     - useradd
+    - lock
+
+# unlock users in ssh + sftp
+- name: Unlock users
+  shell: usermod -U {{ item.stdout }}
+  when: item.stdout|default("") != ""
+  with_items: "{{ user_exists.results }}"
+  tags:
+    - useradd
+    - lock
 
 # Add a user with a bash shell, appending the group 'www-data' and 'developer' to the user's groups
 - name: Create ssh group
@@ -93,6 +104,15 @@
     - useradd
     - addsite
 
+# lock users in user_lock
+- name: Lock user {{ item.name }}
+  shell: usermod -L {{ item.name }}
+  when: item.name is defined
+  with_items: "{{ user_lock }}"
+  tags:
+    - useradd
+    - lock
+
 - name: Display generated password
   debug: 
     msg: |
@@ -113,3 +133,11 @@
   user: name={{ user }} state=present password={{ password.stdout }}
   tags:
     - passwd
+
+
+# unlock single user
+- name: Unlock single user
+  shell: usermod -U {{ name }}
+  when: name is defined
+  tags:
+    - unlock
