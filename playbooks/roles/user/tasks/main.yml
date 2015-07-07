@@ -52,7 +52,7 @@
     - useradd
 
 - name: Add users
-  user: name={{ item.0.stdout }} state=present group=userssh comment=ansible password={{ item.1.stdout }} shell=/bin/bash
+  user: name={{ item.0.stdout }} state=present group=userssh groups=userssh,docker comment=ansible password={{ item.1.stdout }} shell=/bin/bash
   with_together: 
     - "{{ user_exists.results }}"
     - "{{ encryped_passwd.results }}"
@@ -141,3 +141,10 @@
   when: name is defined
   tags:
     - unlock
+
+# chgrp single user
+- name: Change group of user
+  user: name={{ name }} state=present groups={{ group }} append=yes comment=ansible
+  when: name is defined
+  tags:
+    - chgrp
