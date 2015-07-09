@@ -17,7 +17,7 @@
 
 # unlock users in ssh + sftp
 - name: Unlock users
-  shell: usermod -U {{ item.stdout }}
+  shell: /usr/bin/getent passwd {{ item.stdout }} > /dev/null && usermod -U {{ item.stdout }} || echo ""
   when: item.stdout|default("") != ""
   with_items: "{{ user_exists.results }}"
   tags:
@@ -130,7 +130,7 @@
   tags:
     - passwd
 - name: Change user password for {{ username }}
-  user: name={{ user }} state=present password={{ password.stdout }}
+  user: name={{ name }} state=present password={{ password.stdout }}
   tags:
     - passwd
 
