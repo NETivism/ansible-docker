@@ -2,9 +2,11 @@
   - name: Nginx should be started
     service: name=nginx state=started
     sudo: yes
+    tags:
+      - start
 
   - name: Copy desired nginx config file
-    copy: src={{type}}.conf dest=/etc/nginx/{{type}}.conf owner=root group=root mode=0644
+    copy: src={{ type }}.conf dest=/etc/nginx/{{ type }}.conf owner=root group=root mode=0644
     sudo: yes
     tags:
       - start
@@ -24,14 +26,18 @@
     tags:
       - start
 
+  - name: Add Alias into Nginx vhost configuration file
+    # http://docs.ansible.com/replace_module.html
+    #replace:
+    #  dest=/etc/nginx/sites-available/{{ domain }}
+    #  regexp='{{ domain }}'
+    #  replace='{{ domain }} {{ alias }}'
+    #tags:
+    #  - alias
+
   - name: Reload nginx
     sudo: yes
     service: name=nginx state=reloaded
     tags:
       - start
-      
-  - name: Reload nginx
-    sudo: yes
-    service: name=nginx state=reloaded
-    tags:
       - reload
