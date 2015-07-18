@@ -51,7 +51,7 @@
       - nginx
 
   - name: Make sure nginx started when os boot
-    service: name=nginx state=started enable=yes
+    service: name=nginx state=started enabled=yes
 
   - name: Install MySQL
     apt:
