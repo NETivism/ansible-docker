@@ -4,6 +4,21 @@
   remote_user: answerable
   sudo: yes
   tasks: 
+  - name: Install Python Pip
+  # use easy_install because of python bug http://stackoverflow.com/questions/27341064/how-do-i-fix-importerror-cannot-import-name-incompleteread
+    easy_install:
+      name: pip
+    tags:
+      - start
+
+  - name: Install Docker-py
+    pip:
+      name: docker-py
+      version: 1.2.1
+      state: present
+    tags:
+      - start
+
   - name: Make sure docker is running
     service:
       name: docker
@@ -44,6 +59,9 @@
       command: /init.sh
     tags:
       - start 
+
+  - name: Wait for service startup
+    wait_for: port=587 delay=10
 
   - name: DKIM information
     shell: docker logs dovecot | grep _domainkey

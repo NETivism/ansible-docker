@@ -28,14 +28,18 @@
     apt:
       pkg: "lxc-docker"
       state: installed
+    
+  - name: Install Python Pip
+  # use easy_install because of python bug http://stackoverflow.com/questions/27341064/how-do-i-fix-importerror-cannot-import-name-incompleteread
+    easy_install:
+      name: pip
   
-  - name: Install pip
+  - name: Install python-dev
     apt:
       pkg: "{{ item }}"
       state: installed
     with_items:
       - python-dev
-      - python-pip
 
   - name: Install GIT
     apt: 
@@ -90,13 +94,9 @@
     with_items:
       - pwgen
       - vim
-    
-  - name: Install Python Pip
-  # use easy_install because of python bug http://stackoverflow.com/questions/27341064/how-do-i-fix-importerror-cannot-import-name-incompleteread
-    easy_install:
-      name: pip
 
   - name: Install Docker-py
     pip:
       name: docker-py
+      version: 1.2.3
       state: present
