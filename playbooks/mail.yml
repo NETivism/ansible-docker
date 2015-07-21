@@ -62,6 +62,8 @@
 
   - name: Wait for service startup
     wait_for: port=587 delay=10
+    tags:
+      - start 
 
   - name: DKIM information
     shell: docker logs dovecot | grep _domainkey
