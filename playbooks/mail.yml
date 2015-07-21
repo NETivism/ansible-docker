@@ -56,10 +56,10 @@
       volumes:
       - /etc/postfix
       - /etc/ssl
-      - /etc/opendkim
       - /etc/dovecot
       - /var/vmail:/home/vmail
       - /var/vmail/log:/var/log
+      - /var/vmail/opendkim:/etc/opendkim
       command: /init.sh
     tags:
       - start 
