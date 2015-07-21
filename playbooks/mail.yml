@@ -42,9 +42,13 @@
       expose:
        - 993
        - 587
+       - 25
+       - 465
       ports:
       - "993:993"
       - "587:587"
+      - "25:25"
+      - "465:465"
       env:
         MAILNAME: "{{ mailname }}"
         MAILADDR: "{{ mailaddr }}"
