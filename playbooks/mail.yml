@@ -34,6 +34,11 @@
     tags:
       - start
 
+  - name: Make sure smtp not start
+    service: name=exim4 state=stopped
+    tags:
+      - start
+
   - name: Start container
     docker:
       name: dovecot
