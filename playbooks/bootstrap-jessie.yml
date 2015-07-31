@@ -28,6 +28,11 @@
     apt:
       pkg: "lxc-docker"
       state: installed
+  
+  - name: Install Python Setuptools
+    apt:
+      pkg: "python-setuptools"
+      state: installed
     
   - name: Install Python Pip
   # use easy_install because of python bug http://stackoverflow.com/questions/27341064/how-do-i-fix-importerror-cannot-import-name-incompleteread
