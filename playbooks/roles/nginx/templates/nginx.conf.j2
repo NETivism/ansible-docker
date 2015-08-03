@@ -3,5 +3,8 @@ server {
   server_name {{ domain  }};
   root /var/www/sites/{{ domain }};
   set $port {{ port_www }};
+  {% if allow_install_update %}
+  include /etc/nginx/allow_install_update.conf;
+  {% endif %}
   include /etc/nginx/{{ type }}.conf;
 }
