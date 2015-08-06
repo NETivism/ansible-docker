@@ -4,25 +4,38 @@
   git: repo=https://github.com/NETivism/docker-sh.git dest=/etc/ansible/docker-sh accept_hostkey=yes
   tags:
     - start
+    - update
 
 - name: Update to lastest docker repos
   command: docker pull {{ repos }}
   tags:
     - start
+    - update
 
+# update to lastest container
+- name: update container
+  shell: docker exec -it {{ domain }} bash -c "supervisorctl stop all" && docker stop {{ domain }} && docker rm {{ domain }}
+# comment above line, uncomment below line if you meet problem.
+#  shell: docker stop {{ domain }} && docker rm {{ domain }}
+  tags:
+    - update
+
+# normal operation
 - name: Deploy a site with mount
   shell: ./docker-start.sh -d {{ domain }} -w {{ port_www }} -m {{ port_db }} -r {{ repos }} -v {{ mount }} -u {{ dbname }} -p {{ passwd }} chdir=/etc/ansible/docker-sh
   when: mount is defined
   tags:
     - start
+    - update
 
 - name: Deploy a site without mount
   shell: ./docker-start.sh -d {{ domain }} -w {{ port_www }} -m {{ port_db }} -r {{ repos }} -u {{ dbname }} -p {{ passwd }} chdir=/etc/ansible/docker-sh
   when: mount is not defined
   tags:
     - start
+    - update
 
-- name: Restart a site
-  shell: ./docker-start.sh -d {{ domain }} chdir=/etc/ansible/docker-sh
+- name: force-reload / restart site
+  shell: docker exec -it {{ domain }} bash -c "supervisorctl stop all" && docker restart {{ domain }}
   tags:
     - restart
