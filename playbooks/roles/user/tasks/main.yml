@@ -1,7 +1,7 @@
 ---
 - name: Check if user exists
   shell: /usr/bin/getent passwd {{ item.name }} > /dev/null && echo "" || echo {{ item.name }}
-  with_items: "{{ user_ssh }} + {{ user_sftp }}"
+  with_items: "{{ user_docker }} + {{ user_ssh }} + {{ user_sftp }}"
   register: tmpvar
   tags:
     - useradd
@@ -15,7 +15,7 @@
     - useradd
     - lock
 
-# unlock users in ssh + sftp
+# unlock users in docker + ssh + sftp
 - name: Unlock users
   shell: /usr/bin/getent passwd {{ item.stdout }} > /dev/null && usermod -U {{ item.stdout }} || echo ""
   when: item.stdout|default("") != ""
@@ -24,7 +24,7 @@
     - useradd
     - lock
 
-# Add a user with a bash shell, appending the group 'www-data' and 'developer' to the user's groups
+# Add a user with a bash shell, appending groups to the user's groups
 - name: Create ssh group
   group: name=userssh state=present
   tags:
@@ -51,12 +51,18 @@
   tags:
     - useradd
 
-- name: Add users
-  user: name={{ item.0.stdout }} state=present group=userssh groups=userssh,docker comment=ansible password={{ item.1.stdout }} shell=/bin/bash
+- name: Add SSH users
+  user: name={{ item.0.stdout }} state=present group=userssh groups=userssh comment=ansible password={{ item.1.stdout }} shell=/bin/bash
   with_together: 
     - "{{ user_exists.results }}"
     - "{{ encryped_passwd.results }}"
   when: item.0.stdout is defined
+  tags:
+    - useradd
+
+- name: Grant administrators docker permission
+  user: name={{ item.name }} state=present group=userssh groups=userssh,docker comment=ansible shell=/bin/bash
+  with_items: "{{ user_docker }}"
   tags:
     - useradd
 
