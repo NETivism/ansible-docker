@@ -11,6 +11,11 @@
     tags:
       - start
 
+  - copy: src=allow_install_update_fpm.conf dest=/etc/nginx/allow_install_update_fpm.conf owner=root group=root mode=0644
+    sudo: yes
+    tags:
+      - start
+
   - name: Copy desired nginx config file
     copy: src={{ type }}.conf dest=/etc/nginx/{{ type }}.conf owner=root group=root mode=0644
     sudo: yes

@@ -3,8 +3,12 @@ server {
   server_name {{ domain  }};
   root /var/www/sites/{{ domain }};
   set $port {{ port_www }};
-  {% if allow_install_update %}
+{% if allow_install_update %}
+{% if 'fpm' in type %}
+  include /etc/nginx/allow_install_update_fpm.conf;
+{% else %}
   include /etc/nginx/allow_install_update.conf;
-  {% endif %}
+{% endif %}
+{% endif %}
   include /etc/nginx/{{ type }}.conf;
 }
