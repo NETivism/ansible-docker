@@ -1,0 +1,41 @@
+# Enable compression.
+gzip on;
+gzip_http_version 1.0;
+gzip_comp_level 2;
+gzip_proxied any;
+gzip_min_length  1100;
+gzip_buffers 16 8k;
+gzip_types text/plain text/css application/x-javascript text/xml application/xml application/xml+rss text/javascript;
+# Some version of IE 6 don't handle compression well on some mime-types,
+# so just disable for them
+gzip_disable "MSIE [1-6].(?!.*SV1)";
+# Set a vary header so downstream proxies don't send cached gzipped
+# content to IE6
+gzip_vary on;
+# allows file uploads up to 20 megabytes
+client_max_body_size 20M;
+
+# Block access to "hidden" files and directories whose names begin with a
+# period. This includes directories used by version control systems such
+# as Subversion or Git to store control files.
+location ~ (^|/)\. {
+  return 404;
+}
+
+## Replicate the Apache <FilesMatch> directive of Drupal standard
+## .htaccess. Disable access to any code files. Return a 404 to curtail
+## information disclosure. Hide also the text files.
+location ~* ^(?:.+\.(?:htaccess|make|engine|inc|info|install|module|po|sh|.*sql|test|theme|tpl(?:\.php)?|xtmpl|patch)|code-style\.pl|/Entries.*|/Repository|/Root|/Template)$ {
+  return 404;
+}
+
+# Support for favicon. Return an 1x1 transparent GIF if it doesn't
+location = /favicon.ico {
+  expires 30d;
+  try_files /favicon.ico @empty;
+}
+# Return an in memory 1x1 transparent GIF.
+location @empty {
+  expires 30d;
+  empty_gif;
+}

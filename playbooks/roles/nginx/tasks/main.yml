@@ -5,19 +5,14 @@
       - start
 
   - name: Copy override config file
-    copy: src=allow_install_update.conf dest=/etc/nginx/allow_install_update.conf owner=root group=root mode=0644
+    file: path=/etc/nginx/include state=directory mode=0755 owner=answerable
     tags:
       - start
 
-  - copy: src=allow_install_update_fpm.conf dest=/etc/nginx/allow_install_update_fpm.conf owner=root group=root mode=0644
+  - synchronize: src=/etc/ansible/ansible-docker/playbooks/roles/nginx/files/ dest=/etc/nginx/include archive=no delete=yes recursive=yes
     tags:
       - start
   - copy: src=fastcgi_custom dest=/etc/nginx/fastcgi_custom owner=root group=root mode=0644
-    tags:
-      - start
-
-  - name: Copy desired nginx config file
-    copy: src={{ type }}.conf dest=/etc/nginx/{{ type }}.conf owner=root group=root mode=0644
     tags:
       - start
 
