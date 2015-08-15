@@ -12,9 +12,6 @@
   - synchronize: src=/etc/ansible/ansible-docker/playbooks/roles/nginx/files/ dest=/etc/nginx/include archive=no delete=yes recursive=yes
     tags:
       - start
-  - copy: src=fastcgi_custom dest=/etc/nginx/fastcgi_custom owner=root group=root mode=0644
-    tags:
-      - start
 
   - name: Add Nginx vhost configuration file
     # http://docs.ansible.com/template_module.html

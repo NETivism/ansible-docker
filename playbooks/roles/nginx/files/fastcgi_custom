@@ -1,4 +1,0 @@
-fastcgi_index  index.php;
-fastcgi_param  SCRIPT_FILENAME /var/www/html$uri;
-fastcgi_param  SCRIPT_NAME $uri;
-fastcgi_param  DOCUMENT_ROOT /var/www/html;
