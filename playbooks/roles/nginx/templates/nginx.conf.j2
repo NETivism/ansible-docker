@@ -12,3 +12,21 @@ server {
 {% endif %}
   include /etc/nginx/include/{{ type }}.conf;
 }
+{% if ssl %}
+server {
+  listen 443 ssl;
+  server_name {{ domain }};
+  root /var/www/sites/{{ domain }};
+  set $port {{ port_www }};
+  ssl_certificate      {{ ssl_crt }};
+  ssl_certificate_key  {{ ssl_key }};
+{% if allow_install_update %}
+{% if 'fpm' in type %}
+  include /etc/nginx/include/allow_install_update_fpm.conf;
+{% else %}
+  include /etc/nginx/include/allow_install_update.conf;
+{% endif %}
+{% endif %}
+  include /etc/nginx/include/{{ type }}.conf;
+}
+{% endif %}
