@@ -1,37 +1,26 @@
 ---
   - name: Nginx should be started
     service: name=nginx state=started
-    sudo: yes
     tags:
       - start
 
   - name: Copy override config file
-    copy: src=allow_install_update.conf dest=/etc/nginx/allow_install_update.conf owner=root group=root mode=0644
-    sudo: yes
+    file: path=/etc/nginx/include state=directory mode=0755 owner=answerable
     tags:
       - start
 
-  - copy: src=allow_install_update_fpm.conf dest=/etc/nginx/allow_install_update_fpm.conf owner=root group=root mode=0644
-    sudo: yes
-    tags:
-      - start
-
-  - name: Copy desired nginx config file
-    copy: src={{ type }}.conf dest=/etc/nginx/{{ type }}.conf owner=root group=root mode=0644
-    sudo: yes
+  - synchronize: src=/etc/ansible/ansible-docker/playbooks/roles/nginx/files/ dest=/etc/nginx/include archive=no delete=yes recursive=yes
     tags:
       - start
 
   - name: Add Nginx vhost configuration file
     # http://docs.ansible.com/template_module.html
     template: src=nginx.conf.j2 dest=/etc/nginx/sites-available/{{ domain }}
-    sudo: yes
     tags:
       - start
 
   - name: Link Nginx vhost configuration file in site-enabled
     action: file src=/etc/nginx/sites-available/{{ domain }} dest=/etc/nginx/sites-enabled/{{ domain }} state=link
-    sudo: yes
     notify:
       - validate nginx
     tags:
@@ -59,7 +48,6 @@
       - unalias
 
   - name: Reload nginx
-    sudo: yes
     service: name=nginx state=reloaded
     tags:
       - start

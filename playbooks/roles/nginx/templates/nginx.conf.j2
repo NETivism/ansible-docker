@@ -5,10 +5,10 @@ server {
   set $port {{ port_www }};
 {% if allow_install_update %}
 {% if 'fpm' in type %}
-  include /etc/nginx/allow_install_update_fpm.conf;
+  include /etc/nginx/include/allow_install_update_fpm.conf;
 {% else %}
-  include /etc/nginx/allow_install_update.conf;
+  include /etc/nginx/include/allow_install_update.conf;
 {% endif %}
 {% endif %}
-  include /etc/nginx/{{ type }}.conf;
+  include /etc/nginx/include/{{ type }}.conf;
 }

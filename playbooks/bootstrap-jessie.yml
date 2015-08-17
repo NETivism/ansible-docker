@@ -4,30 +4,8 @@
   remote_user: answerable
   sudo: yes
   tasks:
-  - name: Make sure apt-transport-https is installed
-    # http://docs.ansible.com/apt_module.html
-    apt:
-      update_cache: yes
-      pkg: "apt-transport-https"
-      state: installed
-
-  - name: Add Docker repository key
-    # http://docs.ansible.com/apt_key_module.html
-    apt_key:
-      id: "36A1D7869245C8950F966E92D8576A8BA88D21E9"
-      keyserver: "hkp://keyserver.ubuntu.com:80"
-      state: present
-
-  - name: Add Docker repository and update apt cache
-    # http://docs.ansible.com/apt_repository_module.html
-    apt_repository:
-      repo: "deb http://get.docker.io/ubuntu docker main"
-      state: present
-
-  - name: Install lxc-docker
-    apt:
-      pkg: "lxc-docker"
-      state: installed
+  - name: Install Docker
+    shell: curl -sSL https://get.docker.com/ | sh
   
   - name: Install Python Setuptools
     apt:
@@ -99,6 +77,7 @@
     with_items:
       - pwgen
       - vim
+      - realpath
 
   - name: Install Docker-py
     pip:
