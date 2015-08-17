@@ -89,6 +89,7 @@
     dest: "/home/{{ item.0.name }}/{{ item.1 }}"
     state: link
   with_subelements:
+    - user_docker
     - user_ssh
     - website
   when: item.1|default("") != ""
