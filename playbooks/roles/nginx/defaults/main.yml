@@ -1,4 +1,4 @@
 allow_install_update: false
 ssl: false
-ssl_key: 
-ssl_crt:
+ssl_crt: ssl/neticrm.crt 
+ssl_key: ssl/neticrm.key
