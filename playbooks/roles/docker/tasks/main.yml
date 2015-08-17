@@ -14,7 +14,7 @@
 
 # update to lastest container
 - name: update container
-  shell: docker exec -it {{ domain }} bash -c "supervisorctl stop all" && docker stop {{ domain }} && docker rm {{ domain }}
+  shell: docker ps -q -f "name={{ domain }}" | xargs --no-run-if-empty -I{} bash -c 'docker exec -i {} bash -c "supervisorctl stop all" && docker stop {} && docker rm {}'
 # comment above line, uncomment below line if you meet problem.
 #  shell: docker stop {{ domain }} && docker rm {{ domain }}
   tags:
@@ -22,14 +22,14 @@
 
 # normal operation
 - name: Deploy a site with mount
-  shell: ./docker-start.sh -d {{ domain }} -w {{ port_www }} -m {{ port_db }} -r {{ repos }} -v {{ mount }} -u {{ dbname }} -p {{ passwd }} chdir=/etc/ansible/docker-sh
+  shell: ./docker-start.sh -d {{ domain }} -w {{ port_www }} -m {{ port_db }} -r {{ repos }} -v {{ mount }} -u {{ dbname }} -p {{ passwd }} -s {{ init }} chdir=/etc/ansible/docker-sh
   when: mount is defined
   tags:
     - start
     - update
 
 - name: Deploy a site without mount
-  shell: ./docker-start.sh -d {{ domain }} -w {{ port_www }} -m {{ port_db }} -r {{ repos }} -u {{ dbname }} -p {{ passwd }} chdir=/etc/ansible/docker-sh
+  shell: ./docker-start.sh -d {{ domain }} -w {{ port_www }} -m {{ port_db }} -r {{ repos }} -u {{ dbname }} -p {{ passwd }} -s {{ init }} chdir=/etc/ansible/docker-sh
   when: mount is not defined
   tags:
     - start
