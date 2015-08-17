@@ -1,6 +1,6 @@
 server {
   listen 80;
-  server_name {{ domain  }};
+  server_name {{ domain }}{% if alias is defined %}{% for item in alias %} {{ item }}{% endfor %}{% endif %};
   root /var/www/sites/{{ domain }};
   set $port {{ port_www }};
 {% if allow_install_update %}
