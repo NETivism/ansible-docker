@@ -1,6 +1,6 @@
 server {
   listen 80;
-  server_name {{ domain }}{% if alias is defined %}{% for item in alias %} {{ item }}{% endfor %}{% endif %};
+  server_name {% if redirect is defined %}{{ redirect }}{% else %}{{ domain }}{% endif %}{% if alias is defined %}{% for item in alias %} {{ item }}{% endfor %}{% endif %};
   root /var/www/sites/{{ domain }};
   set $port {{ port_www }};
 {% if allow_install_update %}
@@ -15,7 +15,7 @@ server {
 {% if ssl %}
 server {
   listen 443 ssl;
-  server_name {{ domain }}{% if alias is defined %}{% for item in alias %} {{ item }}{% endfor %}{% endif %};
+  server_name {% if redirect is defined %}{{ redirect }}{% else %}{{ domain }}{% endif %}{% if alias is defined %}{% for item in alias %} {{ item }}{% endfor %}{% endif %};
   root /var/www/sites/{{ domain }};
   set $port {{ port_www }};
   ssl_certificate      {{ ssl_crt }};
@@ -28,5 +28,12 @@ server {
 {% endif %}
 {% endif %}
   include /etc/nginx/include/{{ type }}.conf;
+}
+{% endif %}
+{% if redirect %}
+server {
+  listen 80 443 ssl;
+  server_name {{ domain }};
+  return 301 $scheme://{{ redirect }}$request_uri;
 }
 {% endif %}

@@ -66,6 +66,12 @@
   tags:
     - useradd
 
+- name: Update bashrc for userssh group set default group have write permission
+  lineinfile: dest=/home/{{ item.name }}/.bashrc line="umask g+w"
+  with_items: "{{ user_docker }} + {{ user_ssh }}"
+  tags:
+    - useradd
+
 - name: Limit SFTP user
   user: name={{ item.name }} state=present group=usersftp groups=usersftp comment=ansible shell=/bin/sh
   with_items: "{{ user_sftp }}"
