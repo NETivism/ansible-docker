@@ -1,4 +1,5 @@
 allow_install_update: false
+redirect: ""
 ssl: false
 ssl_crt: ssl/neticrm.crt 
 ssl_key: ssl/neticrm.key
