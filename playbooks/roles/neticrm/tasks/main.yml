@@ -1,0 +1,36 @@
+---
+- name: deploy private key for fetching git repository
+  copy: src=id_rsa dest=/home/answerable/.ssh/id_rsa mode=0400 owner=answerable
+  tags: start
+
+- name: Create directory
+  file: path={{ item }} state=directory mode=0755 owner=answerable
+  become: yes
+  become_method: sudo
+  with_items:
+    - /mnt/neticrm-7
+    - /mnt/neticrm-6
+  tags: start
+
+- name: clone netiCRM
+  git: repo=https://github.com/NETivism/neticrm.git dest=/mnt/neticrm-7/civicrm update=no clone=yes accept_hostkey=true
+  tags: start
+- git: repo=https://github.com/NETivism/neticrm.git dest=/mnt/neticrm-7/civicrm update=no clone=yes accept_hostkey=true
+  tags: start
+- shell: cd /mnt/neticrm-6/civicrm/neticrm && git checkout 6.x-develop && cd /mnt/neticrm-6/civicrm/drupal && git checkout 6.x-develop
+  tags: start
+
+- name: clone neticrmp
+  git: repo=git@git.netivism.com.tw:jimmy/neticrmp.git dest=/mnt/neticrm-7/neticrmp update=no clone=yes accept_hostkey=true
+  tags: start
+- git: repo=git@git.netivism.com.tw:jimmy/neticrmp.git dest=/mnt/neticrm-6/neticrmp update=no clone=yes accept_hostkey=true
+  tags: start
+- shell: cd /mnt/neticrm-6/neticrmp && git checkout develop
+  tags: start
+
+- name: upgrade netiCRM
+  git: repo=https://github.com/NETivism/neticrm.git dest=/mnt/neticrm-7/civicrm update=yes clone=no accept_hostkey=true
+  tags: upgrade
+- git: repo=https://github.com/NETivism/neticrm.git dest=/mnt/neticrm-6/civicrm update=yes clone=no accept_hostkey=true
+  tags: upgrade
+
