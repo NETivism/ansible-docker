@@ -9,7 +9,14 @@
     tags:
       - start
 
-  - synchronize: src=/etc/ansible/ansible-docker/playbooks/roles/nginx/files/ dest=/etc/nginx/include archive=no delete=yes recursive=yes
+# due to bug https://github.com/ansible/ansible-modules-core/issues/1162, change to copy
+#  - synchronize: src=/etc/ansible/ansible-docker/playbooks/roles/nginx/files/ dest=/etc/nginx/include archive=no delete=yes recursive=yes
+#    tags:
+#      - start
+
+  - copy: src={{ item }} dest=/etc/nginx/include/ owner=root mode=644
+    with_fileglob:
+      - ./*
     tags:
       - start
 
