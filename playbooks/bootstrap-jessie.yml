@@ -4,6 +4,16 @@
   remote_user: answerable
   sudo: yes
   tasks:
+  - name: Install other packages we need
+    apt:
+      pkg: "{{ item }}"
+      state: installed
+    with_items:
+      - pwgen
+      - vim
+      - realpath
+      - curl
+
   - name: Install Docker
     shell: curl -sSL https://get.docker.com/ | sh
   
@@ -13,9 +23,7 @@
       state: installed
     
   - name: Install Python Pip
-  # use easy_install because of python bug http://stackoverflow.com/questions/27341064/how-do-i-fix-importerror-cannot-import-name-incompleteread
-    easy_install:
-      name: pip
+    shell: curl -sSL https://bootstrap.pypa.io/get-pip.py | python
   
   - name: Install python-dev
     apt:
@@ -69,15 +77,6 @@
     service:
       name: docker
       state: started
-
-  - name: Install other packages we need
-    apt:
-      pkg: "{{ item }}"
-      state: installed
-    with_items:
-      - pwgen
-      - vim
-      - realpath
 
   - name: Install Docker-py
     pip:

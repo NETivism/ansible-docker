@@ -1,4 +1,15 @@
 # create user
+  - name: Install packages
+    apt:
+      pkg: "sudo"
+      state: installed
+    apt:
+      pkg: "python"
+      state: installed
+    apt:
+      pkg: "openssl"
+      state: installed
+
   - name: create deployment user
     user: name={{deployer}} createhome=yes state=present
     register: newuser
@@ -16,11 +27,6 @@
 
   - name: change owner of created authorized_keys
     file: path=/home/{{deployer}}/.ssh/authorized_keys owner={{deployer}} group={{deployer}} mode=400
-
-  - name: Install sudo
-    apt:
-      pkg: "sudo"
-      state: installed
 
   - name: sudoers add
     lineinfile: 
