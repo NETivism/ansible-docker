@@ -54,10 +54,3 @@
 
   - name: Reload SSHD
     service: name=sshd state=reloaded
-
-  - name: Separate cron to single log
-    lineinfile:
-      dest: /etc/rsyslog.conf
-      regexp: '^#cron'
-      line: 'cron.* /var/log/cron.log'
-  - service: name=rsyslog state=restarted
