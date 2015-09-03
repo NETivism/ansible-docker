@@ -1,6 +1,6 @@
 ---
 # file: docker.yml
-- hosts: '{{ target }}'
+- hosts: "{{ target }}"
   sudo: no
   roles:
     - neticrm
