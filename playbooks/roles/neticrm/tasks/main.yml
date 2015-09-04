@@ -33,6 +33,12 @@
     - deploy-6
 
 # neticrm 7
+- name: Global settings
+  copy: src=global_7.inc dest=/mnt/neticrm-7/global.inc mode=0755 owner=answerable
+  tags:
+    - deploy-7
+    - reload
+
 - name: Deploy neticrm-7
   git: repo=https://github.com/NETivism/neticrm.git dest=/mnt/neticrm-7/civicrm update=no clone=yes accept_hostkey=true
   tags:
@@ -45,6 +51,12 @@
     - deploy-7
 
 # neticrm 6
+- name: Global settings
+  copy: src=global_6.inc dest=/mnt/neticrm-6/global.inc mode=0755 owner=answerable
+  tags:
+    - deploy-6
+    - reload
+
 - name: Deploy neticrm-6
   git: repo=https://github.com/NETivism/neticrm.git dest=/mnt/neticrm-6/civicrm update=no clone=yes accept_hostkey=true
   tags:
@@ -75,3 +87,33 @@
   tags: upgrade-6
 - shell: cd /mnt/neticrm-6/neticrmp && git fetch --all && git reset --hard origin/develop
   tags: upgrade-6
+
+
+# Reload and update global config for each site
+- name: List settings.php
+  shell: ls -1 /var/www/sites/*/sites/*/settings.php
+  register: settings
+  tags:
+    - reload
+
+- name: include global
+  lineinfile:
+    dest: "{{ item }}"
+    regexp: "^defined\\('VERSION"
+    line: "defined('VERSION') ? @include_once('/mnt/neticrm-'.substr(VERSION, 0, strpos(VERSION, '.')).'/global.inc') : @include_once('/mnt/neticrm-6/global.inc');"
+  with_items: settings.stdout_lines
+  become: yes
+  become_method: sudo
+  tags:
+    - reload
+
+- name: include local
+  lineinfile:
+    dest: "{{ item }}"
+    insertafter: "^defined\\('VERSION"
+    line: "if(is_file(dirname(__FILE__).'/local.settings.php')){ @include_once('local.settings.php'); }"
+  with_items: settings.stdout_lines
+  become: yes
+  become_method: sudo
+  tags:
+    - reload
