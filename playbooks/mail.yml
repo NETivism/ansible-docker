@@ -84,6 +84,15 @@
     tags:
       - start 
 
+  - name: Mail accounts
+    shell: docker logs dovecot | grep Adding
+    register: result
+    tags:
+      - start 
+  - debug: var=result.stdout_lines
+    tags:
+      - start 
+
   - name: DKIM information
     shell: docker logs dovecot | grep _domainkey
     register: result
@@ -93,14 +102,6 @@
     tags:
       - start 
 
-  - name: Mail accounts
-    shell: docker logs dovecot | grep Adding
-    register: result
-    tags:
-      - start 
-  - debug: var=result.stdout_lines
-    tags:
-      - start 
 
   - name: Stop remove container
     docker:
