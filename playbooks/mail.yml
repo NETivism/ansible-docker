@@ -3,7 +3,17 @@
 - hosts: "{{ target }}"
   remote_user: answerable
   sudo: yes
-  tasks: 
+  tasks:
+  - name: Check if python-pip is installed
+    command: dpkg-query -l python-pip
+    register: pip_is_installed
+    failed_when: pip_is_installed.rc > 1
+    changed_when: no
+
+  - name: Remove python-pip only if installed
+    apt: name=python-pip state=absent
+    when: pip_is_installed.rc == 0
+ 
   - name: Install Python Pip
   # use easy_install because of python bug http://stackoverflow.com/questions/27341064/how-do-i-fix-importerror-cannot-import-name-incompleteread
     easy_install:
