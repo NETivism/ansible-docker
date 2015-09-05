@@ -23,7 +23,9 @@
       state: installed
     
   - name: Install Python Pip
-    shell: curl -sSL https://bootstrap.pypa.io/get-pip.py | python
+    # http://stackoverflow.com/questions/27341064/how-do-i-fix-importerror-cannot-import-name-incompleteread
+    easy_install:
+      name: pip
   
   - name: Install python-dev
     apt:
