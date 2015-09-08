@@ -88,6 +88,10 @@ location / {
   }
 
   # with boost
+  location ~ /(.*)$ {
+    set $drupal_args $1;  
+    try_files $uri /$uri @cache;
+  }
   try_files $uri /$uri @cache;
 
   # without boost 
@@ -113,5 +117,5 @@ location @backend {
   include /etc/nginx/include/global_fastcgi;
   fastcgi_param  SCRIPT_FILENAME /var/www/html/index.php;
   fastcgi_param  SCRIPT_NAME /index.php;
-  fastcgi_param  QUERY_STRING q=$uri&$query_string;
+  fastcgi_param  QUERY_STRING q=$drupal_args&$query_string;
 }
