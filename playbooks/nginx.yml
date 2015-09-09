@@ -1,5 +1,5 @@
 ---
-# file: docker.yml
+# file: nginx.yml
 - hosts: '{{ target }}'
   remote_user: answerable
   sudo: yes

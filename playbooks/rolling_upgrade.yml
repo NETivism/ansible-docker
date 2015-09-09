@@ -1,0 +1,7 @@
+---
+# file: rolling_upgrade.yml
+- hosts: all
+  remote_user: answerable
+  sudo: yes
+  roles:
+    - common

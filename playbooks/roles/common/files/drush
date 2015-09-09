@@ -1,0 +1,28 @@
+#!/bin/bash
+DRUSHBASE=`pwd .`
+if [[ $DRUSHBASE == "/var/www/sites/"* ]]; then
+  TMP=${DRUSHBASE##/var/www/sites/}
+  DOCKERNAME=${TMP%%/*}
+  TMP=${TMP##$DOCKERNAME/}
+  if [[ $TMP == "sites/"* ]]; then
+    TMP=${TMP##sites/}
+    SITENAME=${TMP%%/*}
+  else
+    SITENAME=$DOCKERNAME
+  fi
+  if [ "$SITENAME" == "default" ] || [ "$SITENAME" == "all" ]; then
+    SITENAME=$DOCKERNAME
+  fi
+
+  DRUSHINSIDE=${DRUSHBASE/var\/www\/sites\/$DOCKERNAME/var\/www\/html}
+
+  IFS=' '
+  ARGS="${*:1}" 
+
+  DRUSHCMD="drush -l $SITENAME $ARGS" 
+  BASHCMD="cd $DRUSHINSIDE && $DRUSHCMD" 
+  echo $BASHCMD
+  docker exec -it $DOCKERNAME bash -c "$BASHCMD" 
+else
+  echo "Can't find drush base." 
+fi

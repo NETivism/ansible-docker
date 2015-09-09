@@ -6,3 +6,4 @@ init.yml
 production
 stage
 authorized_keys
+id_rsa
