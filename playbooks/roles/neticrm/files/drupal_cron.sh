@@ -38,7 +38,8 @@ for RUN in `find /var/www/sites/*/sites/*/settings.php -mmin +$LIMIT_MIN -printf
     echo "$(date +"%Y-%m-%d %H:%M:%S") $NAME cron run" >> /var/log/drupal_cron.log
     touch $RUN
     docker_cron_run $NAME $SITE
-    if [ -f $BASE/sites/all/modules/civicrm/civicrm-version.txt ]; then
+    CRMSETTING=${RUN/settings.php/civicrm.settings.php}
+    if [ -f $CRMSETTING ]; then
       echo "$(date +"%Y-%m-%d %H:%M:%S") $NAME civicrm cron run" >> /var/log/drupal_cron.log
       docker_cron_run_neticrm $NAME $SITE
     fi
