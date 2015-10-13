@@ -40,13 +40,10 @@
     - reload
 
 - name: Deploy neticrm-7
-  git: repo=https://github.com/NETivism/neticrm.git dest=/mnt/neticrm-7/civicrm update=no clone=yes accept_hostkey=true
+- git: repo=https://github.com/NETivism/neticrm.git version=master dest=/mnt/neticrm-7/civicrm update=no clone=yes accept_hostkey=true
   tags:
     - deploy-7
-- git: repo=https://github.com/NETivism/neticrm.git dest=/mnt/neticrm-7/civicrm update=no clone=yes accept_hostkey=true
-  tags:
-    - deploy-7
-- git: repo=git@git.netivism.com.tw:jimmy/neticrmp.git dest=/mnt/neticrm-7/neticrmp update=no clone=yes accept_hostkey=true
+- git: repo=git@git.netivism.com.tw:jimmy/neticrmp.git version=7.x-master dest=/mnt/neticrm-7/neticrmp update=no clone=yes accept_hostkey=true
   tags:
     - deploy-7
 
@@ -58,34 +55,31 @@
     - reload
 
 - name: Deploy neticrm-6
-  git: repo=https://github.com/NETivism/neticrm.git dest=/mnt/neticrm-6/civicrm update=no clone=yes accept_hostkey=true
+  git: repo=https://github.com/NETivism/neticrm.git version=master dest=/mnt/neticrm-6/civicrm update=no clone=yes accept_hostkey=true
   tags:
     - deploy-6
-- shell: cd /mnt/neticrm-6/civicrm/neticrm && git checkout 6.x-develop && cd /mnt/neticrm-6/civicrm/drupal && git checkout 6.x-develop
+- shell: cd /mnt/neticrm-6/civicrm/neticrm && git checkout 6.x-master && cd /mnt/neticrm-6/civicrm/drupal && git checkout 6.x-master
   tags:
     - deploy-6
-- git: repo=git@git.netivism.com.tw:jimmy/neticrmp.git dest=/mnt/neticrm-6/neticrmp update=no clone=yes accept_hostkey=true
-  tags:
-    - deploy-6
-- shell: cd /mnt/neticrm-6/neticrmp && git checkout develop
+- git: repo=git@git.netivism.com.tw:jimmy/neticrmp.git version=6.x-master dest=/mnt/neticrm-6/neticrmp update=no clone=yes accept_hostkey=true
   tags:
     - deploy-6
 
 
 # upgrade neticrm 7
 - name: upgrade netiCRM 7
-  git: repo=https://github.com/NETivism/neticrm.git dest=/mnt/neticrm-7/civicrm update=yes clone=no accept_hostkey=true
+  git: repo=https://github.com/NETivism/neticrm.git version=master dest=/mnt/neticrm-7/civicrm update=yes clone=no accept_hostkey=true
   tags: upgrade-7
-- git: repo=git@git.netivism.com.tw:jimmy/neticrmp.git dest=/mnt/neticrm-7/neticrmp update=yes clone=no accept_hostkey=true
+- git: repo=git@git.netivism.com.tw:jimmy/neticrmp.git version=7.x-master dest=/mnt/neticrm-7/neticrmp update=yes clone=no accept_hostkey=true
   tags: upgrade-7
 
 # upgrade neticrm 6
 - name: upgrade netiCRM 6
-  git: repo=https://github.com/NETivism/neticrm.git dest=/mnt/neticrm-6/civicrm update=yes clone=no accept_hostkey=true force=yes
+  git: repo=https://github.com/NETivism/neticrm.git version=master dest=/mnt/neticrm-6/civicrm update=yes clone=no accept_hostkey=true force=yes
   tags: upgrade-6
-- shell: cd /mnt/neticrm-6/civicrm/neticrm && git checkout 6.x-develop && git pull && cd /mnt/neticrm-6/civicrm/drupal && git checkout 6.x-develop && git pull
+- shell: cd /mnt/neticrm-6/civicrm/neticrm && git checkout 6.x-master && git pull && cd /mnt/neticrm-6/civicrm/drupal && git checkout 6.x-master && git pull
   tags: upgrade-6
-- shell: cd /mnt/neticrm-6/neticrmp && git fetch --all && git reset --hard origin/develop
+- shell: cd /mnt/neticrm-6/neticrmp && git fetch --all && git reset --hard origin/6.x-master
   tags: upgrade-6
 
 
