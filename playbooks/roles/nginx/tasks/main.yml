@@ -33,31 +33,31 @@
     tags:
       - start
 
-  - name: Add site alias into Nginx vhost configuration file
-    # http://docs.ansible.com/lineinfile_module.html
-    lineinfile: 
-      dest: /etc/nginx/sites-available/{{ domain }} 
-      regexp: '^(.*)server_name {{ domain }}(.*)$'
-      line: '\1server_name {{ domain }} {{ alias }}\2'
-      state: present
-      backrefs: yes
-    tags:
-      - alias
+  #- name: Add site alias into Nginx vhost configuration file
+  #  # http://docs.ansible.com/lineinfile_module.html
+  #  lineinfile: 
+  #    dest: /etc/nginx/sites-available/{{ domain }} 
+  #    regexp: '^(.*)server_name {{ domain }}(.*)$'
+  #    line: '\1server_name {{ domain }} {{ alias }}\2'
+  #    state: present
+  #    backrefs: yes
+  #  tags:
+  #    - alias
 
-  - name: Remove site alias from Nginx vhost configuration file
-    lineinfile:
-      dest: /etc/nginx/sites-available/{{ domain }}
-      regexp: '^(.*) {{ alias }}(.*)$'
-      line: '\1\2'
-      state: present
-      backrefs: yes
-    tags:
-      - unalias
+  #- name: Remove site alias from Nginx vhost configuration file
+  #  lineinfile:
+  #    dest: /etc/nginx/sites-available/{{ domain }}
+  #    regexp: '^(.*) {{ alias }}(.*)$'
+  #    line: '\1\2'
+  #    state: present
+  #    backrefs: yes
+  #  tags:
+  #    - unalias
 
   - name: Reload nginx
     service: name=nginx state=reloaded
     tags:
       - start
       - reload
-      - alias
-      - unalias
+  #    - alias
+  #    - unalias
