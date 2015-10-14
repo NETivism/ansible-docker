@@ -40,7 +40,7 @@
     - reload
 
 - name: Deploy neticrm-7
-- git: repo=https://github.com/NETivism/neticrm.git version=master dest=/mnt/neticrm-7/civicrm update=no clone=yes accept_hostkey=true
+  git: repo=https://github.com/NETivism/neticrm.git version=master dest=/mnt/neticrm-7/civicrm update=no clone=yes accept_hostkey=true
   tags:
     - deploy-7
 - git: repo=git@git.netivism.com.tw:jimmy/neticrmp.git version=7.x-master dest=/mnt/neticrm-7/neticrmp update=no clone=yes accept_hostkey=true
