@@ -15,17 +15,9 @@ gzip_vary on;
 # allows file uploads up to 20 megabytes
 client_max_body_size 20M;
 
-# Block access to "hidden" files and directories whose names begin with a
-# period. This includes directories used by version control systems such
-# as Subversion or Git to store control files.
-location ~ (^|/)\. {
-  return 404;
-}
-
-## Replicate the Apache <FilesMatch> directive of Drupal standard
-## .htaccess. Disable access to any code files. Return a 404 to curtail
-## information disclosure. Hide also the text files.
-location ~* ^(?:.+\.(?:htaccess|make|engine|inc|info|install|module|po|sh|.*sql|test|theme|tpl(?:\.php)?|xtmpl|patch)|code-style\.pl|/Entries.*|/Repository|/Root|/Template)$ {
+## only ^~ or = match place here to make sure priority first
+# block all access of log files
+location ^~ /log/ {
   return 404;
 }
 
@@ -38,4 +30,12 @@ location = /favicon.ico {
 location @empty {
   expires 30d;
   empty_gif;
+}
+
+# security concern when not use fpm
+location ~ \. {
+  return 404;
+}
+location ~* ^(.*)(?:.+\.(?:inc|po|sh|.*sql|sql\.gz|tpl(?:\.php)?|patch))$ {
+  return 404;
 }

@@ -79,6 +79,16 @@ location / {
     return 404;
   }
 
+  ## Replicate the Apache <FilesMatch> directive of Drupal standard
+  ## .htaccess. Disable access to any code files. Return a 404 to curtail
+  ## information disclosure. Hide also the text files.
+  location ~* ^(.*)(?:.+\.(?:htaccess|make|engine|inc|info|install|module|po|sh|.*sql|sql\.gz|test|theme|tpl(?:\.php)?|xtmpl|patch|php)|code-style\.pl|/Entries.*|/Repository|/Root|/Template)$ {
+    return 404;
+  }
+  location ~ \. {
+    return 404;
+  }
+
   # with boost
   try_files $uri /$uri @cache;
 
