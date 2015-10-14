@@ -8,6 +8,7 @@
     file: path=/etc/nginx/include state=directory mode=0755 owner=answerable
     tags:
       - start
+      - reload
 
 # due to bug https://github.com/ansible/ansible-modules-core/issues/1162, change to copy
 #  - synchronize: src=/etc/ansible/ansible-docker/playbooks/roles/nginx/files/ dest=/etc/nginx/include archive=no delete=yes recursive=yes
@@ -19,6 +20,7 @@
       - ./*
     tags:
       - start
+      - reload 
 
   - name: Add Nginx vhost configuration file
     # http://docs.ansible.com/template_module.html
