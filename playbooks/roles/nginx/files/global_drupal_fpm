@@ -37,7 +37,7 @@ location / {
   }
 
   # allow for files
-  location ~* /files/ {
+  location ~* /sites/.*/files/ {
     allow all;
     try_files $uri 404;
   }
