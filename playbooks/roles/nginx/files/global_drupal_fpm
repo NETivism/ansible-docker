@@ -36,6 +36,12 @@ location / {
     return 404;
   }
 
+  # allow for files
+  location ~* /files/ {
+    allow all;
+    try_files $uri 404;
+  }
+
   # allow for custom
   location ~* /files/civicrm/(custom|persist)/ {
     allow all;
