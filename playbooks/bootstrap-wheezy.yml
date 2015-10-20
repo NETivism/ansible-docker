@@ -11,6 +11,18 @@
   - name: Install GIT
     apt: name=git
 
+  - name: Install other packages we need
+    apt:
+      update_cache: yes
+      cache_valid_time: 3600
+      pkg: "{{ item }}"
+      state: installed
+    with_items:
+      - pwgen
+      - vim
+      - realpath
+      - curl
+
   - name: Install MySQL client
     apt: name=mysql-client
 
