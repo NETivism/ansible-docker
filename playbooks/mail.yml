@@ -58,6 +58,7 @@
       name: dovecot
       image: netivism/docker-postfix-dovecot 
       pull: always
+      #restart_policy: always
       expose:
        - 993
        - 587
@@ -91,6 +92,9 @@
   - name: Mail accounts
     shell: docker logs dovecot | grep Adding
     register: result
+    # grep will exit with 1 when no results found. 
+    # This causes the task not to halt play.
+    ignore_errors: true
     tags:
       - start 
   - debug: var=result.stdout_lines
@@ -100,6 +104,7 @@
   - name: DKIM information
     shell: docker logs dovecot | grep _domainkey
     register: result
+    ignore_errors: true
     tags:
       - start 
   - debug: var=result.stdout_lines
