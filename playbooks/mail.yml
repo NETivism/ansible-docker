@@ -59,7 +59,7 @@
       name: dovecot
       image: netivism/docker-postfix-dovecot 
       pull: always
-      #restart_policy: always
+      restart_policy: always
       expose:
        - 993
        - 587
