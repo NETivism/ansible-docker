@@ -50,6 +50,7 @@
 
   - name: Make sure smtp not start
     service: name=exim4 state=stopped
+    ignore_errors: yes
     tags:
       - start
 
