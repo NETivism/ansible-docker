@@ -9,10 +9,18 @@ location = /sitemap.xml {
 
 # special case for drupal 6, force QUERY_STRING empty when access front page
 location = / {
-  fastcgi_pass   127.0.0.1:$port;
-  include /etc/nginx/include/global_fastcgi;
-  fastcgi_param  SCRIPT_FILENAME /var/www/html/index.php;
-  fastcgi_param  SCRIPT_NAME /index.php;
+  # boost detect
+  if ( $request_method !~ GET ) {
+    return 405;
+  }
+  if ($http_cookie ~ "DRUPAL_UID") {
+    return 405;
+  }
+  error_page 405 = @backend_noquery;
+
+  add_header    Cache-Control  private;
+  add_header X-Header "Boost";
+  try_files /cache/normal/$host${uri}_$args.html @backend_noquery;
 }
 
 # allow live check
@@ -134,4 +142,11 @@ location @backend {
   fastcgi_param  SCRIPT_FILENAME /var/www/html/index.php;
   fastcgi_param  SCRIPT_NAME /index.php;
   fastcgi_param  QUERY_STRING q=$drupal_args&$query_string;
+}
+
+location @backend_noquery {
+  fastcgi_pass   127.0.0.1:$port;
+  include /etc/nginx/include/global_fastcgi;
+  fastcgi_param  SCRIPT_FILENAME /var/www/html/index.php;
+  fastcgi_param  SCRIPT_NAME /index.php;
 }
