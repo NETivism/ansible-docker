@@ -1,0 +1,16 @@
+---
+  - Name: Create a master domain.
+    shell: linode domain create {{ main-domain }} mis@netivism.com.tw
+    shell: linode domain record-create {{ main-domain }} A {{ target-ip }}
+    tags:
+      - create
+
+  - Name: Create domain record.
+    shell: linode domain record-create {{ main-domain }} CNAME {{ sub-domain }} {{ target }}
+    tags:
+      - create
+
+  - Name: Remove domain record.
+    shell: linode domain record-delete {{ main-domain }} CNAME {{ sub-domain }}
+    tags:
+      - remove
