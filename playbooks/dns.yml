@@ -1,0 +1,7 @@
+---
+# file: dns.yml
+  - hosts: local
+    coneection: local
+    sudo: yes
+    roles:
+      - dns

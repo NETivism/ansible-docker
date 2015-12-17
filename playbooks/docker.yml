@@ -6,8 +6,3 @@
   roles:
     - docker
     - nginx
-
- - hosts: local
-   coneection: local
-   roles:
-     - dns
