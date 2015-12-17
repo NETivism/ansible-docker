@@ -1,9 +1,11 @@
 # static to dynamic routing for drupal
 location = /rss.xml {
+  set $drupal_args 'rss.xml';
   try_files $uri @backend;
 }
 
 location = /sitemap.xml {
+  set $drupal_args 'sitemap.xml';
   try_files $uri @backend;
 }
 
@@ -110,9 +112,6 @@ location / {
 
   # with boost
   location ~* ^/(.*)$ {
-    location ~ \. {
-      return 404;
-    }
     set $drupal_args $1;  
     try_files $uri /$uri @cache;
   }
