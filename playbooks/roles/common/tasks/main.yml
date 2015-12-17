@@ -16,7 +16,7 @@
     apt_key: keyserver=p80.pool.sks-keyservers.net id=58118E89F3A912897C070ADBF76221572C52609D
 
   - name: Update docker | add the docker repositories
-    copy: src=docker.list dest=/etc/apt mode=0644 owner=root
+    copy: src=docker.list dest=/etc/apt/sources.list.d mode=0644 owner=root
 
   - name: Update docker | install apt-transport-https package
     apt: name=apt-transport-https update_cache=yes

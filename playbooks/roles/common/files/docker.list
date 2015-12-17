@@ -1,1 +1,1 @@
-deb https://apt.dockerproject.org/repo debian-wheezy main
+deb https://apt.dockerproject.org/repo debian-jessie main
