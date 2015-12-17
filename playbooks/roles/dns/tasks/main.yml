@@ -1,22 +1,31 @@
 ---
   - name: Check if master domain not exist.
-    shell: linode domain show {{ main-domain }} | grep "Couldn't find"
+    shell: linode domain show {{ main_domain }} | grep find
     register: domain_check
     ignore_errors: true
+    tags:
+      - create
 
   - name: Create a master domain.
-    shell: linode domain create {{ main-domain }} mis@netivism.com.tw
-    shell: linode domain record-create {{ main-domain }} A {{ target-ip }}
-    when: domain_check.rc == 0
+    shell: linode domain create {{ main_domain }} mis@netivism.com.tw
+    when: domain_check.stderr != ""
+    tags:
+      - create
+
+  - name:  Check if domain record not exist.
+    shell: linode domain record-list {{ main_domain }} | grep {{ sub_domain }}
+    register: domain_record_check
+    ignore_errors: true
     tags:
       - create
 
   - name: Create domain record.
-    shell: linode domain record-create {{ main-domain }} CNAME {{ sub-domain }} {{ target }}
+    shell: linode domain record-create {{ main_domain }} CNAME {{ sub_domain }} {{ target_host }}
+    when: domain_record_check == ""
     tags:
       - create
 
   - name: Remove domain record.
-    shell: linode domain record-delete {{ main-domain }} CNAME {{ sub-domain }}
+    shell: linode domain record-delete {{ main_domain }} CNAME {{ sub_domain }}
     tags:
       - remove

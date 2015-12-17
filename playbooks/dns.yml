@@ -1,7 +1,7 @@
 ---
 # file: dns.yml
-  - hosts: local
-    coneection: local
+  - hosts: localhost
+    connection: local
     sudo: yes
     roles:
       - dns
