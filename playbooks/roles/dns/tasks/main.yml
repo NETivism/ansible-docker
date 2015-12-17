@@ -2,7 +2,7 @@
   - name: Check if master domain not exist.
     shell: linode domain show {{ main-domain }} | grep "Couldn't find"
     register: domain_check
-    ignore_erros: true
+    ignore_errors: true
 
   - name: Create a master domain.
     shell: linode domain create {{ main-domain }} mis@netivism.com.tw
