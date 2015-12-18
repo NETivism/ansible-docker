@@ -22,8 +22,7 @@
 
   - name: Create domain record.
     shell: linode domain record-create {{ main_domain }} CNAME {{ domain }} {{ hostname }}
-    include_vars: "/etc/ansible/{{ target }}/hostname"
-    when: domain_record_check == ""
+    when: domain_record_check.stderr == ""
     tags:
       - start
       - alias
