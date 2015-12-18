@@ -13,19 +13,27 @@
       - create
 
   - name:  Check if domain record not exist.
-    shell: linode domain record-list {{ main_domain }} | grep {{ sub_domain }}
+    shell: linode domain record-list {{ main_domain }} | grep {{ domain }}
     register: domain_record_check
     ignore_errors: true
     tags:
-      - create
+      - start
+      - alias
 
   - name: Create domain record.
-    shell: linode domain record-create {{ main_domain }} CNAME {{ sub_domain }} {{ target_host }}
+    shell: linode domain record-create {{ main_domain }} CNAME {{ domain }} {{ hostname }}
+    include_vars: "/etc/ansible/{{ target }}/hostname"
     when: domain_record_check == ""
     tags:
-      - create
+      - start
+      - alias
+
+  - name: Suspend domain record.
+    shell: linode domain record-update {{ main_domain }} CNAME {{ domain }} offline.neticrm.tw
+    tags:
+      - suspend
 
   - name: Remove domain record.
-    shell: linode domain record-delete {{ main_domain }} CNAME {{ sub_domain }}
+    shell: linode domain record-delete {{ main_domain }} CNAME {{ domain }}
     tags:
       - remove

@@ -6,3 +6,9 @@
   roles:
     - docker
     - nginx
+
+- hosts: localhost
+  connection: local
+  sudo: yes
+  roles:
+    - dns
