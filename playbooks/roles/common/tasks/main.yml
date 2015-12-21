@@ -2,27 +2,5 @@
   - name: Copy drush execute file
     copy: src=drush dest=/usr/local/bin mode=0755 owner=root
 
-  - name: Update docker | purge older packages
-    apt:
-      pkg={{ item }}
-      state=absent
-      purge=yes
-      force=yes
-    with_items:
-      - lxc-docker
-      - docker.io
-
-  - name: Update docker | add the new gpg key
-    apt_key: keyserver=p80.pool.sks-keyservers.net id=58118E89F3A912897C070ADBF76221572C52609D
-
-  - name: Update docker | add the docker repositories
-    copy: src=docker.list dest=/etc/apt mode=0644 owner=root
-
-  - name: Update docker | install apt-transport-https package
-    apt: name=apt-transport-https update_cache=yes
-
-  - name: Update docker | install docker package
-    apt: name=docker-engine update_cache=yes
-
-  - name: Update docker | restart docker service
-    service: name=docker state=started
+  - name: Alias 'cd' to 'cd -P'
+    lineinfile: dest=/etc/bash.bashrc line="alias cd='cd -P'"
