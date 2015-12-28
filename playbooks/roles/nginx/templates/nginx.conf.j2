@@ -1,39 +1,27 @@
 server {
-  listen 80;
+  listen 80 {% if ssl == 1 or ssl == 2 %}443 ssl spdy{% endif %};
   server_name {% if redirect|length %}{{ redirect }}{% else %}{{ domain }}{% endif %}{% if alias is defined %}{% for item in alias %} {{ item }}{% endfor %}{% endif %};
   root /var/www/sites/{{ domain }};
   set $port {{ port_www }};
-{% if allow_install_update %}
-{% if 'fpm' in type %}
-  include /etc/nginx/include/allow_install_update_fpm.conf;
-{% else %}
-  include /etc/nginx/include/allow_install_update.conf;
-{% endif %}
-{% endif %}
-  include /etc/nginx/include/{{ type }}.conf;
-}
-{% if ssl %}
-server {
-  listen 443 ssl;
-  server_name {% if redirect|length %}{{ redirect }}{% else %}{{ domain }}{% endif %}{% if alias is defined %}{% for item in alias %} {{ item }}{% endfor %}{% endif %};
-  root /var/www/sites/{{ domain }};
-  set $port {{ port_www }};
+  {% if ssl == 1 or ssl == 2 %}
   ssl_certificate      {{ ssl_crt }};
   ssl_certificate_key  {{ ssl_key }};
-{% if allow_install_update %}
-{% if 'fpm' in type %}
+  ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+  ssl_ciphers 'kEECDH+ECDSA+AES128 kEECDH+ECDSA+AES256 kEECDH+AES128 kEECDH+AES256 kEDH+AES128 kEDH+AES256 DES-CBC3-SHA +SHA !aNULL !e>
+  {% endif %}
+  include /etc/nginx/sites-available/{{ domain }}.*custom;
+  {% if allow_install_update %}
+  {% if 'fpm' in type %}
   include /etc/nginx/include/allow_install_update_fpm.conf;
-{% else %}
+  {% else %}
   include /etc/nginx/include/allow_install_update.conf;
-{% endif %}
-{% endif %}
+  {% endif %}
+  {% endif %}
   include /etc/nginx/include/{{ type }}.conf;
-}
-{% endif %}
-{% if redirect|length %}
-server {
-  listen 80 443 ssl;
-  server_name {{ domain }};
+  {% if redirect|lenght %}
   return 301 $scheme://{{ redirect }}$request_uri;
+  {% endif %}
+  {% if ssl == 2 %}
+  rewrite ^ https://$server_name$request_uri? permanent;
+  {% endif %}
 }
-{% endif %}
