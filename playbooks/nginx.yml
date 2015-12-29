@@ -2,6 +2,8 @@
 # file: nginx.yml
 - hosts: '{{ target }}'
   remote_user: answerable
+  vars_files:
+    - '/etc/ansible/target/{{ target }}/redirect'
   sudo: yes
   roles:
     - nginx

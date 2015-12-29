@@ -1,24 +1,24 @@
 server {
-  listen 80{% if ssl == 1 or ssl == 2 %} 443 ssl spdy{% endif %};
+  listen 80{% if '1' or '2' in ssl %} 443 ssl spdy{% endif %};
   server_name {{ domain }}{% if alias is defined %}{% for item in alias %} {{ item }}{% endfor %}{% endif %};
   root /var/www/sites/{{ domain }};
   set $port {{ port_www }};
-  {% if ssl == 1 or ssl == 2 %}
+{% if '1' or '2' in ssl %}
   ssl_certificate      {{ ssl_crt }};
   ssl_certificate_key  {{ ssl_key }};
   ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
-  ssl_ciphers 'kEECDH+ECDSA+AES128 kEECDH+ECDSA+AES256 kEECDH+AES128 kEECDH+AES256 kEDH+AES128 kEDH+AES256 DES-CBC3-SHA +SHA !aNULL !e>
-  {% endif %}
+  ssl_ciphers 'kEECDH+ECDSA+AES128 kEECDH+ECDSA+AES256 kEECDH+AES128 kEECDH+AES256 kEDH+AES128 kEDH+AES256 DES-CBC3-SHA +SHA !aNULL !eNULL !LOW !kECDH !DSS !MD5 !EXP !PSK !SRP !CAMELLIA !SEED';
+{% endif %}
   include /etc/nginx/sites-available/{{ domain }}.*custom;
-  {% if allow_install_update %}
-  {% if 'fpm' in type %}
+{% if allow_install_update %}
+{% if 'fpm' in type %}
   include /etc/nginx/include/allow_install_update_fpm.conf;
-  {% else %}
+{% else %}
   include /etc/nginx/include/allow_install_update.conf;
-  {% endif %}
-  {% endif %}
+{% endif %}
+{% endif %}
   include /etc/nginx/include/{{ type }}.conf;
-  {% if ssl == 2 %}
+{% if '2' in ssl %}
   rewrite ^ https://$server_name$request_uri? permanent;
-  {% endif %}
+{% endif %}
 }

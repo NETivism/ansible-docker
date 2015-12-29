@@ -5,6 +5,6 @@ server {
 }
 server {
   server_name {{ redirect.source }};
-  root /var/www/{{ redirect.source }};
+  root /var/www/sites/{{ redirect.source }};
 }
 {% endfor %}
