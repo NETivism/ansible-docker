@@ -1,6 +1,10 @@
+{% for redirect in redirects %}
 server {
-  listen 80;
-  listen 443 ssl;
   server_name {{ redirect.source }};
   return 301 $scheme://{{ redirect.dest }}$request_uri;
 }
+server {
+  server_name {{ redirect.source }};
+  root /var/www/{{ redirect.source }};
+}
+{% endfor %}

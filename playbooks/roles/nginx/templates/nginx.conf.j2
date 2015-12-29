@@ -1,6 +1,6 @@
 server {
-  listen 80 {% if ssl == 1 or ssl == 2 %}443 ssl spdy{% endif %};
-  server_name {% if redirect|length %}{{ redirect }}{% else %}{{ domain }}{% endif %}{% if alias is defined %}{% for item in alias %} {{ item }}{% endfor %}{% endif %};
+  listen 80{% if ssl == 1 or ssl == 2 %} 443 ssl spdy{% endif %};
+  server_name {{ domain }}{% if alias is defined %}{% for item in alias %} {{ item }}{% endfor %}{% endif %};
   root /var/www/sites/{{ domain }};
   set $port {{ port_www }};
   {% if ssl == 1 or ssl == 2 %}
@@ -18,9 +18,6 @@ server {
   {% endif %}
   {% endif %}
   include /etc/nginx/include/{{ type }}.conf;
-  {% if redirect|lenght %}
-  return 301 $scheme://{{ redirect }}$request_uri;
-  {% endif %}
   {% if ssl == 2 %}
   rewrite ^ https://$server_name$request_uri? permanent;
   {% endif %}
