@@ -4,7 +4,7 @@ server {
   return 301 $scheme://{{ redirect.dest }}$request_uri;
 }
 server {
-  server_name {{ redirect.source }};
+  server_name {{ redirect.dest }};
   root /var/www/sites/{{ redirect.source }};
 }
 {% endfor %}

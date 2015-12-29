@@ -1,9 +1,9 @@
 server {
-  listen 80{% if '1' or '2' in ssl %} 443 ssl spdy{% endif %};
+  listen 80{% if ssl == 1 or ssl == 2 %} 443 ssl spdy{% endif %};
   server_name {{ domain }}{% if alias is defined %}{% for item in alias %} {{ item }}{% endfor %}{% endif %};
   root /var/www/sites/{{ domain }};
   set $port {{ port_www }};
-{% if '1' or '2' in ssl %}
+{% if ssl == 1 or ssl ==2 %}
   ssl_certificate      {{ ssl_crt }};
   ssl_certificate_key  {{ ssl_key }};
   ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
@@ -18,7 +18,7 @@ server {
 {% endif %}
 {% endif %}
   include /etc/nginx/include/{{ type }}.conf;
-{% if '2' in ssl %}
+{% if ssl == 2 %}
   rewrite ^ https://$server_name$request_uri? permanent;
 {% endif %}
 }
