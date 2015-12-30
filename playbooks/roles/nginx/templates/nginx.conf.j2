@@ -1,5 +1,8 @@
 server {
-  listen 80{% if ssl == 1 or ssl == 2 %} 443 ssl spdy{% endif %};
+  listen 80;
+{% if ssl == 1 or ssl == 2 %}
+  listen 443 ssl spdy;
+{% endif %}
   server_name {{ domain }}{% if alias is defined %}{% for item in alias %} {{ item }}{% endfor %}{% endif %};
   root /var/www/sites/{{ domain }};
   set $port {{ port_www }};
