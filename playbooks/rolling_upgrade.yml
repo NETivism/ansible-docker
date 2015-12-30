@@ -11,5 +11,5 @@
     timezone: Asia/Taipei
     ntp_timezone: Asia/Taipei
   tasks:
-    - include: update_docker.yml
+    - include: roles/common/tasks/update_docker.yml
       when: update_docker
