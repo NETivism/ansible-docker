@@ -2,7 +2,7 @@
 	path = playbooks/roles/firewall
 	url = https://github.com/NETivism/ansible-role-firewall.git
 [submodule "playbooks/roles/ansible-role-ntp"]
-	path = playbooks/roles/ansible-role-ntp
+	path = playbooks/roles/ntp
 	url = https://github.com/NETivism/ansible-role-ntp
 [submodule "playbooks/roles/timezone"]
 	path = playbooks/roles/timezone
