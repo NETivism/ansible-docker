@@ -51,6 +51,7 @@
       - validate nginx
     tags:
       - start
+      - reload
 
   - name: Reload nginx
     service: name=nginx state=reloaded
