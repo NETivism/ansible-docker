@@ -5,8 +5,8 @@
   sudo: yes
   roles:
     - common
-    - yatesr.timezone
-    - geerlingguy.ntp
+    - timezone
+    - ntp
   vars:
     timezone: Asia/Taipei
     ntp_timezone: Asia/Taipei
