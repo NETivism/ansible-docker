@@ -22,6 +22,16 @@
       - start
       - reload 
 
+  - name: create ssl directory and sync ssl cert
+    file: path=/etc/nginx/ssl/neticrm.tw state=directory owner=root mode=0755 
+
+  - copy: src={{ item }} dest=/etc/nginx/ssl/neticrm.tw/ owner=root mode=400
+    with_fileglob:
+      - ./ssl/*
+    tags:
+      - start
+      - reload 
+
   - name: Add Nginx vhost configuration file in sites-available
     # http://docs.ansible.com/template_module.html
     template: src=nginx.conf.j2 dest=/etc/nginx/sites-available/{{ domain }}
