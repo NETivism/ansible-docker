@@ -6,3 +6,11 @@
   roles:
     - docker
     - nginx
+
+- hosts: localhost
+  connection: local
+  vars_files:
+    - '/etc/ansible/target/{{ target }}/hostname'
+  sudo: yes
+  roles:
+    - dns

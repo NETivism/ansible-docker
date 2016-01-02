@@ -1,0 +1,38 @@
+---
+  - name: Check if master domain not exist.
+    shell: linode domain show {{ main_domain }} | grep find
+    register: domain_check
+    ignore_errors: true
+    tags:
+      - create
+
+  - name: Create a master domain.
+    shell: linode domain create {{ main_domain }} mis@netivism.com.tw
+    when: domain_check.stderr != ""
+    tags:
+      - create
+
+  - name:  Check if domain record not exist.
+    shell: linode domain record-list {{ main_domain }} | grep {{ domain }}
+    register: domain_record_check
+    ignore_errors: true
+    tags:
+      - start
+      - alias
+
+  - name: Create domain record.
+    shell: linode domain record-create {{ main_domain }} CNAME {{ domain }} {{ hostname }}
+    when: domain_record_check.stderr == ""
+    tags:
+      - start
+      - alias
+
+  - name: Suspend domain record.
+    shell: linode domain record-update {{ main_domain }} CNAME {{ domain }} offline.neticrm.tw
+    tags:
+      - suspend
+
+  - name: Remove domain record.
+    shell: linode domain record-delete {{ main_domain }} CNAME {{ domain }}
+    tags:
+      - remove
