@@ -33,6 +33,6 @@
       - suspend
 
   - name: Remove domain record.
-    shell: linode domain record-delete {{ main_domain }} CNAME {{ domain }}
+    shell: linode domain record-delete -l {{ main_domain }} -t CNAME -m {{ hostname }} -n {{ domain }}
     tags:
       - remove
