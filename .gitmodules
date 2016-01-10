@@ -6,4 +6,7 @@
 	url = https://github.com/NETivism/ansible-timezone.git
 [submodule "playbooks/roles/ntp"]
 	path = playbooks/roles/ntp
-	url = https://github.com/NETivism/ansible-role-ntp.git
+  url = https://github.com/NETivism/ansible-role-ntp.git
+[submodule "playbooks/filter_plugins/split"]
+	path = playbooks/filter_plugins/split
+	url = https://github.com/NETivism/ansible-string-split-filter
