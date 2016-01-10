@@ -21,14 +21,14 @@
       - alias
 
   - name: Create domain record.
-    shell: linode domain record-create {{ main_domain }} CNAME {{ domain }} {{ hostname }}
+    shell: linode domain record-create -l {{ main_domain }} -t CNAME -n {{ domain }} -R {{ hostname }}
     when: domain_record_check.stderr == ""
     tags:
       - start
       - alias
 
   - name: Suspend domain record.
-    shell: linode domain record-update {{ main_domain }} CNAME {{ domain }} offline.neticrm.tw
+    shell: linode domain record-update -l {{ main_domain }} -t CNAME -m {{ hostname }} -n {{ domain }} -R offline.neticrm.tw
     tags:
       - suspend
 

@@ -7,3 +7,5 @@ production
 stage
 authorized_keys
 id_rsa
+node_modules
+package.json
