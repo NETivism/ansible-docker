@@ -23,7 +23,10 @@
       - reload 
 
   - name: create ssl directory and sync ssl cert
-    file: path=/etc/nginx/ssl/neticrm.tw state=directory owner=root mode=0755 
+    file: path=/etc/nginx/ssl/neticrm.tw state=directory owner=root mode=0755
+    tags:
+      - start
+      - reload
 
   - copy: src={{ item }} dest=/etc/nginx/ssl/neticrm.tw/ owner=root mode=400
     with_fileglob:

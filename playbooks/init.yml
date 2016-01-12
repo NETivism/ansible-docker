@@ -5,3 +5,12 @@
   sudo: no
   roles:
     - init
+
+- hosts: localhost
+  connection: local
+  sudo: yes
+  tasks:
+    - name: Create target directory.
+      file: path=/etc/ansible/target/{{ target }} state=directory
+    - name: Create redirect file.
+      file: path=/etc/ansible/target/{{ target }}/redirect state=touch mode=644
