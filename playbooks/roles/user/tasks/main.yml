@@ -118,6 +118,7 @@
     - user_sftp
     - website
   when: item.1|default("") != ""
+  ignore_errors: yes
   tags:
     - useradd
     - addsite
