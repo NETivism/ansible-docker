@@ -1,6 +1,8 @@
 # Ignore files
 *.pub
 *.bak
+*.key
+*.crt
 public_keys
 init.yml
 production

@@ -22,44 +22,39 @@
       - start
       - reload 
 
-  - name: Add Nginx vhost configuration file
+  - name: create ssl directory and sync ssl cert
+    file: path=/etc/nginx/ssl/neticrm.tw state=directory owner=root mode=0755 
+
+  - copy: src={{ item }} dest=/etc/nginx/ssl/neticrm.tw/ owner=root mode=400
+    with_fileglob:
+      - ./ssl/*
+    tags:
+      - start
+      - reload 
+
+  - name: Add Nginx vhost configuration file in sites-available
     # http://docs.ansible.com/template_module.html
     template: src=nginx.conf.j2 dest=/etc/nginx/sites-available/{{ domain }}
     tags:
       - start
 
-  - name: Link Nginx vhost configuration file in site-enabled
+  - name: Link Nginx vhost configuration file in sites-enabled
     action: file src=/etc/nginx/sites-available/{{ domain }} dest=/etc/nginx/sites-enabled/{{ domain }} state=link
     notify:
       - validate nginx
     tags:
       - start
 
-  #- name: Add site alias into Nginx vhost configuration file
-  #  # http://docs.ansible.com/lineinfile_module.html
-  #  lineinfile: 
-  #    dest: /etc/nginx/sites-available/{{ domain }} 
-  #    regexp: '^(.*)server_name {{ domain }}(.*)$'
-  #    line: '\1server_name {{ domain }} {{ alias }}\2'
-  #    state: present
-  #    backrefs: yes
-  #  tags:
-  #    - alias
-
-  #- name: Remove site alias from Nginx vhost configuration file
-  #  lineinfile:
-  #    dest: /etc/nginx/sites-available/{{ domain }}
-  #    regexp: '^(.*) {{ alias }}(.*)$'
-  #    line: '\1\2'
-  #    state: present
-  #    backrefs: yes
-  #  tags:
-  #    - unalias
+  - name: Generate Nginx redirect configuration file in sites-enabled
+    template: src=redirect.conf.j2 dest=/etc/nginx/sites-enabled/0_redirect
+    notify:
+      - validate nginx
+    tags:
+      - start
+      - reload
 
   - name: Reload nginx
     service: name=nginx state=reloaded
     tags:
       - start
       - reload
-  #    - alias
-  #    - unalias
