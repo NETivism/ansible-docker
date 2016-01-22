@@ -39,3 +39,14 @@
   shell: docker exec -it {{ domain }} bash -c "supervisorctl stop all" && docker restart {{ domain }}
   tags:
     - restart
+
+# create mail account
+- name: Add mail account into vmail file
+  lineinfile: dest=/etc/ansible/target/{{ target }}/vmail
+              state=present
+              regexp='^(.*)"}$'
+              line='\1;{{ domain }}@{{ hostname }}"}'
+              backup=yes
+              backrefs=yes
+  tags:
+    - start
