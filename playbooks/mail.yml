@@ -83,35 +83,44 @@
       - /var/vmail/opendkim:/etc/opendkim
       command: /init.sh
     tags:
-      - start 
+      - start
 
   - name: Wait for service startup
     wait_for: port=587 delay=10
     tags:
-      - start 
+      - start
 
   - name: Mail accounts
     shell: docker logs dovecot | grep Adding
     register: result
-    # grep will exit with 1 when no results found. 
+    # grep will exit with 1 when no results found.
     # This causes the task not to halt play.
     ignore_errors: true
     tags:
-      - start 
-  - debug: var=result.stdout_lines
+      - start
+  - name: Save mail account and password into vmail_account
+    local_action: shell echo {{ result.stdout_lines }} >> /etc/ansible/target/{{ target }}/vmail_account
     tags:
-      - start 
+      - start
+  - name: Print mail accounts information
+    debug: var=result.stdout_lines
+    tags:
+      - start
 
   - name: DKIM information
     shell: docker logs dovecot | grep _domainkey
     register: result
     ignore_errors: true
     tags:
-      - start 
-  - debug: var=result.stdout_lines
+      - start
+  - name: Save DKIM key into vmail_dkim
+    local_action: copy content={{ result.stdout_lines }} dest=/etc/ansible/target/{{ target }}/vmail_dkim
+    tags:
+      - start
+  - name: Print DKIM information 
+    debug: var=result.stdout_lines
     tags:
       - start 
-
 
   - name: Stop remove container
     docker:

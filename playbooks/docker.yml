@@ -23,7 +23,7 @@
                   state=present
                   regexp='^(.*)"}$'
                   line='\1;{{ domain }}@{{ hostname }}"}'
-                  backup=yes
+                  backup=no
                   backrefs=yes
       tags:
         - start
