@@ -3,8 +3,6 @@
 - hosts: "{{ target }}"
   remote_user: answerable
   sudo: yes
-  vars_files:
-    - '/etc/ansible/target/{{ target }}/hostname'
   tasks:
   - name: Check if python-pip is installed
     command: dpkg-query -l python-pip
