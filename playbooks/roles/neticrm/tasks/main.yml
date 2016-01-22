@@ -4,6 +4,7 @@
   become: yes
   become_method: sudo
   tags:
+    - load
     - deploy-7
     - deploy-6
 
@@ -12,12 +13,14 @@
   become: yes
   become_method: sudo
   tags:
+    - load
     - deploy-7
     - deploy-6
 
 - name: deploy private key for fetching git repository
   copy: src=id_rsa dest=/home/answerable/.ssh/id_rsa mode=0400 owner=answerable
   tags:
+    - load
     - deploy-7
     - deploy-6
 
@@ -29,16 +32,16 @@
     - /mnt/neticrm-7
     - /mnt/neticrm-6
   tags:
+    - load
     - deploy-7
     - deploy-6
-    - reload
 
 # neticrm 7
 - name: Global settings
   copy: src=global_7.inc dest=/mnt/neticrm-7/global.inc mode=0755 owner=answerable
   tags:
+    - load
     - deploy-7
-    - reload
 
 - name: Deploy neticrm-7
   git: repo=https://github.com/NETivism/neticrm.git version=master dest=/mnt/neticrm-7/civicrm update=no clone=yes accept_hostkey=true
@@ -52,8 +55,8 @@
 - name: Global settings
   copy: src=global_6.inc dest=/mnt/neticrm-6/global.inc mode=0755 owner=answerable
   tags:
+    - load
     - deploy-6
-    - reload
 
 - name: Deploy neticrm-6
   git: repo=https://github.com/NETivism/neticrm.git version=master dest=/mnt/neticrm-6/civicrm update=no clone=yes accept_hostkey=true
@@ -89,7 +92,7 @@
   shell: ls -1 /var/www/sites/*/sites/*/settings.php
   register: settings
   tags:
-    - reload
+    - site-setting
 
 - name: include global
   lineinfile:
@@ -100,7 +103,7 @@
   become: yes
   become_method: sudo
   tags:
-    - reload
+    - site-setting
 
 - name: include local
   lineinfile:
@@ -111,4 +114,4 @@
   become: yes
   become_method: sudo
   tags:
-    - reload
+    - site-setting
