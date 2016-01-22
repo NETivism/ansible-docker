@@ -13,10 +13,10 @@
     - name: Create target directory.
       file: path=/etc/ansible/target/{{ target }} state=directory
     - name: Create hostname directory.
-      template: src=hostname.j2 dest=/etc/ansible/target/{{ target }}
+      template: src=roles/init/templates/hostname.j2 dest=/etc/ansible/target/{{ target }}/hostname
     - name: Create redirect file.
-      template: src=redirect.j2 dest=/etc/ansible/target/{{ target }}
+      template: src=roles/init/templates/redirect.j2 dest=/etc/ansible/target/{{ target }}/redirect
     - name: Create user file.
-      template: src=user.j2 dest=/etc/ansible/target/{{ target }}
+      template: src=roles/init/templates/user.j2 dest=/etc/ansible/target/{{ target }}/user
     - name: Create vmail file.
-      template: src=vmail.j2 dest=/etc/ansible/target/{{ target }}
+      template: src=roles/init/templates/vmail.j2 dest=/etc/ansible/target/{{ target }}/vmail
