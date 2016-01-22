@@ -16,3 +16,14 @@
     - '/etc/ansible/target/{{ target }}/hostname'
   roles:
     - dns
+  tasks:
+    # create mail account
+    - name: Add mail account into vmail file
+      lineinfile: dest=/etc/ansible/target/{{ target }}/vmail
+                  state=present
+                  regexp='^(.*)"}$'
+                  line='\1;{{ domain }}@{{ hostname }}"}'
+                  backup=yes
+                  backrefs=yes
+      tags:
+        - start
