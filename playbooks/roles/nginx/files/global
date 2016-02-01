@@ -13,7 +13,7 @@ gzip_disable "MSIE [1-6].(?!.*SV1)";
 # content to IE6
 gzip_vary on;
 # allows file uploads up to 20 megabytes
-client_max_body_size 20M;
+client_max_body_size 100M;
 
 ## only ^~ or = match place here to make sure priority first
 # block all access of log files
