@@ -1,0 +1,11 @@
+{% for item in email %}
+<?php
+$conf['mail_system']['default-system'] = 'SmtpMailSystem';
+$conf['smtp_on'] = TRUE;
+$conf['smtp_host'] = '{{ hostname }}';
+$conf['smtp_port'] = 587;
+$conf['smtp_username'] = '{{ item.username }}';
+$conf['smtp_password'] = '{{ item.password }}';
+$conf['smtp_from'] = '{{ item.username }}';
+//$conf['smtp_fromname'] = '{{ item.username }}';
+{% endfor %}

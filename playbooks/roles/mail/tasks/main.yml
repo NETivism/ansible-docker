@@ -1,0 +1,131 @@
+---
+  - name: Check if python-pip is installed
+    command: dpkg-query -l python-pip
+    register: pip_is_installed
+    failed_when: pip_is_installed.rc > 1
+    changed_when: no
+    tags:
+      - start
+
+  - name: Remove python-pip only if installed
+    apt: name=python-pip state=absent
+    when: pip_is_installed.rc == 0
+    tags:
+      - start
+
+  - name: Install Python Pip
+  # use easy_install because of python bug http://stackoverflow.com/questions/27341064/how-do-i-fix-importerror-cannot-import-name-incompleteread
+    easy_install:
+      name: pip
+    tags:
+      - start
+
+  - name: Install Docker-py
+    pip:
+      name: docker-py
+      version: 1.2.1
+      state: present
+    tags:
+      - start
+
+  - name: Make sure docker is running
+    service:
+      name: docker
+      state: started
+    tags:
+      - start
+
+  - name: Create /var/vmail if not exists
+    file:
+      path: /var/vmail
+      state: directory
+      mode: 0755
+    tags:
+      - start
+
+  - name: Make sure smtp not start
+    service: name=exim4 state=stopped
+    ignore_errors: yes
+    tags:
+      - start
+
+  - name: Start container
+    docker:
+      name: dovecot
+      image: netivism/docker-postfix-dovecot
+      pull: always
+      restart_policy: always
+      expose:
+       - 993
+       - 587
+       - 25
+       - 465
+      ports:
+      - "993:993"
+      - "587:587"
+      - "25:25"
+      - "465:465"
+      env:
+        MAILNAME: "{{ mailname }}"
+        MAILADDR: "{{ mailaddr }}"
+        TZ: "Asia/Taipei"
+      volumes:
+      - /etc/postfix
+      - /etc/ssl
+      - /etc/dovecot
+      - /var/vmail:/home/vmail
+      - /var/vmail/log:/var/log
+      - /var/vmail/opendkim:/etc/opendkim
+      command: /init.sh
+    tags:
+      - start
+
+  - name: Wait for service startup
+    wait_for: port=587 delay=10
+    tags:
+      - start
+
+  - name: Mail accounts
+    shell: docker logs dovecot | grep Adding
+    register: result
+    # grep will exit with 1 when no results found.
+    # This causes the task not to halt play.
+    ignore_errors: true
+    tags:
+      - start
+  - name: Save mail account and password into vmail_account
+    local_action: copy content={{ result.stdout_lines }} dest=/etc/ansible/target/{{ target }}/vmail_account
+    tags:
+      - start
+  - name: Print mail accounts information
+    debug: var=result.stdout_lines
+    tags:
+      - start
+
+  - name: DKIM information
+    shell: docker logs dovecot | grep _domainkey
+    register: result
+    ignore_errors: true
+    tags:
+      - start
+  - name: Save DKIM key into vmail_dkim
+    local_action: copy content={{ result.stdout_lines }} dest=/etc/ansible/target/{{ target }}/vmail_dkim
+    tags:
+      - start
+  - name: Print DKIM information
+    debug: var=result.stdout_lines
+    tags:
+      - start
+
+  - name: Stop remove container
+    docker:
+      name: dovecot
+      image: netivism/docker-postfix-dovecot
+      state: absent
+    tags:
+      - stop
+
+  - name: Create site's smtp configuration file
+    template: src=smtp.settings.php.j2 dest=/var/www/sites/{{ domain }}/sites/default/smtp.settings.php
+    tags:
+      - site-setting

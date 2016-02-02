@@ -39,3 +39,12 @@
   shell: docker exec -it {{ domain }} bash -c "supervisorctl stop all" && docker restart {{ domain }}
   tags:
     - restart
+
+- name: include smtp setting
+  lineinfile:
+    dest="/var/www/sites/{{ domain }}/sites/default/settings.php"
+    regexp=""
+    line="if(is_file(dirname(__FILE__).'/smtp.settings.php')){ @include_once('smtp.settings.php'); }"
+    insertafter=EOF
+  tags:
+    - site-setting
