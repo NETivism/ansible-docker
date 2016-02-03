@@ -129,3 +129,18 @@
     template: src=smtp.settings.php.j2 dest=/var/www/sites/{{ domain }}/sites/default/smtp.settings.php
     tags:
       - site-setting
+
+  - stat: path=/var/www/sites/{{ domain }}/sites/default/settings.php
+    register: settings
+    tags:
+      - site-setting
+
+  - name: Include smtp conf into drupal settings file
+    lineinfile:
+      dest="/var/www/sites/{{ domain }}/sites/default/settings.php"
+      regexp=""
+      line="if(is_file(dirname(__FILE__).'/smtp.settings.php')){ @include_once('smtp.settings.php'); }"
+      insertafter=EOF
+    when: settings.stat.exists == True
+    tags:
+      - site-setting
