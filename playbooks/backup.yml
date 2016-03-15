@@ -1,0 +1,7 @@
+---
+# file: backup.yml
+  - hosts: "{{ target }}"
+    remote_user: answerable
+    sudo: yes
+    roles:
+      - backup

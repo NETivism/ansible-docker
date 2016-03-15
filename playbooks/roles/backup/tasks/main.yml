@@ -1,0 +1,9 @@
+---
+  - name: Create backup folder for all related files.
+    file: path=/backup/sh state=directory mode=0755
+
+  - name: Copy backup script file to remote server.
+    copy: src=backup-db.sh dest=/backup/sh/backup-db.sh owner=root group=root mode=0644
+
+  - name: Set cron job for remote server.
+    cron: name="backup db for every site" minute="0" hour="2" job="/backup/sh/backup-db.sh > /dev/null"
