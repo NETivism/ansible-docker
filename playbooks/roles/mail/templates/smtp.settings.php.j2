@@ -10,5 +10,5 @@ $conf['smtp_password'] = '{{ item.password }}';
 $conf['smtp_from'] = '{{ item.username }}';
 $conf['smtp_allowhtml'] = 1;
 $conf['smtp_debugging'] = 0;
-//$conf['smtp_fromname'] = '{{ item.username }}';
+$conf['mailing_settings_protocol'] = 1; // imap
 {% endfor %}
