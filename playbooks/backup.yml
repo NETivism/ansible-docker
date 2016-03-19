@@ -4,4 +4,5 @@
     remote_user: answerable
     sudo: yes
     roles:
-      - backup
+      - gcloud
+      - mysqldump
