@@ -6,4 +6,4 @@
     template: src=backupdb.sh.j2 dest=/backup/sh/backupdb.sh owner=root group=root mode=0744
 
   - name: Set cron job for remote server.
-    cron: name="backup db for every site" minute="0" hour="2" cron_file="backup" user="root" job="/backup/sh/backupdb.sh > /dev/null"
+    cron: name="backup db for every site" minute="0" hour="2" cron_file="backup" user="root" job="bash -c /backup/sh/backupdb.sh > /dev/null 2>&1"
