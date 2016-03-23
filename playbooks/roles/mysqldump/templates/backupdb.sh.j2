@@ -1,5 +1,6 @@
 #!/bin/bash
 
+HOSTNAME={{ hostname }}
 for RUN in `find /var/www/sites/*/sites/*/settings.php -printf "%C@ %p\n" | sort | awk '{ print $2 }'` ; do
   NAME=${RUN//\/var\/www\/sites\//}
   NAME=${NAME%%/*}
@@ -14,5 +15,7 @@ for RUN in `find /var/www/sites/*/sites/*/settings.php -printf "%C@ %p\n" | sort
   RUNNING=$(docker ps -q -f name=$NAME)
   if [ -n "$RUNNING" ]; then
     docker exec -d $RUNNING php /var/www/html/sites/default/finddb.inc
+    gsutil cp /var/www/sites/$NAME/log/backupdb.sql.gz gs://neticrm/$HOSTNAME/$NAME/db/backupdb-$(date +%u).sql.gz
+    gsutil rsync -d -r -x 'log' /var/www/sites/$NAME gs://neticrm/$HOSTNAME/$NAME/web/
   fi
 done

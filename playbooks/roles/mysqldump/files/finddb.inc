@@ -22,6 +22,7 @@ if ($success) {
 }
 
 // dump db by using mysqldump command.
-$filename = "backup-" . date("d-m-Y") . ".sql.gz";
+//$filename = "backup-" . date("d-m-Y") . ".sql.gz";
+$filename = "backupdb.sql.gz";
 $cmd = "mysqldump -u $username -p$password $database | gzip -9 -c > /var/www/html/log/$filename";
 exec($cmd);

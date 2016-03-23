@@ -3,6 +3,8 @@
   - hosts: "{{ target }}"
     remote_user: answerable
     sudo: yes
+    vars_files:
+      - '/etc/ansible/target/{{ target }}/hostname'
     roles:
       - gcloud
       - mysqldump
