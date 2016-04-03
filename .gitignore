@@ -3,6 +3,7 @@
 *.bak
 *.key
 *.crt
+*.orig
 public_keys
 init.yml
 production
