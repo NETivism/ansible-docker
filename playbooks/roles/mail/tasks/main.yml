@@ -126,7 +126,13 @@
       - stop
 
   - name: Create site's smtp configuration file
-    template: src=smtp.settings.php.j2 dest=/var/www/sites/{{ domain }}/sites/default/smtp.settings.php
+    stat: path=/var/www/sites/{{ domain }}/sites/default/smtp.settings.php
+    register: smtpsettings
+    tags:
+      - site-setting
+
+  - template: src=smtp.settings.php.j2 dest=/var/www/sites/{{ domain }}/sites/default/smtp.settings.php
+    when: smtpsettings.stat.exists == False
     tags:
       - site-setting
 
