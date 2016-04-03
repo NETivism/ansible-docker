@@ -3,14 +3,27 @@
 - hosts: '{{ target }}'
   remote_user: answerable
   sudo: yes
+  vars_files:
+    - '/etc/ansible/target/{{ target }}/hostname'
   roles:
     - docker
     - nginx
 
 - hosts: localhost
   connection: local
+  sudo: yes
   vars_files:
     - '/etc/ansible/target/{{ target }}/hostname'
-  sudo: yes
   roles:
     - dns
+  tasks:
+    # create mail account
+    - name: Add mail account into vmail file
+      lineinfile: dest=/etc/ansible/target/{{ target }}/vmail
+                  state=present
+                  regexp='^(.*)"}$'
+                  line='\1;{{ domain }}@{{ hostname }}"}'
+                  backup=no
+                  backrefs=yes
+      tags:
+        - start
