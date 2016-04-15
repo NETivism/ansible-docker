@@ -94,3 +94,8 @@
       regexp: '^#cron'
       line: 'cron.* /var/log/cron.log'
   - service: name=rsyslog state=restarted
+
+  - name: generate locale
+    locale_gen:
+      name: zh_TW.UTF-8
+      state: present
