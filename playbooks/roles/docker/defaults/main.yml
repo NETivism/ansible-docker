@@ -1,2 +1,4 @@
 init: "init.sh"
 size: "default"
+site_name: "Your New Site"
+site_mail: "noreply@example.com"

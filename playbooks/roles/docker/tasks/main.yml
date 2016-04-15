@@ -5,6 +5,7 @@
   tags:
     - start
     - update
+  ignore_errors: yes
 
 - name: Update to lastest docker repos
   command: docker pull {{ repos }}
@@ -22,14 +23,14 @@
 
 # normal operation
 - name: Deploy a site with mount
-  shell: ./docker-start.sh -d {{ domain }} -w {{ port_www }} -m {{ port_db }} -r {{ repos }} -v {{ mount }} -u {{ dbname }} -p {{ passwd }} -s {{ init }} -t {{ size }} chdir=/etc/ansible/docker-sh
+  shell: ./docker-start.sh -d {{ domain }} -n {{ site_name }} -l {{ site_mail }} -w {{ port_www }} -m {{ port_db }} -r {{ repos }} -v {{ mount }} -u {{ dbname }} -p {{ passwd }} -s {{ init }} -t {{ size }} chdir=/etc/ansible/docker-sh
   when: mount is defined
   tags:
     - start
     - update
 
 - name: Deploy a site without mount
-  shell: ./docker-start.sh -d {{ domain }} -w {{ port_www }} -m {{ port_db }} -r {{ repos }} -u {{ dbname }} -p {{ passwd }} -s {{ init }} -t {{ size }} chdir=/etc/ansible/docker-sh
+  shell: ./docker-start.sh -d {{ domain }} -n {{ site_name }} -l {{ site_mail }} -w {{ port_www }} -m {{ port_db }} -r {{ repos }} -u {{ dbname }} -p {{ passwd }} -s {{ init }} -t {{ size }} chdir=/etc/ansible/docker-sh
   when: mount is not defined
   tags:
     - start
