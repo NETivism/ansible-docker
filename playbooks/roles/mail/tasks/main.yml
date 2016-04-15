@@ -150,3 +150,15 @@
     when: settings.stat.exists == True
     tags:
       - site-setting
+
+  - name: Setup site wide mail info
+    shell: cd /var/www/sites/{{ domain }} && drush neticrm-set-domain
+    ignore_errors: yes
+    tags:
+      - site-setting
+
+  - name: Send welcome mail
+    shell: cd /var/www/sites/{{ domain }} && drush neticrm-welcome-mail
+    ignore_errors: yes
+    tags:
+      - welcome
