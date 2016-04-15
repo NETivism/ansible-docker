@@ -30,7 +30,7 @@
 
   - copy: src={{ item }} dest=/etc/nginx/ssl/neticrm.tw/ owner=root mode=400
     with_fileglob:
-      - ./ssl/*
+      - ./ssl/neticrm.tw/*
     tags:
       - start
       - reload 
