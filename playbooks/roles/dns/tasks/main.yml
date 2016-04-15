@@ -31,13 +31,13 @@
     set_fact:
       sub: "{{ domain | split('.') }}"
     tags:
-      - suspend
+      - offline
       - remove
 
-  - name: Suspend domain record.
+  - name: Make domain offline.
     shell: linode domain record-update -l {{ main_domain }} -t CNAME -m {{ sub.0 }} -R offline.neticrm.tw
     tags:
-      - suspend
+      - offline
 
   - name: Remove domain record.
     shell: linode domain record-delete -l {{ main_domain }} -t CNAME -m {{ sub.0 }}

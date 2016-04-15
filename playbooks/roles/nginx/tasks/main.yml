@@ -56,8 +56,22 @@
       - start
       - reload
 
+  - name: Suspend a website
+    template: src=suspend.conf.j2 dest=/etc/nginx/sites-available/{{ domain }}.suspend
+    tags:
+      - suspend
+  - file: path=/etc/nginx/sites-enabled/{{ domain }} state=absent
+    tags:
+      - suspend
+  - action: file src=/etc/nginx/sites-available/{{ domain }}.suspend dest=/etc/nginx/sites-enabled/{{ domain }} state=link
+    notify:
+      - validate nginx
+    tags:
+      - suspend
+
   - name: Reload nginx
     service: name=nginx state=reloaded
     tags:
       - start
       - reload
+      - suspend

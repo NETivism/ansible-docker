@@ -40,3 +40,13 @@
   shell: docker exec -it {{ domain }} bash -c "supervisorctl stop all" && docker restart {{ domain }}
   tags:
     - restart
+
+- name: Suspend a container
+  shell: docker exec -it {{ domain }} bash -c "supervisorctl stop all" && docker stop {{ domain }}
+  tags:
+    - suspend
+
+- name: Remove container(but keep data)
+  shell: docker exec -it {{ domain }} bash -c "supervisorctl stop all" && docker stop {{ domain }} && docker rm -f {{ domain }}
+  tags:
+    - remove
