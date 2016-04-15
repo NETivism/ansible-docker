@@ -4,6 +4,11 @@
   remote_user: answerable
   sudo: yes
   tasks:
+  - name: Generate correct locale
+    locale_gen:
+      name: zh_TW.UTF-8
+      state: present
+
   - name: Install other packages we need
     apt:
       update_cache: yes
@@ -95,7 +100,3 @@
       line: 'cron.* /var/log/cron.log'
   - service: name=rsyslog state=restarted
 
-  - name: generate locale
-    locale_gen:
-      name: zh_TW.UTF-8
-      state: present
