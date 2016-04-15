@@ -9,6 +9,9 @@ ini_set("session.cookie_httponly", 1);
 # we can only reset error_reporting here (after bootstrap env done)
 ini_set('error_reporting', E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED);
 
+# for docker, sometime we will fail with http request
+$conf['drupal_http_request_fails'] = FALSE;
+
 # memcache support
 /*
 if(file_exists("profiles/neticrmp/modules/memcache/memcache.inc")){
