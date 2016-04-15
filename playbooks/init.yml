@@ -10,6 +10,11 @@
   connection: local
   sudo: yes
   tasks:
+    - name: Generate correct locale
+      locale_gen:
+        name: zh_TW.UTF-8
+        state: present
+
     - name: Create target directory.
       file: path=/etc/ansible/target/{{ target }} state=directory
 
