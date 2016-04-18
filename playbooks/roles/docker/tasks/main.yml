@@ -46,7 +46,12 @@
   tags:
     - suspend
 
-- name: Remove container(but keep data)
-  shell: docker exec -it {{ domain }} bash -c "supervisorctl stop all" && docker stop {{ domain }} && docker rm -f {{ domain }}
+- name: Stop a container
+  shell: docker exec -it {{ domain }} bash -c "supervisorctl stop all" && docker stop {{ domain }}
+  ignore_errors: yes
+  tags:
+    - remove
+- name: Remove a container(but keep data)
+  shell: docker rm -f {{ domain }}
   tags:
     - remove
