@@ -18,17 +18,17 @@
 
   - name: Install Docker
     shell: curl -sSL https://get.docker.com/ | sh
-  
+
   - name: Install Python Setuptools
     apt:
       pkg: "python-setuptools"
       state: installed
-    
+
   - name: Install Python Pip
     # http://stackoverflow.com/questions/27341064/how-do-i-fix-importerror-cannot-import-name-incompleteread
     easy_install:
       name: pip
-  
+
   - name: Install python-dev
     apt:
       pkg: "{{ item }}"
@@ -37,7 +37,7 @@
       - python-dev
 
   - name: Install GIT
-    apt: 
+    apt:
       pkg: "git"
       state: installed
 
@@ -95,3 +95,9 @@
       line: 'cron.* /var/log/cron.log'
   - service: name=rsyslog state=restarted
 
+  - name: remove exim4
+    service: name=exim4 state=stopped
+    ignore_errors: yes
+
+  - apt: name=exim4 state=absent
+    ignore_errors: true
