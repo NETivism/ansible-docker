@@ -8,3 +8,9 @@
   - name: remove exim4
     apt: name=exim4 state=absent
     ignore_errors: true 
+  - apt: name=exim4-base state=absent
+    ignore_errors: true 
+  - apt: name=exim4-config state=absent
+    ignore_errors: true 
+  - apt: name=exim4-daemon-light state=absent
+    ignore_errors: true 

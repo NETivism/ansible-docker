@@ -98,6 +98,11 @@
   - name: remove exim4
     service: name=exim4 state=stopped
     ignore_errors: yes
-
   - apt: name=exim4 state=absent
-    ignore_errors: true
+    ignore_errors: true 
+  - apt: name=exim4-base state=absent
+    ignore_errors: true 
+  - apt: name=exim4-config state=absent
+    ignore_errors: true 
+  - apt: name=exim4-daemon-light state=absent
+    ignore_errors: true 
