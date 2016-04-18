@@ -69,9 +69,25 @@
     tags:
       - suspend
 
+  - name: Remove a site config
+    file: path=/etc/nginx/sites-enabled/{{ domain }} state=absent
+    tags:
+      - remove
+  - file: path=/etc/nginx/sites-available/{{ domain }}.suspend state=absent
+    notify:
+      - validate nginx
+    tags:
+      - remove
+  - file: path=/etc/nginx/sites-available/{{ domain }} state=absent
+    notify:
+      - validate nginx
+    tags:
+      - remove
+
   - name: Reload nginx
     service: name=nginx state=reloaded
     tags:
       - start
       - reload
       - suspend
+      - remove
