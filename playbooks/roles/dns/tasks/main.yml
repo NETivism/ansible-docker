@@ -23,6 +23,7 @@
   - name: Create domain record.
     shell: linode domain record-create -l {{ main_domain }} -t CNAME -n {{ domain }} -R {{ hostname }}
     when: domain_record_check.stderr == ""
+    ignore_errors: true
     tags:
       - start
       - alias
