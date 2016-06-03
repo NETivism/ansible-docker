@@ -1,0 +1,10 @@
+---
+  - name: Setup logrorate.d scripts
+    copy: src={{ item }}
+          dest=/etc/logrotate.d/{{ item }}
+    with_items:
+      - vmail
+      - drupal
+
+  - name: Restart rsyslog service
+    service: name=rsyslog state=restarted
