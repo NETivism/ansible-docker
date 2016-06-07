@@ -1,0 +1,8 @@
+/var/www/sites/*/log/*.log {
+  su root
+  rotate 7
+  daily
+  compress
+  delaycompress
+  copytruncate
+}

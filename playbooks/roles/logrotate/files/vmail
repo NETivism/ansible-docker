@@ -1,0 +1,16 @@
+/var/vmail/log/mail.info
+/var/vmail/log/mail.warn
+/var/vmail/log/mail.err
+/var/vmail/log/mail.log
+/var/vmall/log/auth.log
+/var/vmail/log/user.log
+/var/vmail/log/lpr.log
+{
+  rotate 7
+  daily
+  compress
+  dailycompress
+  postrotate
+    invoke-rc.d rsyslog rotate > /dev/null
+  endscript
+}
