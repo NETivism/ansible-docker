@@ -122,7 +122,7 @@
   become_method: sudo
   tags: upgrade-db
 - name: Run upgrade database script
-  shell: /usr/local/bin/neticrm_update.sh
+  shell: bash -c "/usr/local/bin/neticrm_update.sh"
   become: yes
   become_method: sudo
   tags: upgrade-db
