@@ -118,8 +118,12 @@
 # upgrade db
 - name: Upgrade drupal database
   copy: src=neticrm_update.sh dest=/usr/local/bin/neticrm_update.sh mode=0755 owner=answerable
+  become: yes
+  become_method: sudo
   tags: upgrade-db
 - name: Run upgrade database script
   shell: /usr/local/bin/neticrm_update.sh
+  become: yes
+  become_method: sudo
   tags: upgrade-db
 
