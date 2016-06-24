@@ -86,7 +86,6 @@
 - shell: cd /mnt/neticrm-6/neticrmp && git fetch --all && git reset --hard origin/6.x-master
   tags: upgrade-6
 
-
 # Reload and update global config for each site
 - name: List settings.php
   shell: ls -1 /var/www/sites/*/sites/*/settings.php
@@ -115,3 +114,12 @@
   become_method: sudo
   tags:
     - site-setting
+
+# upgrade db
+- name: Upgrade drupal database
+  copy: src=neticrm_update.sh dest=/usr/local/bin/neticrm_update.sh mode=0755 owner=answerable
+  tags: upgrade-db
+- name: Run upgrade database script
+  shell: /usr/local/bin/neticrm_update.sh
+  tags: upgrade-db
+
