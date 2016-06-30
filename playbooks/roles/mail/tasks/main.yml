@@ -76,7 +76,6 @@
       - /var/vmail:/home/vmail
       - /var/vmail/log:/var/log
       - /var/vmail/opendkim:/etc/opendkim
-      command: /init.sh
     tags:
       - start
 
@@ -85,35 +84,12 @@
     tags:
       - start
 
-  - name: Mail accounts
-    shell: docker logs dovecot | grep Adding
-    register: result
-    # grep will exit with 1 when no results found.
-    # This causes the task not to halt play.
-    ignore_errors: true
-    tags:
-      - start
   - name: Save mail account and password into vmail_account
-    local_action: copy content={{ result.stdout_lines }} dest=/etc/ansible/target/{{ target }}/vmail_account
-    tags:
-      - start
-  - name: Print mail accounts information
-    debug: var=result.stdout_lines
-    tags:
-      - start
-
-  - name: DKIM information
-    shell: docker logs dovecot | grep _domainkey
-    register: result
-    ignore_errors: true
+    fetch: src=/var/vmail/vmail_account dest=/etc/ansible/target/{{ target }}/vmail_account flat=yes
     tags:
       - start
   - name: Save DKIM key into vmail_dkim
-    local_action: copy content={{ result.stdout_lines }} dest=/etc/ansible/target/{{ target }}/vmail_dkim
-    tags:
-      - start
-  - name: Print DKIM information
-    debug: var=result.stdout_lines
+    fetch: src=/var/vmail/vmail_dkim dest=/etc/ansible/target/{{ target }}/vmail_dkim flat=yes
     tags:
       - start
 
