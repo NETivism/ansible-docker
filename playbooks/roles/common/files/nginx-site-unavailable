@@ -1,0 +1,29 @@
+server {
+  listen 80 default_server;
+  server_name  _;
+  root /var/www/html;
+  error_page 404 /404.html;
+  location / {
+    return 404;
+  }
+  location = /404.html {
+    root /var/www/sites-unavailable;
+  }
+}
+server {
+  listen 443 ssl spdy default_server;
+  server_name _;
+  ssl_certificate      ssl/neticrm.tw/neticrm.tw.crt;
+  ssl_certificate_key  ssl/neticrm.tw/neticrm.tw.key;
+  ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+  ssl_ciphers 'kEECDH+ECDSA+AES128 kEECDH+ECDSA+AES256 kEECDH+AES128 kEECDH+AES256 kEDH+AES128 kEDH+AES256 DES-CBC3-SHA +SHA !aNULL !eNULL !LOW !kECDH !DSS !MD5 !EXP !PSK !SRP !CAMELLIA !SEED';
+
+  root /var/www/html;
+  error_page 404 /404.html;
+  location / {
+    return 404;
+  }
+  location = /404.html {
+    root /var/www/sites-unavailable;
+  }
+}

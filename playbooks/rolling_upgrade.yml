@@ -14,3 +14,5 @@
   tasks:
     - include: roles/common/tasks/update_docker.yml
       when: update_docker
+  handlers:
+    - include: roles/nginx/handlers/main.yml

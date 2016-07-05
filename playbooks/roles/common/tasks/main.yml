@@ -13,4 +13,12 @@
   - apt: name=exim4-config state=absent
     ignore_errors: true 
   - apt: name=exim4-daemon-light state=absent
-    ignore_errors: true 
+    ignore_errors: true
+ 
+  - name: Fetch sites-unavailable repo from github
+    git: repo=https://github.com/NETivism/sites-unavailable.git dest=/var/www/sites-unavailable update=no clone=yes accept_hostkey=true
+  - name: Generate Nginx site-unavailable configuration file in sites-enabled
+    copy: src=nginx-site-unavailable dest=/etc/nginx/sites-enabled/0_default
+    notify:
+      - validate nginx
+      - reload nginx
