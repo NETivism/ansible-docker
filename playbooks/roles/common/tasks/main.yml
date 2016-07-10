@@ -22,3 +22,12 @@
     notify:
       - validate nginx
       - reload nginx
+
+  - name: Nginx log format
+    replace:
+      dest: /etc/nginx/nginx.conf
+      regexp: '^\s*(access_log\s[^;]*access\.log);$'
+      replace: "\tlog_format vcombined '$host $remote_addr - $remote_user [$time_local] \"$request\" $status $body_bytes_sent \"$http_referer\" \"$http_user_agent\"';\n\t\\1 vcombined;"
+    notify:
+      - validate nginx
+      - reload nginx
