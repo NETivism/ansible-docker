@@ -116,14 +116,22 @@
     - site-setting
 
 # upgrade db
-- name: Upgrade drupal database
+- name: Copy upgrade script
   copy: src=neticrm_update.sh dest=/usr/local/bin/neticrm_update.sh mode=0755 owner=answerable
   become: yes
   become_method: sudo
-  tags: upgrade-db
+  tags: 
+    - upgrade-db
+    - load
 - name: Run upgrade database script
   shell: bash -c "/usr/local/bin/neticrm_update.sh"
   become: yes
   become_method: sudo
   tags: upgrade-db
 
+- name: Copy check module to place
+  copy: src=check_module.sh dest=/usr/local/bin/check_module.sh mode=0755 owner=answerable
+  become: yes
+  become_method: sudo
+  tags:
+    - load
