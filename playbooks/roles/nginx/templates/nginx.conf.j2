@@ -11,8 +11,7 @@ server {
 {% if ssl == 1 or ssl ==2 %}
   ssl_certificate      {{ ssl_crt }};
   ssl_certificate_key  {{ ssl_key }};
-  ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
-  ssl_ciphers 'kEECDH+ECDSA+AES128 kEECDH+ECDSA+AES256 kEECDH+AES128 kEECDH+AES256 kEDH+AES128 kEDH+AES256 DES-CBC3-SHA +SHA !aNULL !eNULL !LOW !kECDH !DSS !MD5 !EXP !PSK !SRP !CAMELLIA !SEED';
+  include /etc/nginx/include/ssl.conf;
 {% endif %}
   include /etc/nginx/sites-available/{{ domain }}.*custom;
 {% if allow_install_update %}

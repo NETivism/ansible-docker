@@ -33,7 +33,17 @@
       - ./ssl/neticrm.tw/*
     tags:
       - start
-      - reload 
+      - reload
+  - name: Check if dhparams exists
+    stat: path=/etc/nginx/ssl/dhparams.pem
+    register: dhparams
+    tags:
+      - start
+  - name: Generate dhparams when necessery (needs wait awhile)
+    shell: openssl dhparam -out /etc/nginx/ssl/dhparams.pem 2048
+    when: dhparams.stat.isreg is not defined
+    tags:
+      - start
 
   - name: Add Nginx vhost configuration file in sites-available
     # http://docs.ansible.com/template_module.html

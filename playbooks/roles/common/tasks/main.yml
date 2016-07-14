@@ -31,3 +31,15 @@
     notify:
       - validate nginx
       - reload nginx
+
+# refs #18389
+  - name: Check if dhparams exists
+    stat: path=/etc/nginx/ssl/dhparams.pem
+    register: dhparams
+
+  - name: Generate dhparams when necessery (needs wait awhile)
+    shell: openssl dhparam -out /etc/nginx/ssl/dhparams.pem 2048
+    when: dhparams.stat.isreg is not defined
+
+  - name: Upgrade linux, especially for openssl and nginx(CVE-2016-2108)
+    shell: apt-get upgrade -y
