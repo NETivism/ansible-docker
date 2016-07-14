@@ -74,6 +74,10 @@
 - name: upgrade netiCRM 7
   git: repo=https://github.com/NETivism/neticrm.git version=master dest=/mnt/neticrm-7/civicrm update=yes clone=no accept_hostkey=true
   tags: upgrade-7
+- git: repo=https://github.com/NETivism/neticrm-neticrm.git version=7.x-master dest=/mnt/neticrm-7/civicrm/neticrm update=yes clone=no accept_hostkey=true
+  tags: upgrade-7
+- git: repo=https://github.com/NETivism/neticrm-drupal.git version=7.x-master dest=/mnt/neticrm-7/civicrm/drupal update=yes clone=no accept_hostkey=true
+  tags: upgrade-7
 - git: repo=git@git.netivism.com.tw:jimmy/neticrmp.git version=7.x-master dest=/mnt/neticrm-7/neticrmp update=yes clone=no accept_hostkey=true
   tags: upgrade-7
 
