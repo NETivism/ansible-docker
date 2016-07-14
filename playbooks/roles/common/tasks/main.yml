@@ -42,4 +42,4 @@
     when: dhparams.stat.isreg is not defined
 
   - name: Upgrade linux, especially for openssl and nginx(CVE-2016-2108)
-    shell: apt-get upgrade -y
+    shell: bash -c "apt-get update && apt-get upgrade -y"
