@@ -26,3 +26,6 @@
       template: src=roles/init/templates/user.j2 dest=/etc/ansible/target/{{ target }}/user
     - name: Create vmail file.
       template: src=roles/init/templates/vmail.j2 dest=/etc/ansible/target/{{ target }}/vmail
+
+    - name: Set system hostname
+      hostname: name={{ hostname }}
