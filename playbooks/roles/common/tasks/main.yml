@@ -41,5 +41,3 @@
     shell: openssl dhparam -out /etc/nginx/ssl/dhparams.pem 2048
     when: dhparams.stat.isreg is not defined
 
-  - name: Upgrade linux, especially for openssl and nginx(CVE-2016-2108)
-    shell: bash -c "apt-get update && apt-get upgrade -y"
