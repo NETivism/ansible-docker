@@ -4,6 +4,12 @@
     tags:
       - start
 
+  - name: Remove default nginx file
+    file: path=/etc/nginx/sites-enabled/default state=absent
+    tags:
+      - start
+      - reload
+
   - name: Copy override config file
     file: path=/etc/nginx/include state=directory mode=0755 owner=answerable
     tags:
