@@ -91,11 +91,17 @@
   tags: upgrade-6
 
 # Reload and update global config for each site
-- name: List settings.php
+- name: List settings for all sites
   shell: ls -1 /var/www/sites/*/sites/*/settings.php
   register: settings
   tags:
-    - site-setting
+    - all-sites
+
+- name: List setting in specific domain
+  shell: ls -1 /var/www/sites/{{ domain }}/sites/*/settings.php
+  register: settings
+  tags:
+    - single-site
 
 - name: include global
   lineinfile:
@@ -106,7 +112,8 @@
   become: yes
   become_method: sudo
   tags:
-    - site-setting
+    - all-sites
+    - single-site
 
 - name: include local
   lineinfile:
@@ -117,7 +124,8 @@
   become: yes
   become_method: sudo
   tags:
-    - site-setting
+    - all-sites
+    - single-site
 
 # upgrade db
 - name: Copy upgrade script
