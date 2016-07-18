@@ -34,7 +34,8 @@
 
 # refs #18389
   - name: Check if dhparams exists
-    stat: path=/etc/nginx/ssl/dhparams.pem
+    file: path=/etc/nginx/ssl state=directory
+  - stat: path=/etc/nginx/ssl/dhparams.pem
     register: dhparams
 
   - name: Generate dhparams when necessery (needs wait awhile)
