@@ -15,7 +15,7 @@ for RUN in `find /var/www/sites/*/sites/*/settings.php -printf "%C@ %p\n" | sort
   RUNNING=$(docker ps -q -f name=$NAME)
   if [ -n "$RUNNING" ]; then
     docker exec -d $RUNNING php /var/www/html/sites/default/finddb.inc
-    gsutil cp /var/www/sites/$NAME/log/backupdb.sql.gz gs://neticrm/$HOSTNAME/$NAME/db/backupdb-$(date +%u).sql.gz
+    gsutil cp -Z /var/www/sites/$NAME/log/backupdb.sql.gz gs://neticrm/$HOSTNAME/$NAME/db/backupdb-$(date +%u).sql.gz
   fi
 done
 
