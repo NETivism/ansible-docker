@@ -1,0 +1,5 @@
+---
+  - name: Copy finddb.inc into specific single site.
+    copy: src=finddb.inc dest=/var/www/sites/{{ domain }}/sites/default/finddb.inc
+    tags:
+      - single-site

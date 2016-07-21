@@ -8,7 +8,6 @@
   roles:
     - docker
     - nginx
-    - {role: mysqldump, tags:["single-site"]}
 
 - hosts: localhost
   connection: local
