@@ -8,8 +8,8 @@
     - timezone
     - ntp
     - logrotate
-    - {role: gcloud, tags:["start"]}
-    - {role: mysqldump, tags:["start", "all-sites"]}
+    - { role: gcloud, tags: ["start"] }
+    - { role: mysqldump, tags: ["start", "all-sites"] }
   vars:
     timezone: Asia/Taipei
     ntp_timezone: Asia/Taipei
