@@ -8,3 +8,5 @@
     roles:
       - gcloud
       - mysqldump
+    tasks:
+      - include: roles/mysqldump/tasks/single_site.yml

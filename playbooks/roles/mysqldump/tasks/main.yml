@@ -25,6 +25,3 @@
     with_items: settings.stdout_lines
     tags:
       - all-sites
-
-  - include: single_site.yml tags=single-site
-
