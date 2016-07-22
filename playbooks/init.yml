@@ -27,5 +27,5 @@
     - name: Create vmail file.
       template: src=roles/init/templates/vmail.j2 dest=/etc/ansible/target/{{ target }}/vmail
 
-    - name: Set system hostname
-      hostname: name={{ hostname }}
+    - name: Copy hostname to remote
+      shell: echo "{{ hostname }}" > /etc/ansible/fqdn
