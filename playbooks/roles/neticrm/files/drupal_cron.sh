@@ -12,16 +12,23 @@ docker_cron_run_neticrm(){
   docker exec -i $1 bash -c "cd /var/www/html && drush -l $2 neticrms run_membership_status_update"
 }
 
-# make sure we have 
+# make sure we have
 COUNT=0
-LIMIT_NUM=5
-LIMIT_MIN=30
+
+# make sure we can run at least 40 sites per 30 mins
+LIMIT_NUM=15
+LIMIT_MIN=25
 
 for RUN in `find /var/www/sites/*/sites/*/settings.php -mmin +$LIMIT_MIN -printf "%C@ %p\n" | sort | awk '{ print $2 }'` ; do
   NAME=${RUN//\/var\/www\/sites\//}
   NAME=${NAME%%/*}
-  TMP=${RUN%/*}
-  TMP=${TMP##*/} 
+  CONFPATH=${RUN%/*}
+
+  # exclude symbolic link directory
+  if [ -L $CONFPATH ]; then
+    continue
+  fi
+  TMP=${CONFPATH##*/}
   SITE=""
   if [ "$TMP" != "default" ]; then
     SITE=$TMP

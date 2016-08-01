@@ -27,5 +27,9 @@
     - name: Create vmail file.
       template: src=roles/init/templates/vmail.j2 dest=/etc/ansible/target/{{ target }}/vmail
 
+    - name: Upgrade debian package
+      apt: update_cache=yes cache_valid_time=3600
+    - shell: bash -c "apt-get upgrade --assume-yes &> /var/log/system_upgrade.log"
+
     - name: Copy hostname to remote
       shell: echo "{{ hostname }}" > /etc/ansible/fqdn
