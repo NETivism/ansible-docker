@@ -15,7 +15,6 @@ for RUN in `find /var/www/sites/*/sites/*/settings.php -printf "%C@ %p\n" | sort
   RUNNING=$(docker ps -q -f name=$NAME)
   if [ -n "$RUNNING" ]; then
     docker exec -d $RUNNING php /var/www/html/sites/default/finddb.inc
-    gsutil cp -Z /var/www/sites/$NAME/log/backupdb.sql.gz gs://neticrm/$HOSTNAME/$NAME/db/backupdb-$(date +%u).sql.gz
   fi
 done
 
@@ -23,4 +22,5 @@ for RUN in `find /var/www/sites/*/sites/*/settings.php -printf "%C@ %p\n" | sort
   NAME=${RUN//\/var\/www\/sites\//}
   NAME=${NAME%%/*}
   gsutil -m rsync -C -r -x 'log|cache|.*\.sql\.gz$|.*\.sql$|sites/.*/files/(styles|imagecache|css|js)|\.git.*' /var/www/sites/$NAME gs://neticrm/$HOSTNAME/$NAME/web/
+  gsutil -h 'Content-Type: application/gzip' -h 'Content-Disposition:attachment; filename=backupdb.sql.gz' cp /var/www/sites/$NAME/log/backupdb.sql.gz gs://neticrm/$HOSTNAME/$NAME/db/backupdb-$(date +%u).sql.gz
 done
