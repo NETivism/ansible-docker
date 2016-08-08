@@ -4,6 +4,7 @@
 *.key
 *.crt
 *.orig
+*.swp
 public_keys
 init.yml
 production
