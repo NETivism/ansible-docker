@@ -37,6 +37,7 @@ location / {
   # module statistics for d7
   # civicrm external open click detect php
   location ~ (^/index.php|modules/statistics/statistics\.php|civicrm/extern/.+\.php)$ {
+    include /etc/nginx/include/limit_req.conf;
     fastcgi_pass   127.0.0.1:$port;
     include /etc/nginx/include/global_fastcgi;
   }
@@ -136,6 +137,7 @@ location @cache {
 }
 
 location @backend {
+  include /etc/nginx/include/limit_req.conf;
   fastcgi_pass   127.0.0.1:$port;
   include /etc/nginx/include/global_fastcgi;
   fastcgi_param  SCRIPT_FILENAME /var/www/html/index.php;
@@ -144,6 +146,7 @@ location @backend {
 }
 
 location @backend_noquery {
+  include /etc/nginx/include/limit_req.conf;
   fastcgi_pass   127.0.0.1:$port;
   include /etc/nginx/include/global_fastcgi;
   fastcgi_param  SCRIPT_FILENAME /var/www/html/index.php;

@@ -19,6 +19,7 @@ location / {
   # module statistics for d7
   # civicrm external open click detect php
   location ~ (^/index.php|modules/statistics/statistics\.php|civicrm/extern/.+\.php)$ {
+    include /etc/nginx/include/limit_req.conf;
     proxy_pass http://127.0.0.1:$port;
     include /etc/nginx/include/global_proxy;
   }
@@ -117,6 +118,7 @@ location @cache {
 }
 
 location @backend {
+  include /etc/nginx/include/limit_req.conf;
   proxy_pass http://127.0.0.1:$port;
   include /etc/nginx/include/global_proxy;
 }

@@ -1,3 +1,7 @@
+# scope http
+limit_req_zone $binary_remote_addr zone=phpip:10m rate=2r/s;
+limit_req_zone $server_name zone=phpserver:10m rate=8r/s;
+
 server {
   listen 80 default_server;
   server_name  _;

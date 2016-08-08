@@ -5,8 +5,13 @@
   - name: Fetch sites-unavailable repo from github
     git: repo=https://github.com/NETivism/sites-unavailable.git dest=/var/www/sites-unavailable update=no clone=yes accept_hostkey=true
 
-  - name: Generate Nginx site-unavailable configuration file in sites-enabled
-    copy: src=nginx-site-unavailable dest=/etc/nginx/sites-enabled/0_default
+  - name: Remove default nginx file prevent duplicate
+    file: path=/etc/nginx/sites-enabled/0_default state=absent
+
+  - copy: src=roles/nginx/files/default_site dest=/etc/nginx/include/default_site owner=root mode=644
+
+  - name: Link default file
+    file: src=/etc/nginx/include/default_site dest=/etc/nginx/sites-enabled/0_default state=link
     notify:
       - validate nginx
       - reload nginx
