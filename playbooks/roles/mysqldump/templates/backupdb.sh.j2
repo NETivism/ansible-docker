@@ -6,13 +6,24 @@ for RUN in `find /var/www/sites/*/sites/*/settings.php -printf "%C@ %p\n" | sort
   NAME=${NAME%%/*}
   TMP=${RUN%/*}
   TMP=${TMP##*/}
+  CONFPATH=${RUN%/*}
+
+  # exclude symbolic link directory
+  if [ -L $CONFPATH ]; then
+    continue
+  fi
+
+  TMP=${CONFPATH##*/}
   SITE=""
+
   if [ "$TMP" != "default" ]; then
     SITE=$TMP
   else
     SITE=$NAME
   fi
+
   RUNNING=$(docker ps -q -f name=$NAME)
+
   if [ -n "$RUNNING" ]; then
     docker exec -i $RUNNING php /var/www/html/sites/default/finddb.inc
     gsutil -h 'Content-Type: application/gzip' -h 'Content-Disposition:attachment; filename=backupdb.sql.gz' cp -e -c /var/www/sites/$NAME/log/backupdb.sql.gz gs://neticrm/$HOSTNAME/$NAME/db/backupdb-$(date +%u).sql.gz
