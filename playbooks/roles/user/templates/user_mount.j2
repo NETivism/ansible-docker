@@ -1,0 +1,4 @@
+#! /bin/sh
+# /etc/init.d/mount
+{% for user in user_sftp %}{% for website in user['website'] %}mount --bind /var/www/sites/{{ website }} /home/{{ user['name'] }}/{{ website }}
+{% endfor %}{% endfor %}

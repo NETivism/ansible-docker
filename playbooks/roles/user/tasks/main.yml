@@ -167,3 +167,8 @@
   when: name is defined
   tags:
     - chgrp
+
+- name: Copy user mount init script into place.
+  template: src=user_mount.j2 dest=/etc/init.d/mount owner=root group=root mode=0755
+  tags:
+    - useradd
