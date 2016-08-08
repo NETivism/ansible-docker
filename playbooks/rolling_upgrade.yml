@@ -5,13 +5,5 @@
   sudo: yes
   roles:
     - common
-    - timezone
-    - ntp
-    - logrotate
-    - gcloud
-    - mysqldump
-  vars:
-    timezone: Asia/Taipei
-    ntp_timezone: Asia/Taipei
   handlers:
     - include: roles/nginx/handlers/main.yml

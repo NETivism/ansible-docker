@@ -2,45 +2,11 @@
   - name: Copy drush execute file
     copy: src=drush dest=/usr/local/bin mode=0755 owner=root
 
-  - name: Alias 'cd' to 'cd -P'
-    lineinfile: dest=/etc/bash.bashrc line="alias cd='cd -P'"
-
-  - name: remove exim4
-    apt: name=exim4 state=absent
-    ignore_errors: true 
-  - apt: name=exim4-base state=absent
-    ignore_errors: true 
-  - apt: name=exim4-config state=absent
-    ignore_errors: true 
-  - apt: name=exim4-daemon-light state=absent
-    ignore_errors: true
-
-  - name: Remove default nginx file prevent duplicate
-    file: path=/etc/nginx/sites-enabled/default state=absent
   - name: Fetch sites-unavailable repo from github
     git: repo=https://github.com/NETivism/sites-unavailable.git dest=/var/www/sites-unavailable update=no clone=yes accept_hostkey=true
+
   - name: Generate Nginx site-unavailable configuration file in sites-enabled
     copy: src=nginx-site-unavailable dest=/etc/nginx/sites-enabled/0_default
     notify:
       - validate nginx
       - reload nginx
-
-  - name: Nginx log format
-    replace:
-      dest: /etc/nginx/nginx.conf
-      regexp: '^\s*(access_log\s[^;]*access\.log);$'
-      replace: "\tlog_format vcombined '$host $remote_addr - $remote_user [$time_local] \"$request\" $status $body_bytes_sent \"$http_referer\" \"$http_user_agent\"';\n\t\\1 vcombined;"
-    notify:
-      - validate nginx
-      - reload nginx
-
-# refs #18389
-  - name: Check if dhparams exists
-    file: path=/etc/nginx/ssl state=directory
-  - stat: path=/etc/nginx/ssl/dhparams.pem
-    register: dhparams
-
-  - name: Generate dhparams when necessery (needs wait awhile)
-    shell: openssl dhparam -out /etc/nginx/ssl/dhparams.pem 2048
-    when: dhparams.stat.isreg is not defined
-
