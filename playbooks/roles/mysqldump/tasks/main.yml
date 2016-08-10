@@ -1,27 +1,9 @@
 ---
   - name: Create backup folder for all related files.
     file: path=/backup/sh state=directory mode=0755
-    tags:
-      - start
 
   - name: Copy backup script file to remote server.
     template: src=backupdb.sh.j2 dest=/backup/sh/backupdb.sh owner=root group=root mode=0744
-    tags:
-      - start
 
   - name: Set cron job for remote server.
     cron: name="backup db for every site" minute="0" hour="2" cron_file="backup" user="root" job="bash -c /backup/sh/backupdb.sh > /dev/null 2>&1"
-    tags:
-      - start
-
-  - name: List all Drupal sites path.
-    shell: ls -d /var/www/sites/*/sites/default
-    register: settings
-    tags:
-      - all-sites
-
-  - name: Scan all sites and copy finddb.inc into sites/default folder.
-    copy: src=finddb.inc dest={{ item }}/finddb.inc
-    with_items: settings.stdout_lines
-    tags:
-      - all-sites

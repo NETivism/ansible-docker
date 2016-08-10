@@ -1,30 +1,18 @@
 ---
   - name: Add the gcloud distribution URL as a package source
     apt_repository: repo="deb http://packages.cloud.google.com/apt cloud-sdk-jessie main" state=present
-    tags:
-      - start
 
   - name: Import the repo's public key
     apt_key: url=https://packages.cloud.google.com/apt/doc/apt-key.gpg state=present
-    tags:
-      - start
 
   - name: Update the list of package available and install gcloud
     apt: name=google-cloud-sdk update_cache=yes
-    tags:
-      - start
 
   - name: Create gcloud directory
     file: path=/backup/gcloud state=directory mode=0755
-    tags:
-      - start
 
   - name: Copy gcloud auth configuration file to remote
     copy: src=gcauth.json dest=/backup/gcloud/gcauth.json
-    tags:
-      - start
 
   - name: Activite gcloud
     command: gcloud auth activate-service-account --key-file /backup/gcloud/gcauth.json 
-    tags:
-      - start
