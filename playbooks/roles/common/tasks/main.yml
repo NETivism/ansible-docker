@@ -8,7 +8,11 @@
   - name: Remove default nginx file prevent duplicate
     file: path=/etc/nginx/sites-enabled/0_default state=absent
 
-  - copy: src=roles/nginx/files/default_site dest=/etc/nginx/include/default_site owner=root mode=644
+  - name: include directory should exists
+    file: path=/etc/nginx/include state=directory
+
+  - name: Copy default file to nginx
+    copy: src=roles/nginx/files/default_site dest=/etc/nginx/include/default_site owner=root mode=644
 
   - name: Link default file
     file: src=/etc/nginx/include/default_site dest=/etc/nginx/sites-enabled/0_default state=link
