@@ -4,5 +4,5 @@
     remote_user: answerable
     sudo: yes
     roles:
-      - gcloud
-      - mysqldump
+      - { role: 'gcloud', tags: [ 'gcloud' ] }
+      - { role: 'mysqldump', tags: [ 'mysqldump'] }
