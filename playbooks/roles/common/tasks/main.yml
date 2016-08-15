@@ -3,7 +3,7 @@
     copy: src=drush dest=/usr/local/bin mode=0755 owner=root
 
   - name: Fetch sites-unavailable repo from github
-    git: repo=https://github.com/NETivism/sites-unavailable.git dest=/var/www/sites-unavailable update=no clone=yes accept_hostkey=true
+    git: repo=https://github.com/NETivism/sites-unavailable.git dest=/var/www/sites-unavailable update=yes clone=yes accept_hostkey=true
 
   - name: Remove default nginx file prevent duplicate
     file: path=/etc/nginx/sites-enabled/0_default state=absent
