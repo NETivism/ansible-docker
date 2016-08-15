@@ -10,6 +10,9 @@ server {
   error_page 500 502 503 504 /404.html;
 
   location = /live/live.htm {
+    try_files $uri @live;
+  }
+  location @live {
     return 200 "live";
   }
   location /404.html {
@@ -32,6 +35,9 @@ server {
   error_page 500 502 503 504 /404.html;
 
   location = /live/live.htm {
+    try_files $uri @live;
+  }
+  location @live {
     return 200 "live";
   }
   location /404.html {

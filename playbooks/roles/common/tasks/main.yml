@@ -19,3 +19,9 @@
     notify:
       - validate nginx
       - reload nginx
+
+  - name: Syslive file
+    copy: src=syslive.sh dest=/usr/local/bin mode=0755 owner=root
+
+  - name: Syslive cron
+    cron: name="system usage live status" minute="*/15" hour="*" cron_file="syslive" user="root" job="bash -c /usr/local/bin/syslive.sh > /dev/null 2>&1"
