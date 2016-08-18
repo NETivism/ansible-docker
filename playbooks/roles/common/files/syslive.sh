@@ -14,7 +14,7 @@ function diskp {
 function cpup {
   CPUPROCESSOR=`cat /proc/cpuinfo | grep processor | wc -l`
   CPUPROCESSOR=`echo "$CPUPROCESSOR*100" | bc`
-  CPULOAD=`top -bn1 | grep "load average" | awk '{printf "%.2f\n", $(NF)}'`
+  CPULOAD=`top -bn1 | grep "load average" | awk '{printf "%.2f\n", $(NF-1)}'`
   CPULOAD=`echo "$CPULOAD*100" | bc`
   echo "$CPULOAD $CPUPROCESSOR" | awk '{printf "%d", $1*100/$2}'
 }
