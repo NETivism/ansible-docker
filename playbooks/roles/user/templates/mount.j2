@@ -1,0 +1,16 @@
+#! /bin/sh
+# /etc/init.d/mount
+
+# Carry out specific functions when asked to by the system
+case "$1" in
+  start)
+    echo "Mounting sftp user folder."
+    /usr/local/bin/mount.sh
+    ;;
+  *)
+    echo "Usage: /etc/init.d/mount {start}"
+    exit 1
+    ;;
+esac
+
+exit 0

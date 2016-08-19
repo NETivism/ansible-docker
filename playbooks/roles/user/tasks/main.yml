@@ -168,7 +168,20 @@
   tags:
     - chgrp
 
-- name: Copy user mount init script into place.
-  template: src=user_mount.j2 dest=/etc/init.d/mount owner=root group=root mode=0755
+- name: Copy user mount script into place.
+  template: src=mount.bash.j2 dest=/usr/local/bin/mount.sh owner=root group=root mode=0755
   tags:
     - useradd
+    - mount
+
+- name: Copy user mount init script into place.
+  template: src=mount.j2 dest=/etc/init.d/mount owner=root group=root mode=0755
+  tags:
+    - useradd
+    - mount
+
+- name: Ensure the user mount is enabled and will start on boot.
+  service: name=mount state=started enabled=yes
+  tags:
+    - useradd
+    - mount
