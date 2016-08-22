@@ -85,11 +85,11 @@
       - start
 
   - name: Save mail account and password into vmail_account
-    fetch: src=/var/vmail/vmail_account dest=/etc/ansible/target/{{ target }}/vmail_account flat=yes
+    fetch: src=/var/vmail/vmail_account dest=/etc/ansible/target/{{ inventory_hostname }}/vmail_account flat=yes
     tags:
       - start
   - name: Save DKIM key into vmail_dkim
-    fetch: src=/var/vmail/vmail_dkim dest=/etc/ansible/target/{{ target }}/vmail_dkim flat=yes
+    fetch: src=/var/vmail/vmail_dkim dest=/etc/ansible/target/{{ inventory_hostname }}/vmail_dkim flat=yes
     tags:
       - start
 
