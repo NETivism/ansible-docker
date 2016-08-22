@@ -8,7 +8,7 @@ server {
   server_name {{ domain }}{% if alias is defined %}{% for item in alias %} {{ item }}{% endfor %}{% endif %};
   root /var/www/sites/{{ domain }};
   set $port {{ port_www }};
-{% if ssl == 1 or ssl ==2 %}
+{% if ssl == 1 or ssl == 2 %}
   ssl_certificate      {{ ssl_crt }};
   ssl_certificate_key  {{ ssl_key }};
   include /etc/nginx/include/ssl.conf;
