@@ -4,6 +4,6 @@
   remote_user: answerable
   sudo: yes
   vars_files:
-    - '/etc/ansible/target/{{ target }}/hostname'
+    - '/etc/ansible/target/{{ inventory_hostname }}/hostname'
   roles:
     - mail

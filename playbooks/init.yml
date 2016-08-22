@@ -16,16 +16,16 @@
     - command: update-locale LANG=zh_TW.UTF-8
 
     - name: Create target directory.
-      file: path=/etc/ansible/target/{{ target }} state=directory
+      file: path=/etc/ansible/target/{{ inventory_hostname }} state=directory
 
     - name: Create hostname directory.
-      template: src=roles/init/templates/hostname.j2 dest=/etc/ansible/target/{{ target }}/hostname
+      template: src=roles/init/templates/hostname.j2 dest=/etc/ansible/target/{{ inventory_hostname }}/hostname
     - name: Create redirect file.
-      template: src=roles/init/templates/redirect.j2 dest=/etc/ansible/target/{{ target }}/redirect
+      template: src=roles/init/templates/redirect.j2 dest=/etc/ansible/target/{{ inventory_hostname }}/redirect
     - name: Create user file.
-      template: src=roles/init/templates/user.j2 dest=/etc/ansible/target/{{ target }}/user
+      template: src=roles/init/templates/user.j2 dest=/etc/ansible/target/{{ inventory_hostname }}/user
     - name: Create vmail file.
-      template: src=roles/init/templates/vmail.j2 dest=/etc/ansible/target/{{ target }}/vmail
+      template: src=roles/init/templates/vmail.j2 dest=/etc/ansible/target/{{ inventory_hostname }}/vmail
 
     - name: Upgrade debian package
       apt: update_cache=yes cache_valid_time=3600

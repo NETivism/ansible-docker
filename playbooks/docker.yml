@@ -4,7 +4,7 @@
   remote_user: answerable
   sudo: yes
   vars_files:
-    - '/etc/ansible/target/{{ target }}/hostname'
+    - '/etc/ansible/target/{{ inventory_hostname }}/hostname'
   roles:
     - docker
     - nginx
@@ -13,13 +13,13 @@
   connection: local
   sudo: yes
   vars_files:
-    - '/etc/ansible/target/{{ target }}/hostname'
+    - '/etc/ansible/target/{{ inventory_hostname }}/hostname'
   roles:
     - dns
   tasks:
     # create mail account
     - name: Add mail account into vmail file
-      lineinfile: dest=/etc/ansible/target/{{ target }}/vmail
+      lineinfile: dest=/etc/ansible/target/{{ inventory_hostname }}/vmail
                   state=present
                   regexp='^(.*)"}$'
                   line='\1;{{ domain }}@{{ hostname }}"}'
