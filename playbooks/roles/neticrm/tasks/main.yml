@@ -134,7 +134,7 @@
   copy: src=neticrm_update.sh dest=/usr/local/bin/neticrm_update.sh mode=0755 owner=answerable
   become: yes
   become_method: sudo
-  tags: 
+  tags:
     - upgrade-db
     - load
 - name: Run upgrade database script
@@ -149,3 +149,26 @@
   become_method: sudo
   tags:
     - load
+
+# cache clear
+- name: Copy cache clear script
+  copy: src=drupal_cache_clear.sh dest=/usr/local/bin/drupal_cache_clear.sh mode=0755 owner=answerable
+  become: yes
+  become_method: sudo
+  tags:
+    - cache-clear-all
+    - cache-clear-css-js
+    - load
+
+- name: Run drush cache-clear all
+  shell: bash -c "/usr/local/bin/drupal_cache_clear.sh all"
+  become: yes
+  become_method: sudo
+  tags:
+    - cache-clear-all
+- name: Run drush cache-clear css-js
+  shell: bash -c "/usr/local/bin/drupal_cache_clear.sh css-js"
+  become: yes
+  become_method: sudo
+  tags:
+    - cache-clear-css-js
