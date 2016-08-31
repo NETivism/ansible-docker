@@ -1,5 +1,19 @@
 #! /bin/sh
 # /etc/init.d/mount
+#
+# Users mount init script, to be used with /usr/local/bin/mount.sh by Fuyuan Cheng.
+#
+# @author Fuyuan Cheng <gloomcheng@gmail.com>
+
+### BEGIN INIT INFO
+# Provides:          mount
+# Required-Start:    $remote_fs $syslog
+# Required-Stop:     $remote_fs $syslog
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Start user mount at boot time.
+# Description:       Enable user mount.
+### END INIT INFO
 
 # Carry out specific functions when asked to by the system
 case "$1" in
