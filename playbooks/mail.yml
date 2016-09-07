@@ -5,5 +5,7 @@
   sudo: yes
   vars_files:
     - '/etc/ansible/target/{{ inventory_hostname }}/hostname'
+    - '/etc/ansible/target/{{ inventory_hostname }}/vmail'
+    - '/etc/ansible/target/{{ inventory_hostname }}/vmail_json'
   roles:
     - mail
