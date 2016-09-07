@@ -42,6 +42,7 @@
     shell: linode domain record-update -l {{ main_domain }} -t CNAME -m {{ sub.0 }} -R offline.neticrm.tw
     tags:
       - offline
+      - suspend
 
   - name: Remove domain record.
     shell: linode domain record-delete -l {{ main_domain }} -t CNAME -m {{ sub.0 }}
