@@ -1,4 +1,12 @@
 ---
+  - name: Stop and remove container
+    docker:
+      name: dovecot
+      image: netivism/docker-postfix-dovecot
+      state: absent
+    tags:
+      - stop
+
   - name: Check if python-pip is installed
     command: dpkg-query -l python-pip
     register: pip_is_installed
@@ -92,14 +100,6 @@
     fetch: src=/var/vmail/vmail_dkim dest=/etc/ansible/target/{{ inventory_hostname }}/vmail_dkim flat=yes
     tags:
       - start
-
-  - name: Stop remove container
-    docker:
-      name: dovecot
-      image: netivism/docker-postfix-dovecot
-      state: absent
-    tags:
-      - stop
 
   - name: Create site's smtp configuration file
     stat: path=/var/www/sites/{{ domain }}/sites/default/smtp.settings.php
