@@ -29,3 +29,8 @@ fastcgi_param	REDIRECT_STATUS		200;
 # timeout handling increase to 2 hour
 fastcgi_read_timeout 7200;
 
+# security setting
+fastcgi_hide_header X-Powered-By;
+fastcgi_hide_header X-Generator;
+fastcgi_hide_header Server;
+
