@@ -19,9 +19,16 @@
     notify:
       - validate nginx
       - reload nginx
+    ignore_errors: yes
 
   - name: Syslive file
     copy: src=syslive.sh dest=/usr/local/bin mode=0755 owner=root
 
   - name: Syslive cron
     cron: name="system usage live status" minute="*/6" hour="*" cron_file="syslive" user="root" job="bash -c /usr/local/bin/syslive.sh > /dev/null 2>&1"
+
+  - name: fstrim file
+    copy: src=fstrim.sh dest=/usr/local/bin mode=0755 owner=root
+
+  - name: fstrim cron
+    cron: name="release used space by container" minute="10" hour="2" weekday="0" cron_file="fstrim" user="root" job="bash -c /usr/local/bin/fstrim.sh > /dev/null 2>&1"
