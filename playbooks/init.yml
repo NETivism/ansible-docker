@@ -22,7 +22,7 @@
     - name: Create vmail file.
       template: src=roles/init/templates/vmail.j2 dest=/etc/ansible/target/{{ inventory_hostname }}/vmail
     - name: Create vmail json.
-      template: src=roles/init/templates/vmail.j2 dest=/etc/ansible/target/{{ inventory_hostname }}/vmail_json
+      template: src=roles/init/templates/vmail_json.j2 dest=/etc/ansible/target/{{ inventory_hostname }}/vmail_json
 
     - name: Upgrade debian package
       apt: update_cache=yes cache_valid_time=3600
