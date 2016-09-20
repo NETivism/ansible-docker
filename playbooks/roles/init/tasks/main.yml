@@ -36,3 +36,7 @@
       create=yes
       validate='visudo -cf %s'
 
+  - name: Generate correct locale
+    command: sed -i -e 's/# zh_TW.UTF-8 UTF-8/zh_TW.UTF-8 UTF-8/' /etc/locale.gen
+  - command: dpkg-reconfigure --frontend=noninteractive locales
+  - command: update-locale LANG=zh_TW.UTF-8
