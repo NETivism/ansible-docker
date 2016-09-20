@@ -1,6 +1,6 @@
 #!/bin/bash
 
-HOSTNAME=`cat /etc/ansible/fqdn`
+HOSTNAME={{ inventory_hostname }}
 for RUN in `find /var/www/sites/*/sites/*/settings.php -printf "%C@ %p\n" | sort | awk '{ print $2 }'` ; do
   NAME=${RUN//\/var\/www\/sites\//}
   NAME=${NAME%%/*}
