@@ -78,11 +78,6 @@ location / {
     try_files $uri @backend;
   }
 
-  # allow for other files
-  location ~* /sites/.+/files/ {
-    try_files $uri 404;
-  }
-
   # image
   location ~* ^.+\.(?:css|cur|js|jpe?g|gif|htc|ico|png|html|xml|woff|ttf|swf|svg)$ {
     access_log off;
@@ -97,6 +92,11 @@ location / {
     open_file_cache_errors off;
     ## ETag support. This requires an Nginx version >= 1.3.3.
     etag on;
+  }
+
+  # allow for other files
+  location ~* /sites/.+/files/ {
+    try_files $uri 404;
   }
 
   # secure all other drupal directory
