@@ -25,7 +25,7 @@ for RUN in `find /var/www/sites/*/sites/*/settings.php -printf "%C@ %p\n" | sort
   RUNNING=$(docker ps -q -f name=$NAME)
 
   if [ -n "$RUNNING" ]; then
-    docker exec -i $RUNNING bash -c "mysqldump -uroot -p\$INIT_PASSWD \$INIT_DB | gzip -9 -c > /var/www/html/log/backupdb.sql.gz"
+    docker exec -i $RUNNING bash -c "mysqldump -uroot -p\$INIT_PASSWD --skip-lock-tables \$INIT_DB | gzip -9 -c > /var/www/html/log/backupdb.sql.gz"
     gsutil -h 'Content-Type: application/gzip' -h 'Content-Disposition:attachment; filename=backupdb.sql.gz' cp -e -c /var/www/sites/$NAME/log/backupdb.sql.gz gs://neticrm/$HOSTNAME/$NAME/db/backupdb-$(date +%u).sql.gz
   fi
 done
