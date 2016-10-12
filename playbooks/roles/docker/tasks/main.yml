@@ -52,6 +52,7 @@
   tags:
     - remove
 - name: Remove a container(but keep data)
-  shell: docker rm -f {{ domain }}
+  shell: docker rm {{ domain }}
+  ignore_errors: yes
   tags:
     - remove
