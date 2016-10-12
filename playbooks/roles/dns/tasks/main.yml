@@ -7,6 +7,7 @@
       - start
       - alias
       - offline
+      - suspend 
       - remove
 
   - name: Check if master domain not exist.
@@ -28,6 +29,9 @@
     ignore_errors: true
     tags:
       - start
+      - offline
+      - suspend
+      - remove
       - alias
 
   - name: Create domain record.
@@ -40,11 +44,15 @@
 
   - name: Make domain offline.
     shell: linode domain record-update -l {{ main_domain }} -t CNAME -m {{ sub.0 }} -R offline.neticrm.tw
+    when: domain_record_check.rc > 0 and '{{ main_domain }}' in '{{ domain }}'
+    ignore_errors: true
     tags:
       - offline
       - suspend
 
   - name: Remove domain record.
     shell: linode domain record-delete -l {{ main_domain }} -t CNAME -m {{ sub.0 }}
+    when: domain_record_check.rc > 0 and '{{ main_domain }}' in '{{ domain }}'
+    ignore_errors: true
     tags:
       - remove
