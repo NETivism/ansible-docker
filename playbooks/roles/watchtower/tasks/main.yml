@@ -7,6 +7,8 @@
       pull: missing
       state: started
       restart_policy: always
+      volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
     tags:
       - start
 
@@ -27,5 +29,7 @@
       pull: missing
       state: started
       restart_policy: no
+      volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
     tags:
       - update-all-container
