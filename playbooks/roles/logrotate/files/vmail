@@ -5,6 +5,7 @@
 /var/vmall/log/auth.log
 /var/vmail/log/user.log
 /var/vmail/log/lpr.log
+/var/vmail/log/syslog
 {
   rotate 7
   daily
