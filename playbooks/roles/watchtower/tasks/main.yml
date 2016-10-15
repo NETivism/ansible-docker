@@ -1,0 +1,31 @@
+---
+  - name: Start watchtower
+    docker:
+      name: watchtower
+      image: centurylink/watchtower
+      command: --cleanup --no-pull --interval 180
+      pull: missing
+      state: started
+      restart_policy: always
+    tags:
+      - start
+
+  - name: Stop and remove container
+    docker:
+      name: watchtower
+      image: centurylink/watchtower
+      state: absent
+    tags:
+      - stop
+      - update-all-container
+
+  - name: Start and update all container
+    docker:
+      name: watchtower
+      image: centurylink/watchtower
+      command: --cleanup --interval 300
+      pull: missing
+      state: started
+      restart_policy: no
+    tags:
+      - update-all-container
