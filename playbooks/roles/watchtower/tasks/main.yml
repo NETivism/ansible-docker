@@ -3,7 +3,7 @@
     docker:
       name: watchtower
       image: centurylink/watchtower
-      command: --cleanup --no-pull --interval 180
+      command: --cleanup --no-pull --interval 120
       pull: missing
       state: started
       restart_policy: always
@@ -21,14 +21,14 @@
       - stop
       - update-all-container
 
-  - name: Start and update all container
+  - name: Start and update all container in 300 second
     docker:
       name: watchtower
       image: centurylink/watchtower
       command: --cleanup --interval 300
       pull: missing
       state: started
-      restart_policy: no
+      restart_policy: on-failure
       volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     tags:
