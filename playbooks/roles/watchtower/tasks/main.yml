@@ -1,5 +1,5 @@
 ---
-  - name: Start watchtower
+  - name: Start watchtower, manually pull(interval 120s)
     docker:
       name: watchtower
       image: centurylink/watchtower
@@ -21,7 +21,7 @@
       - stop
       - update-all-container
 
-  - name: Start and update all container in 300 second
+  - name: Start,pull,update container immediately(interval 300s)
     docker:
       name: watchtower
       image: centurylink/watchtower
