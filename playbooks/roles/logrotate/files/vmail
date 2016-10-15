@@ -6,12 +6,14 @@
 /var/vmail/log/user.log
 /var/vmail/log/lpr.log
 /var/vmail/log/syslog
+/var/vmail/log/dovecot
+/var/vmail/log/dovecot.info
 {
-  rotate 7
+  rotate 30
   daily
   compress
-  dailycompress
+  delaycompress
   postrotate
-    invoke-rc.d rsyslog rotate > /dev/null
+    /usr/bin/docker restart dovecot > /dev/null 2>/dev/null || true
   endscript
 }
