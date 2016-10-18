@@ -31,3 +31,6 @@
   - copy: src=roles/neticrm/files/check_module.sh dest=/usr/local/bin/check_module.sh mode=0755 owner=answerable
   - copy: src=roles/neticrm/files/drupal_cache_clear.sh dest=/usr/local/bin/drupal_cache_clear.sh mode=0755 owner=answerable
   - copy: src=roles/neticrm/files/neticrm_update.sh dest=/usr/local/bin/neticrm_update.sh mode=0755 owner=answerable
+
+  - name: Update logrotate
+    copy: src=roles/logrotate/files/vmail dest=/etc/logrotate.d/vmail
