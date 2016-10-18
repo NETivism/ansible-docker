@@ -1,6 +1,6 @@
 ---
   - name: Copy drush execute file
-    copy: src=drush dest=/usr/local/bin mode=0755 owner=root
+    copy: src=drush dest=/usr/local/bin/drush mode=0755 owner=root
 
   - name: Fetch sites-unavailable repo from github
     git: repo=https://github.com/NETivism/sites-unavailable.git dest=/var/www/sites-unavailable update=yes clone=yes accept_hostkey=true
@@ -25,3 +25,9 @@
 
   - name: Syslive cron
     cron: name="system usage live status" minute="*/6" hour="*" cron_file="syslive" user="root" job="bash -c /usr/local/bin/syslive.sh > /dev/null 2>&1"
+
+  - name: Update script files
+    copy: src=roles/neticrm/files/drupal_cron.sh dest=/usr/local/bin/drupal_cron.sh mode=0755 owner=answerable
+  - copy: src=roles/neticrm/files/check_module.sh dest=/usr/local/bin/check_module.sh mode=0755 owner=answerable
+  - copy: src=roles/neticrm/files/drupal_cache_clear.sh dest=/usr/local/bin/drupal_cache_clear.sh mode=0755 owner=answerable
+  - copy: src=roles/neticrm/files/neticrm_update.sh dest=/usr/local/bin/neticrm_update.sh mode=0755 owner=answerable
