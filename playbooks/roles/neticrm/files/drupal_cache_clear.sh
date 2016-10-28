@@ -1,4 +1,4 @@
-# !/bin/bash
+#!/bin/bash
 
 TYPE=$1
 if [ -z "$TYPE" ]; then
