@@ -1,0 +1,12 @@
+# file: docker.yml
+- hosts: "{{ target }}"
+  sudo: yes
+  handlers:
+    - include: roles/nginx/handlers/main.yml
+  tasks:
+  - name: Upgrade neticrm ssl certificate file
+    copy: src=roles/nginx/files/ssl/neticrm.tw/neticrm.tw.crt dest=/etc/nginx/ssl/neticrm.tw/neticrm.tw.crt owner=root mode=400
+    notify:
+      - validate nginx
+  - name: Reload nginx
+    service: name=nginx state=reloaded
