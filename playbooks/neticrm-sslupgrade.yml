@@ -6,6 +6,7 @@
   tasks:
   - name: Upgrade neticrm ssl certificate file
     copy: src=roles/nginx/files/ssl/neticrm.tw/neticrm.tw.crt dest=/etc/nginx/ssl/neticrm.tw/neticrm.tw.crt owner=root mode=400
+  - copy: src=roles/nginx/files/ssl/neticrm.tw/neticrm.tw.key dest=/etc/nginx/ssl/neticrm.tw/neticrm.tw.key owner=root mode=400
     notify:
       - validate nginx
   - name: Reload nginx
