@@ -137,8 +137,21 @@
   tags:
     - upgrade-db
     - load
-- name: Run upgrade database script
+    - deploy-7
+    - deploy-6
+    - upgrade-7
+    - upgrade-6
+
+- name: Clear cache and NOT run upgrade database script
   shell: bash -c "/usr/local/bin/neticrm_update.sh"
+  become: yes
+  become_method: sudo
+  tags:
+    - upgrade-7
+    - upgrade-6
+
+- name: Clear cache and run upgrade database script
+  shell: bash -c "/usr/local/bin/neticrm_update.sh --updb"
   become: yes
   become_method: sudo
   tags: upgrade-db
@@ -159,6 +172,10 @@
     - cache-clear-all
     - cache-clear-css-js
     - load
+    - deploy-7
+    - deploy-6
+    - upgrade-7
+    - upgrade-6
 
 - name: Run drush cache-clear all
   shell: bash -c "/usr/local/bin/drupal_cache_clear.sh all"
@@ -166,6 +183,7 @@
   become_method: sudo
   tags:
     - cache-clear-all
+
 - name: Run drush cache-clear css-js
   shell: bash -c "/usr/local/bin/drupal_cache_clear.sh css-js"
   become: yes
