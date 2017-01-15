@@ -129,7 +129,6 @@
     - all-sites
     - single-site
 
-# upgrade db
 - name: Copy upgrade script
   copy: src=neticrm_update.sh dest=/usr/local/bin/neticrm_update.sh mode=0755 owner=answerable
   become: yes
@@ -142,6 +141,20 @@
     - upgrade-7
     - upgrade-6
 
+- name: Copy cache clear script
+  copy: src=drupal_cache_clear.sh dest=/usr/local/bin/drupal_cache_clear.sh mode=0755 owner=answerable
+  become: yes
+  become_method: sudo
+  tags:
+    - cache-clear-all
+    - cache-clear-css-js
+    - load
+    - deploy-7
+    - deploy-6
+    - upgrade-7
+    - upgrade-6
+
+# upgrade db
 - name: Clear cache and NOT run upgrade database script
   shell: bash -c "/usr/local/bin/neticrm_update.sh"
   become: yes
@@ -164,19 +177,6 @@
     - load
 
 # cache clear
-- name: Copy cache clear script
-  copy: src=drupal_cache_clear.sh dest=/usr/local/bin/drupal_cache_clear.sh mode=0755 owner=answerable
-  become: yes
-  become_method: sudo
-  tags:
-    - cache-clear-all
-    - cache-clear-css-js
-    - load
-    - deploy-7
-    - deploy-6
-    - upgrade-7
-    - upgrade-6
-
 - name: Run drush cache-clear all
   shell: bash -c "/usr/local/bin/drupal_cache_clear.sh all"
   become: yes
