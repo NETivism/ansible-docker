@@ -13,7 +13,7 @@ for RUN in `find /var/www/sites/*/sites/*/civicrm.settings.php` ; do
   fi
   RUNNING=$(docker ps -q -f name=$NAME)
   if [ -n "$RUNNING" ]; then
-    if [ "$1" -eq '--updb' ]; then
+    if [ "$1" == "--updb" ]; then
       docker exec -i $NAME bash -c "drush -l $SITE updb --yes &> /var/www/html/log/neticrm_update.log"
     fi
     docker exec -i $NAME bash -c "drush -l $SITE neticrm-clear-cache --yes"
