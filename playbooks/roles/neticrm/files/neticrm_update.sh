@@ -4,6 +4,10 @@ for RUN in `find /var/www/sites/*/sites/*/civicrm.settings.php` ; do
   NAME=${RUN//\/var\/www\/sites\//}
   NAME=${NAME%%/*}
   TMP=${RUN%/*}
+  # exclude symbolic link directory
+  if [ -L $TMP ]; then
+    continue
+  fi
   TMP=${TMP##*/} 
   SITE=""
   if [ "$TMP" != "default" ]; then
