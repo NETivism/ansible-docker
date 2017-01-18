@@ -148,21 +148,20 @@
   tags:
     - cache-clear-all
     - cache-clear-css-js
+    - cache-clear-site
     - load
     - deploy-7
     - deploy-6
-    - upgrade-7
-    - upgrade-6
 
-# upgrade db
+# cache clear
 - name: Clear cache and NOT run upgrade database script
   shell: bash -c "/usr/local/bin/neticrm_update.sh"
   become: yes
   become_method: sudo
   tags:
-    - upgrade-7
-    - upgrade-6
+    - cache-clear-site
 
+# cache clear and updb
 - name: Clear cache and run upgrade database script
   shell: bash -c "/usr/local/bin/neticrm_update.sh --updb"
   become: yes
