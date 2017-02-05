@@ -12,6 +12,15 @@ ini_set('error_reporting', E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED);
 # for docker, sometime we will fail with http request
 $conf['drupal_http_request_fails'] = FALSE;
 
+# support cloudflare ssl
+if (isset($_SERVER['HTTP_CF_VISITOR'])) {
+  if (preg_match('/https/i', $_SERVER['HTTP_CF_VISITOR'])) {
+    $_SERVER['HTTPS'] = 'On';
+    $_SERVER['HTTP_X_FORWARDED_PORT'] = 443;
+    $_SERVER['SERVER_PORT'] = 443;
+  }
+}
+
 # memcache support
 /*
 if(file_exists("profiles/neticrmp/modules/memcache/memcache.inc")){
