@@ -22,7 +22,7 @@ location = / {
 
   add_header    Cache-Control  private;
   add_header X-Header "Boost";
-  try_files /cache/normal/$host${uri}_$args.html @backend_noquery;
+  try_files /_front.html /cache/normal/$host${uri}_$args.html @backend_noquery;
 }
 
 # allow live check
