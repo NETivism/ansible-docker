@@ -10,3 +10,6 @@
 [submodule "playbooks/filter_plugins/split"]
 	path = playbooks/filter_plugins/split
 	url = https://github.com/NETivism/ansible-string-split-filter
+[submodule "playbooks/roles/letsencrypt"]
+	path = playbooks/roles/letsencrypt
+	url = https://github.com/NETivism/ansible-letsencrypt.git
