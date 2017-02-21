@@ -3,8 +3,6 @@ server {
   listen 80;
   listen 443 ssl spdy;
   server_name {{ redirect.source }};
-  ssl_certificate      {{ ssl_crt }};
-  ssl_certificate_key  {{ ssl_key }};
   include /etc/nginx/include/ssl.conf;
   return 301 $scheme://{{ redirect.dest }}$request_uri;
 }
