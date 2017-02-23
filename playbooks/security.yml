@@ -1,5 +1,7 @@
 - hosts: "{{ target }}"
   remote_user: answerable
+  vars_files:
+    - '/etc/ansible/target/all/security'
   sudo: yes
   roles:
   - firewall
@@ -26,7 +28,7 @@
       line: "{{ item.line }}"
     with_items:
       - { regexp: '^## Deny by ip', line: '## Deny by ip' }
-      - { regexp: '^Match Address \*', line: 'Match Address *,!106.185.32.129 User answerable' }
+      - { regexp: '^Match Address \*', line: 'Match Address *,!{{ ssh_master_ip }} User answerable' }
       - { regexp: '^  DenyUsers answerable', line: '  DenyUsers answerable' }
 
   - name: Disallow answerable login by password
