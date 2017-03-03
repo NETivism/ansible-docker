@@ -44,6 +44,9 @@ location / {
   location ~* /files/private/ {
     internal;
   }
+  location ~* sites/[^/]+/private/ {
+    internal;
+  }
 
   location ^~ /system/files/ {
     try_files $uri @backend;
