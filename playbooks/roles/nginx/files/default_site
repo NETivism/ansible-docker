@@ -1,7 +1,27 @@
 # scope http
+# allows file uploads up to 20 megabytes
+client_max_body_size 100M;
+
+# security
+server_tokens off;
 limit_req_zone $binary_remote_addr zone=phpip:10m rate=3r/s;
 limit_req_zone $server_name zone=phpserver:10m rate=12r/s;
 
+# type
+types {
+  # fonts
+  application/vnd.ms-fontobject eot;
+  application/x-font-ttf ttf;
+  font/opentype ott;
+  font/x-woff2 woff2;
+
+  # text
+  text/csv csv;
+  text/x-markdown md;
+}
+gzip_types text/plain text/css application/x-javascript application/javascript text/javascript ext/xml application/xml application/xml+rss application/json text/csv application/vnd.ms-fontobject application/x-font-ttf font/opentype;
+
+# scope server
 server {
   listen 80 default_server;
   server_name  _;
