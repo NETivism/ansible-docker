@@ -4,6 +4,7 @@
       name: dovecot
       image: netivism/docker-postfix-dovecot
       state: absent
+    ignore_errors: true
     tags:
       - stop
       - restart
