@@ -6,6 +6,7 @@
       state: absent
     tags:
       - stop
+      - restart
 
   - name: Check if python-pip is installed
     command: dpkg-query -l python-pip
@@ -86,20 +87,24 @@
       - /var/vmail/opendkim:/etc/opendkim
     tags:
       - start
+      - restart
 
   - name: Wait for service startup
     wait_for: port=587 delay=10
     tags:
       - start
+      - restart
 
   - name: Save mail account and password into vmail_account
     fetch: src=/var/vmail/vmail_account dest=/etc/ansible/target/{{ inventory_hostname }}/vmail_account flat=yes
     tags:
       - start
+      - restart
   - name: Save DKIM key into vmail_dkim
     fetch: src=/var/vmail/vmail_dkim dest=/etc/ansible/target/{{ inventory_hostname }}/vmail_dkim flat=yes
     tags:
       - start
+      - restart
 
   - name: Create site's smtp configuration file
     stat: path=/var/www/sites/{{ domain }}/sites/default/smtp.settings.php
