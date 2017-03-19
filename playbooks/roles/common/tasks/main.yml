@@ -41,3 +41,13 @@
 
   - name: fstrim cron
     cron: name="release used space by container" minute="10" hour="2" weekday="0" cron_file="fstrim" user="root" job="bash -c /usr/local/bin/fstrim.sh > /dev/null 2>&1"
+
+  - name: Install bash completion
+    apt:
+      update_cache: yes
+      cache_valid_time: 3600
+      pkg: "{{ item }}"
+      state: installed
+    with_items:
+      - bash-completion
+  - lineinfile: dest=/root/.bashrc line="[ -f /etc/bash_completion ] && . /etc/bash_completion"

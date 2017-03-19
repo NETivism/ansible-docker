@@ -24,6 +24,7 @@
       - vim
       - realpath
       - curl
+      - bash-completion
 
   - name: Install Docker
     shell: curl -sSL https://get.docker.com/ | sh
@@ -136,4 +137,7 @@
 
   - name: Alias 'cd' to 'cd -P'
     lineinfile: dest=/etc/bash.bashrc line="alias cd='cd -P'"
+
+  - name: Add auto completion
+    lineinfile: dest=/root/.bashrc line="[ -f /etc/bash_completion ] && . /etc/bash_completion"
 
