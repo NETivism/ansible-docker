@@ -21,9 +21,9 @@ location @empty {
 }
 
 # security concern when not use fpm
-location ~ \. {
+location ~ /\. {
   return 404;
 }
-location ~* ^(.*)(?:.+\.(?:inc|po|sh|.*sql|sql\.gz|tpl(?:\.php)?|patch))$ {
+location ~* ^(.*)(?:.+\.(?:inc|sh|sql|mysql|sql\.gz|tpl\.php|tpl|patch))$ {
   return 404;
 }

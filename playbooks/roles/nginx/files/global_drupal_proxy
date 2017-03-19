@@ -94,7 +94,7 @@ location / {
   location ~* ^(.*)(?:.+\.(?:htaccess|make|engine|inc|info|install|module|po|sh|.*sql|sql\.gz|test|theme|tpl(?:\.php)?|xtmpl|patch|php)|code-style\.pl|/Entries.*|/Repository|/Root)$ {
     return 404;
   }
-  location ~ \. {
+  location ~ /\. {
     return 404;
   }
 
