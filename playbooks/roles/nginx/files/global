@@ -1,5 +1,8 @@
 # scope server
 
+location ^~ /.well-known/ {
+}
+
 # only ^~ or = match place here to make sure priority first
 # block all access of log files
 location ^~ /log/ {
