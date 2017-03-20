@@ -1,7 +1,6 @@
 ---
 # file: docker_upgrade.yml
 - hosts: "{{ target }}"
-  remote_user: answerable
   sudo: yes
   tasks:
     - include: roles/common/tasks/update_docker.yml

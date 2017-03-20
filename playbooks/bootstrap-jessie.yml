@@ -1,7 +1,6 @@
 ---
 # Install the Docker and associated packages, ref: http://stackoverflow.com/questions/29083638/docker-io-has-no-installation-candidated
 - hosts: '{{ target }}'
-  remote_user: answerable
   sudo: yes
   roles:
     - timezone
