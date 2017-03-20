@@ -11,7 +11,7 @@
       state: installed
 
   - name: create deployment user
-    user: name={{deployer}} createhome=yes state=present
+    user: name={{deployer}} createhome=yes state=present shell=/bin/bash
     register: newuser
   - name: generate random password for user only on creation
     shell: /usr/sbin/usermod -p $(openssl rand -base64 20 | openssl passwd -1 -stdin) {{deployer}}
