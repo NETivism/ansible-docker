@@ -1,34 +1,12 @@
 # static to dynamic routing for drupal
-location = /rss.xml {
+location ^~ /rss.xml {
   set $drupal_args 'rss.xml';
   try_files $uri @backend;
 }
 
-location = /sitemap.xml {
+location ^~ /sitemap.xml {
   set $drupal_args 'sitemap.xml';
   try_files $uri @backend;
-}
-
-# special case for drupal 6, force QUERY_STRING empty when access front page
-location = / {
-  # boost detect
-  if ( $request_method !~ GET ) {
-    return 405;
-  }
-  if ($http_cookie ~ "DRUPAL_UID") {
-    return 405;
-  }
-  error_page 405 = @backend_noquery;
-
-  add_header    Cache-Control  private;
-  add_header X-Header "Boost";
-  try_files /_front.html /cache/normal/$host${uri}_$args.html @backend_noquery;
-}
-
-# allow live check
-location = /live/live.php {
-  fastcgi_pass 127.0.0.1:$port;
-  include /etc/nginx/include/global_fastcgi;
 }
 
 location / {
@@ -82,7 +60,7 @@ location / {
   }
 
   # image
-  location ~* ^.+\.(?:css|cur|js|jpe?g|gif|htc|ico|png|html|xml|woff|ttf|swf|svg)$ {
+  location ~* ^.+\.(?:css|cur|js|jpe?g|gif|htc|ico|png|html|xml|woff|woff2|ttf|swf|svg)$ {
     access_log off;
     expires 30d;
     ## No need to bleed constant updates. Send the all shebang in one
@@ -114,8 +92,24 @@ location / {
     return 404;
   }
 
+  # special case for drupal 6, force QUERY_STRING empty when access front page
+  location ~* ^/$ {
+    # boost detect
+    if ( $request_method !~ GET ) {
+      return 405;
+    }
+    if ($http_cookie ~ "DRUPAL_UID") {
+      return 405;
+    }
+    error_page 405 = @backend_noquery;
+
+    add_header    Cache-Control  private;
+    add_header X-Header "Boost";
+    try_files /_front.html /cache/normal/$host${uri}_$args.html @backend_noquery;
+  }
+
   # with boost
-  location ~* ^/(.*)$ {
+  location ~* ^/(.+)$ {
     set $drupal_args $1;  
     try_files $uri /$uri @cache;
   }

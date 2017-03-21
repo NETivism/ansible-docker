@@ -1,16 +1,10 @@
 # static to dynamic routing for drupal
-location = /rss.xml {
+location ^~ /rss.xml {
   try_files $uri @backend;
 }
 
-location = /sitemap.xml {
+location ^~ /sitemap.xml {
   try_files $uri @backend;
-}
-
-# allow live check
-location = /live/live.php {
-  proxy_pass http://127.0.0.1:$port;
-  include /etc/nginx/include/global_proxy;
 }
 
 location / {
@@ -63,7 +57,7 @@ location / {
   }
 
   # image
-  location ~* ^.+\.(?:css|cur|js|jpe?g|gif|htc|ico|png|html|xml|woff|ttf|swf)$ {
+  location ~* ^.+\.(?:css|cur|js|jpe?g|gif|htc|ico|png|html|xml|woff|woff2|ttf|swf)$ {
     access_log off;
     expires 30d;
     ## No need to bleed constant updates. Send the all shebang in one
