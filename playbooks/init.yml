@@ -1,8 +1,6 @@
 ---
 # Initial linode image and create remote user account for ansible.
 - hosts: "{{ target }}"
-  remote_user: root
-  sudo: no
   roles:
     - init
 
