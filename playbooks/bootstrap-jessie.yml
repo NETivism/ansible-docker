@@ -1,5 +1,4 @@
 ---
-# Install the Docker and associated packages, ref: http://stackoverflow.com/questions/29083638/docker-io-has-no-installation-candidated
 - hosts: '{{ target }}'
   sudo: yes
   roles:
@@ -24,85 +23,26 @@
       - realpath
       - curl
       - bash-completion
-
-  - name: Install Docker
-    shell: curl -sSL https://get.docker.com/ | sh
-
-  - name: Allow remote user use docker
-    user:
-      name: answerable
-      groups: docker
-      append: yes
-
-  - name: Install Python Setuptools
-    apt:
-      pkg: "python-setuptools"
-      state: installed
+      - apt-transport-https
+      - ca-certificates
+      - software-properties-common
+      - mysql-client
+      - git
+      - python-dev
+      - nginx-full
+      - nginx
+      - python-setuptools # for python pip
 
   - name: Install Python Pip
     # http://stackoverflow.com/questions/27341064/how-do-i-fix-importerror-cannot-import-name-incompleteread
     easy_install:
       name: pip
 
-  - name: Install python-dev
-    apt:
-      pkg: "{{ item }}"
-      state: installed
-    with_items:
-      - python-dev
-
-  - name: Install GIT
-    apt:
-      pkg: "git"
-      state: installed
-
-  - name: Install Nginx
-    apt:
-      pkg: "{{ item }}"
-      state: installed
-    with_items:
-      - nginx-full
-      - nginx
-
   - name: Make sure nginx started when os boot
     service: name=nginx state=started enabled=yes
 
-  - name: Install MySQL
-    apt:
-      pkg: "{{ item }}"
-      state: installed
-    with_items:
-      - mysql-client
 
-  - name: Clone docker-sh git repository
-    # http://docs.ansible.com/git_module.html
-    git: repo=https://github.com/NETivism/docker-sh.git dest=/etc/ansible/docker-sh accept_hostkey=yes
-
-  - name: Create the directory for docker repository
-    # http://docs.ansible.com/file_module.html
-    file: path=/etc/ansible/docker owner=root group=root mode=0755 state=directory
-
-  - name: Create the directory for place sites and databases
-    # http://docs.ansible.com/file_module.html
-    file:
-      path: "{{ item }}"
-      mode: 0755
-      state: directory
-    with_items:
-      - "/var/www/sites"
-      - "/var/mysql/sites"
-
-  - name: Make sure docker is running
-    service:
-      name: docker
-      state: started
-
-  - name: Install Docker-py
-    pip:
-      name: docker-py
-      version: 1.2.3
-      state: present
-
+# Misc
   - name: Separate cron to single log
     lineinfile:
       dest: /etc/rsyslog.conf
@@ -122,7 +62,6 @@
   - apt: name=exim4-daemon-light state=absent
     ignore_errors: true 
 
-# refs #18389
   - name: Check if dhparams exists
     file: path=/etc/nginx/ssl state=directory
   - stat: path=/etc/nginx/ssl/dhparams.pem
@@ -146,3 +85,60 @@
   - name: Add auto completion
     lineinfile: dest=/root/.bashrc line="[ -f /etc/bash_completion ] && . /etc/bash_completion"
 
+# docker related below
+# we install docker last because third-party dependency
+  - name: Docker - prepare install
+    shell: curl -fsSL https://download.docker.com/linux/debian/gpg | sudo apt-key add -
+    when: ansible_distribution == "Debian"
+  - name: Docker - prepare install
+    shell: curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+    when: ansible_distribution == "Ubuntu"
+
+  - shell: add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/debian $(lsb_release -cs) stable"
+    when: ansible_distribution == "Debian"
+  - shell: add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+    when: ansible_distribution == "Ubuntu"
+
+  - shell: apt-get update
+
+  - name: Docker - install
+    shell: apt-get install docker-ce=17.03.0~ce-0~debian-jessie -y
+    when: ansible_distribution == "Debian"
+  - name: Docker - install
+    shell: apt-get install docker-ce=17.03.0~ce-0~ubuntu-xenial -y
+    when: ansible_distribution == "Ubuntu"
+
+  - name: Allow remote user use docker
+    user:
+      name: answerable
+      groups: docker
+      append: yes
+
+  - name: Make sure docker is running
+    service:
+      name: docker
+      state: started
+
+  - name: Install Docker-py
+    pip:
+      name: docker-py
+      version: 1.2.3
+      state: present
+
+  - name: Clone docker-sh git repository
+    # http://docs.ansible.com/git_module.html
+    git: repo=https://github.com/NETivism/docker-sh.git dest=/etc/ansible/docker-sh accept_hostkey=yes
+
+  - name: Create the directory for docker repository
+    # http://docs.ansible.com/file_module.html
+    file: path=/etc/ansible/docker owner=root group=root mode=0755 state=directory
+
+  - name: Create the directory for place sites and databases
+    # http://docs.ansible.com/file_module.html
+    file:
+      path: "{{ item }}"
+      mode: 0755
+      state: directory
+    with_items:
+      - "/var/www/sites"
+      - "/var/mysql/sites"
