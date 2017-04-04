@@ -81,7 +81,7 @@
 
   - name: Generate Nginx redirect configuration file in sites-enabled
     template: src=redirect.conf.j2 dest=/etc/nginx/sites-enabled/0_redirect
-    when: redirects > 0
+    when: redirects|length > 0
     notify:
       - validate nginx
     tags:
