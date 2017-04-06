@@ -24,7 +24,7 @@ DISKP=$(diskp)
 CPUP=$(cpup)
 
 NOTIFY="live"
-if [ $MEMP -gt "90" ] || [ $DISKP -gt "95" ] || [ $CPUP -gt "90" ]; then
+if [ $MEMP -gt "90" ] || [ $DISKP -gt "95" ] || [ $CPUP -gt "166" ]; then
   NOTIFY=`echo $MEMP $DISKP $CPUP | awk '{printf "M:%d%% D:%d%% C:%d%%", $1, $2, $3}'`
 fi
 echo $NOTIFY > $LIVE
