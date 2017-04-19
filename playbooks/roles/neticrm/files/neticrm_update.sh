@@ -16,6 +16,9 @@ for RUN in `find /var/www/sites/*/sites/*/civicrm.settings.php` ; do
     SITE=$NAME
   fi
   RUNNING=$(docker ps -q -f name=$NAME)
+  echo "=============================";
+  echo "RUNNING $NAME";
+  echo "=============================";
   if [ -n "$RUNNING" ]; then
     if [ "$1" == "--updb" ]; then
       docker exec -i $NAME bash -c "drush -l $SITE updb --yes &> /var/www/html/log/neticrm_update.log"
