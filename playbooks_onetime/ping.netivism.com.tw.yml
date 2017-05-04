@@ -1,0 +1,41 @@
+- hosts: '{{ target }}'
+  sudo: yes
+  tasks:
+  - name: Create ping.netivism.com.tw directory
+    file: path=/var/www/sites/ping.netivism.com.tw state=directory
+
+  - name: Check app script exists
+    file: path=/var/www/sites/ping.netivism.com.tw/app.js state=file
+
+  - name: Check mongodb directory
+    file: path=/var/www/sites/ping.netivism.com.tw/mongo state=directory
+
+  - name: Start mongodb
+    shell: /usr/bin/docker rm -f mongo
+    ignore_errors: true
+    tags: start
+  - shell: >
+      /usr/bin/docker run -d 
+      --name mongo
+      -v /var/www/sites/ping.netivism.com.tw/mongo:/data/db
+      -w /data/db
+      --memory=128m
+      --restart=unless-stopped
+      mongo:2 --bind_ip 0.0.0.0 --auth
+    tags: start
+
+  - name: Start uptime container
+    shell: /usr/bin/docker rm -f ping.netivism.com.tw
+    ignore_errors: true
+    tags: start
+  - shell: >
+      /usr/bin/docker run 
+      --name ping.netivism.com.tw 
+      --link=mongo:mongo
+      -v /var/www/sites/ping.netivism.com.tw:/usr/src/app
+      -w /usr/src/app
+      -p 9999:9999
+      -e NODE_ENV=production
+      --restart=unless-stopped
+      node:0.10-wheezy node app.js &
+    tags: start

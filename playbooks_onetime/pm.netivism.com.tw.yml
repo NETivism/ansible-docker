@@ -1,0 +1,20 @@
+- hosts: '{{ target }}'
+  remote_user: answerable
+  tasks:
+  - name: Create pm.netivism.com.tw directory
+    become: yes
+    file: path=/var/www/sites/pm.netivism.com.tw/data state=directory
+
+  - name: Check file exists
+    stat:
+      path: /var/www/sites/pm.netivism.com.tw/docker-compose.yml
+      register: compose_file
+
+  - name: Update latest git
+    when: compose_file.stat.exists == True
+    ignore_errors: true
+    shell: "cd /var/www/sites/pm.netivism.com.tw/ && git pull"
+
+  - name: First checkout pm
+    when: compose_file.stat.exists == False
+    shell: "cd /tmp/ && git pull git@git.netivism.com.tw:netivism/redmine-docker.git && cp -R redmine-docker/* /var/www/sites/pm.netivism.com.tw/ && cp -R redmine-docker/.* /var/www/sites/pm.netivism.com.tw/"

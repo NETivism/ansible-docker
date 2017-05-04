@@ -1,0 +1,12 @@
+---
+# file: rolling_upgrade.yml
+- hosts: "{{ target }}"
+  remote_user: answerable
+  sudo: yes
+  tasks:
+    - name: Remove default nginx file prevent duplicate
+      file: path=/etc/nginx/sites-enabled/default state=absent
+    - name: Fetch sites-unavailable repo from github
+      git: repo=https://github.com/NETivism/sites-unavailable.git dest=/var/www/sites-unavailable update=yes clone=yes accept_hostkey=true
+  handlers:
+    - include: ../playbooks/roles/nginx/handlers/main.yml
