@@ -1,0 +1,10 @@
+---
+# file: put_hostname.yml
+- hosts: "{{ target }}"
+  remote_user: answerable
+  sudo: yes
+  vars_files:
+    - '/etc/ansible/target/{{ inventory_hostname }}/hostname'
+  tasks:
+    - name: put hostname to remote
+      shell: echo "{{ hostname }}" > /etc/ansible/fqdn
