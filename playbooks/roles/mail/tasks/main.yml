@@ -1,9 +1,7 @@
 ---
   - name: Stop and remove container
-    docker:
-      name: dovecot
-      image: netivism/docker-postfix-dovecot
-      state: absent
+    shell: >
+      /usr/bin/docker stop dovecot
     ignore_errors: true
     tags:
       - stop
@@ -39,34 +37,22 @@
       - start
 
   - name: Start container
-    docker:
-      name: dovecot
-      image: netivism/docker-postfix-dovecot
-      pull: always
-      restart_policy: always
-      expose:
-       - 993
-       - 587
-       - 25
-       - 2525
-       - 465
-      ports:
-      - "993:993"
-      - "587:587"
-      - "25:25"
-      - "2525:2525"
-      - "465:465"
-      env:
-        MAILNAME: "{{ mailname }}"
-        MAILADDR: "{{ mailaddr }}"
-        TZ: "Asia/Taipei"
-      volumes:
-      - /etc/postfix
-      - /etc/ssl
-      - /etc/dovecot
-      - /var/vmail:/home/vmail
-      - /var/vmail/log:/var/log
-      - /var/vmail/opendkim:/etc/opendkim
+    shell: >
+      /usr/bin/docker run -d
+      --name dovecot
+      -p 933:933
+      -p 587:587
+      -p 25:25
+      -p 2525:2525
+      -p 465:465
+      -v /var/vmail:/home/vmail
+      -v /var/vmail/log:/var/log
+      -v /var/vmail/opendkim:/etc/opendkim
+      -e "MAILNAME={{ mailname }}"
+      -e "MAILADDR={{ mailaddr }}"
+      -e "TZ=Asia/Taipei"
+      --restart=unless-stopped
+      netivism/docker-postfix-dovecot
     tags:
       - start
       - restart
