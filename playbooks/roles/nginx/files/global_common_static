@@ -1,0 +1,3 @@
+ssi on;
+ssi_silent_errors on;
+index index.shtml index.html index.htm default.html default.htm;
