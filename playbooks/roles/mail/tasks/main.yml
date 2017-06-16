@@ -1,7 +1,7 @@
 ---
   - name: Stop and remove container
     shell: >
-      /usr/bin/docker stop dovecot
+      /usr/bin/docker stop dovecot && /usr/bin/docker rm dovecot
     ignore_errors: true
     tags:
       - stop
