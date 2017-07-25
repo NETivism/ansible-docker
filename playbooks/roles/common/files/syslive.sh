@@ -18,14 +18,31 @@ function cpup {
   CPULOAD=`echo "$CPULOAD*100" | bc`
   echo "$CPULOAD $CPUPROCESSOR" | awk '{printf "%d", $1*100/$2}'
 }
+function cronr {
+  CRONRUN=`/etc/init.d/cron status | grep "failed"`
+  if [ -n "$CRONRUN" ]; then
+    echo "CRON daemon: $CRONRUN"
+  fi
+}
+
+function smtpr {
+  SMTPRUN=`nc -zv 127.0.0.1 25 2>&1 | grep refused`
+  if [ -n "$SMTPRUN" ]; then
+    SMTPDOCKER=`docker ps -a --format "{{.Names}}\t{{.Status}} (Created:{{.CreatedAt}})" | grep dovecot`
+    echo "SMTP: $SMTPDOCKER"
+  fi
+}
 
 MEMP=$(memp)
 DISKP=$(diskp)
 CPUP=$(cpup)
+CRONR=$(cronr)
+SMTPR=$(smtpr)
 
 NOTIFY="live"
-if [ $MEMP -gt "90" ] || [ $DISKP -gt "95" ] || [ $CPUP -gt "166" ]; then
+if [ $MEMP -gt "90" ] || [ $DISKP -gt "95" ] || [ $CPUP -gt "166" ] || [ -n "$SMTPR" ] || [ -n "$CRONR" ]; then
   NOTIFY=`echo $MEMP $DISKP $CPUP | awk '{printf "M:%d%% D:%d%% C:%d%%", $1, $2, $3}'`
+  NOTIFY="${NOTIFY}${CRONR}\n${SMTPR}"
 fi
-echo $NOTIFY > $LIVE
+echo -e $NOTIFY > $LIVE
 echo $MEMP $DISKP $CPUP | awk '{printf "M:%d%% D:%d%% C:%d%%\n", $1, $2, $3}'
