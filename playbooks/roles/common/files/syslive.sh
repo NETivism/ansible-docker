@@ -19,7 +19,7 @@ function cpup {
   echo "$CPULOAD $CPUPROCESSOR" | awk '{printf "%d", $1*100/$2}'
 }
 function cronr {
-  CRONRUN=`/etc/init.d/cron status | grep "failed"`
+  CRONRUN=`/etc/init.d/cron status | grep "Active" | grep "failed"`
   if [ -n "$CRONRUN" ]; then
     echo "CRON daemon: $CRONRUN"
   fi
