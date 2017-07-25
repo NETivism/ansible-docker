@@ -142,3 +142,43 @@
     with_items:
       - "/var/www/sites"
       - "/var/mysql/sites"
+
+# some rolling upgrade here
+  - name: Remove default nginx file prevent duplicate
+    file: path=/etc/nginx/sites-enabled/0_default state=absent
+
+  - name: include directory should exists
+    file: path=/etc/nginx/include state=directory
+
+  - name: Copy default file to nginx
+    copy: src=roles/nginx/files/default_site dest=/etc/nginx/include/default_site owner=root mode=644
+
+  - name: Link default file
+    file: src=/etc/nginx/include/default_site dest=/etc/nginx/sites-enabled/0_default state=link
+    notify:
+      - validate nginx
+      - reload nginx
+    ignore_errors: yes
+
+  - name: Update logrotate
+    copy: src=roles/logrotate/files/vmail dest=/etc/logrotate.d/vmail
+
+  - name: fstrim file
+    copy: src=roles/common/files/fstrim.sh dest=/usr/local/bin/fstrim.sh mode=0755 owner=root
+
+  - name: fstrim cron
+    cron: name="release used space by container" minute="10" hour="2" weekday="0" cron_file="fstrim" user="root" job="bash -c /usr/local/bin/fstrim.sh > /dev/null 2>&1"
+
+  - name: Allow remote user use docker
+    user:
+      name: answerable
+      shell: /bin/bash
+      groups: docker
+      append: yes
+
+  - name: Syslive file
+    copy: src=roles/common/files/syslive.sh dest=/usr/local/bin/syslive.sh mode=0755 owner=root
+
+  - name: Syslive cron
+    cron: name="system usage live status" minute="*/6" hour="*" cron_file="syslive" user="root" job="bash -c /usr/local/bin/syslive.sh > /dev/null 2>&1"
+
