@@ -7,14 +7,6 @@
       - stop
       - restart
 
-  - name: Install Docker-py
-    pip:
-      name: docker-py
-      version: 1.2.1
-      state: present
-    tags:
-      - start
-
   - name: Make sure docker is running
     service:
       name: docker
