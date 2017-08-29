@@ -6,6 +6,9 @@ global $conf, $base_url;
 # HTTP only
 ini_set("session.cookie_httponly", 1);
 
+# Decrease flood window from 1hr to 10 min
+$conf['user_failed_login_ip_window'] = 600;
+
 # we can only reset error_reporting here (after bootstrap env done)
 ini_set('error_reporting', E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED);
 
