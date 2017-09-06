@@ -36,7 +36,7 @@
 
   - name: Create domain record.
     shell: linode domain record-create -l {{ main_domain }} -t CNAME -n {{ domain }} -R {{ hostname }}
-    when: domain_record_check|bool == false and '{{ main_domain }}' in '{{ domain }}'
+    when: "'{{ domain_record_check.stdout }}' == '0' and '{{ main_domain }}' in '{{ domain }}'"
     ignore_errors: true
     tags:
       - start
@@ -44,7 +44,7 @@
 
   - name: Make domain offline.
     shell: linode domain record-update -l {{ main_domain }} -t CNAME -m {{ sub.0 }} -R offline.neticrm.tw
-    when: domain_record_check != "0" and '{{ main_domain }}' in '{{ domain }}'
+    when: "'{{ domain_record_check.stdout }}' == '1' and '{{ main_domain }}' in '{{ domain }}'"
     ignore_errors: true
     tags:
       - offline
@@ -52,7 +52,7 @@
 
   - name: Remove domain record.
     shell: linode domain record-delete -l {{ main_domain }} -t CNAME -m {{ sub.0 }}
-    when: domain_record_check != "0" and '{{ main_domain }}' in '{{ domain }}'
+    when: "'{{ domain_record_check.stdout }}' == '1' and '{{ main_domain }}' in '{{ domain }}'"
     ignore_errors: true
     tags:
       - remove
