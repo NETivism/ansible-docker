@@ -36,7 +36,7 @@
 
   - name: Create domain record.
     shell: linode domain record-create -l {{ main_domain }} -t CNAME -n {{ domain }} -R {{ hostname }}
-    when: domain_record_check == "0" and '{{ main_domain }}' in '{{ domain }}'
+    when: domain_record_check|bool == false and '{{ main_domain }}' in '{{ domain }}'
     ignore_errors: true
     tags:
       - start
