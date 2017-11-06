@@ -25,6 +25,7 @@
       dest: /etc/ssh/sshd_config
       regexp: "{{ item.regexp }}"
       line: "{{ item.line }}"
+    when: ssh_master_ip is defined
     with_items:
       - { regexp: '^## Deny by ip', line: '## Deny by ip' }
       - { regexp: '^Match Address \*', line: 'Match Address *,!{{ ssh_master_ip }} User answerable' }
