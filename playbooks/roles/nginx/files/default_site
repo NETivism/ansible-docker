@@ -38,6 +38,9 @@ server {
   location /404.html {
     internal;
   }
+  location /image {
+    try_files $uri /$uri 404;
+  }
   location / {
     internal;
   }
@@ -62,6 +65,9 @@ server {
   }
   location /404.html {
     internal;
+  }
+  location /image {
+    try_files $uri /$uri 404;
   }
   location / {
     internal;
