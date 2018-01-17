@@ -155,10 +155,6 @@
 
   - name: Link default file
     file: src=/etc/nginx/include/default_site dest=/etc/nginx/sites-enabled/0_default state=link
-    notify:
-      - validate nginx
-      - reload nginx
-    ignore_errors: yes
 
   - name: Update logrotate
     copy: src=roles/logrotate/files/vmail dest=/etc/logrotate.d/vmail
