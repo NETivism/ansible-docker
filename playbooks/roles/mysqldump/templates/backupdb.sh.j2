@@ -22,7 +22,7 @@ for RUN in `find /var/www/sites/*/sites/*/settings.php -printf "%C@ %p\n" | sort
     SITE=$NAME
   fi
 
-  RUNNING=$(docker ps -q -f name=$NAME)
+  RUNNING=$(docker ps -q -f name=^/$NAME$)
 
   if [ -n "$RUNNING" ]; then
     docker exec -i $RUNNING bash -c "mysqldump -uroot -p\$INIT_PASSWD --skip-lock-tables \$INIT_DB | gzip -9 -c > /var/www/html/log/backupdb.sql.gz"
