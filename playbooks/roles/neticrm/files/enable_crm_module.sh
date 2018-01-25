@@ -19,7 +19,7 @@ if [ -z "$WWW_ROOT" ]; then
   fi
 fi
 
-for RUN in `find $WWW_ROOT/*/sites/*/civicrm_settings.php` ; do
+for RUN in `find $WWW_ROOT/*/sites/*/civicrm.settings.php` ; do
   NAME=${RUN//$WWW_ROOT\//}
   NAME=${NAME%%/*}
   DIR=$(dirname "$RUN")
