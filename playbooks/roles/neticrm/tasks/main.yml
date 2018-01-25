@@ -191,6 +191,13 @@
   tags:
     - load
 
+- name: Copy enable crm module to place
+  copy: src=enable_crm_module.sh dest=/usr/local/bin/enable_crm_module.sh mode=0755 owner=answerable
+  become: yes
+  become_method: sudo
+  tags:
+    - load
+
 # cache clear
 - name: Run drush cache-clear all
   shell: bash -c "/usr/local/bin/drupal_cache_clear.sh all"
