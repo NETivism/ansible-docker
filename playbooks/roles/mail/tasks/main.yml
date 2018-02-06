@@ -1,18 +1,19 @@
 ---
   - name: Stop and remove container
     shell: >
-      /usr/bin/docker stop dovecot && /usr/bin/docker rm dovecot
+      /usr/bin/docker stop dovecot
     ignore_errors: true
     tags:
       - stop
-      - restart
 
   - name: Make sure docker is running
     service:
       name: docker
       state: started
     tags:
+      - create
       - start
+      - restart
 
   - name: Create /var/vmail if not exists
     file:
@@ -20,15 +21,23 @@
       state: directory
       mode: 0755
     tags:
+      - create
+
+  - name: Export mailaddrs to file
+    template: src=mailaddr.j2 dest=/var/vmail/mailaddr
+    tags:
+      - create
       - start
+      - stop
+      - restart
 
   - name: Make sure smtp not start
     service: name=exim4 state=stopped
     ignore_errors: yes
     tags:
-      - start
+      - create
 
-  - name: Start container
+  - name: Create container
     shell: >
       /usr/bin/docker run -d
       --name dovecot
@@ -41,28 +50,38 @@
       -v /var/vmail/log:/var/log
       -v /var/vmail/opendkim:/etc/opendkim
       -e "MAILNAME={{ mailname }}"
-      -e "MAILADDR={{ mailaddr }}"
       -e "TZ=Asia/Taipei"
       --restart=unless-stopped
       netivism/docker-postfix-dovecot
     tags:
-      - start
+      - create
+
+  - name: restart container
+    shell: >
+      /usr/bin/docker restart dovecot
+    ignore_errors: true
+    tags:
       - restart
+      - start
 
   - name: Wait for service startup
     wait_for: port=587 delay=10
     tags:
+      - create
       - start
       - restart
 
-  - name: Save mail account and password into vmail_account
-    fetch: src=/var/vmail/vmail_account dest=/etc/ansible/target/{{ inventory_hostname }}/vmail_account flat=yes
+  - name: Save mail account and password into vmail_json
+    fetch: src=/var/vmail/tmp/vmail_json dest=/etc/ansible/target/{{ inventory_hostname }}/vmail_json flat=yes
     tags:
+      - create
       - start
       - restart
+
   - name: Save DKIM key into vmail_dkim
-    fetch: src=/var/vmail/vmail_dkim dest=/etc/ansible/target/{{ inventory_hostname }}/vmail_dkim flat=yes
+    fetch: src=/var/vmail/tmp/vmail_dkim dest=/etc/ansible/target/{{ inventory_hostname }}/vmail_dkim flat=yes
     tags:
+      - create
       - start
       - restart
 
