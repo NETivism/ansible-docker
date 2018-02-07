@@ -58,22 +58,13 @@
     - remove
 
 - name: Remove site (move data to /bak)
-  file:
-		path: /bak
-		state: directory
-		mode: 0755
+  file: path=/bak state=directory mode=0755
   tags:
     - remove-data
-- file:
-		path: /bak/www
-		state: directory
-		mode: 0755
+- file: path=/bak/www state=directory mode=0755
   tags:
     - remove-data
-- file:
-		path: /bak/mysql
-		state: directory
-		mode: 0755
+- file: path=/bak/mysql state=directory mode=0755
   tags:
     - remove-data
 - shell: mv /var/www/sites/{{ domain }} /bak/www/
