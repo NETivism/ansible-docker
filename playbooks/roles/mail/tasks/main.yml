@@ -125,7 +125,7 @@
 
   - name: re-generate passwd
     shell: >
-      /usr/bin/docker exec -i dovecot bash -c "regenpasswd.sh {{ mail }}"
+      /usr/bin/docker exec -i dovecot bash -c "regenpasswd.sh {{ domain }}"
     register: passwd
     tags:
       - passwd
@@ -135,7 +135,7 @@
 
   - name: remove mail account
     shell: >
-      /usr/bin/docker exec -i dovecot bash -c "removemail.sh {{ mail }}"
+      /usr/bin/docker exec -i dovecot bash -c "removemail.sh {{ domain }}"
     register: passwd
     tags:
       - passwd
