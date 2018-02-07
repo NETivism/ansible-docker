@@ -132,3 +132,10 @@
   - debug: var=passwd.stdout_lines
     tags:
       - passwd
+
+  - name: remove mail account
+    shell: >
+      /usr/bin/docker exec -i dovecot bash -c "removemail.sh {{ mail }}"
+    register: passwd
+    tags:
+      - passwd
