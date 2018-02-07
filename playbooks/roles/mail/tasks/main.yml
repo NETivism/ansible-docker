@@ -122,3 +122,13 @@
     ignore_errors: yes
     tags:
       - welcome
+
+  - name: re-generate passwd
+    shell: >
+      /usr/bin/docker exec -i dovecot bash -c "regenpasswd.sh {{ mail }}"
+    register: passwd
+    tags:
+      - passwd
+  - debug: var=passwd.stdout_lines
+    tags:
+      - passwd
