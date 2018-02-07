@@ -37,6 +37,12 @@
     tags:
       - create
 
+  - name: Remove container (when need rebuild)
+    shell: >
+      /usr/bin/docker stop dovecot && /usr/bin/docker rm -f dovecot
+    tags:
+      - rebuild
+
   - name: Create container
     shell: >
       /usr/bin/docker run -d
@@ -136,6 +142,5 @@
   - name: remove mail account
     shell: >
       /usr/bin/docker exec -i dovecot bash -c "removemail.sh {{ domain }}"
-    register: passwd
     tags:
-      - passwd
+      - remove
