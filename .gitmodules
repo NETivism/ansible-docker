@@ -1,15 +1,15 @@
-[submodule "playbooks/roles/firewall"]
-	path = playbooks/roles/firewall
+[submodule "roles/firewall"]
+	path = roles/firewall
 	url = https://github.com/NETivism/ansible-role-firewall.git
-[submodule "playbooks/roles/timezone"]
-	path = playbooks/roles/timezone
+[submodule "roles/timezone"]
+	path = roles/timezone
 	url = https://github.com/NETivism/ansible-timezone.git
-[submodule "playbooks/roles/ntp"]
-	path = playbooks/roles/ntp
+[submodule "roles/ntp"]
+	path = roles/ntp
   url = https://github.com/NETivism/ansible-role-ntp.git
-[submodule "playbooks/filter_plugins/split"]
-	path = playbooks/filter_plugins/split
+[submodule "filter_plugins/split"]
+	path = filter_plugins/split
 	url = https://github.com/NETivism/ansible-string-split-filter
-[submodule "playbooks/roles/letsencrypt"]
-	path = playbooks/roles/letsencrypt
+[submodule "roles/letsencrypt"]
+	path = roles/letsencrypt
 	url = https://github.com/NETivism/ansible-letsencrypt.git
