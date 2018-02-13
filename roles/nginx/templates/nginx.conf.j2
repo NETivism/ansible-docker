@@ -2,8 +2,10 @@ server {
 {% if ssl != 2 %}
   listen 80;
 {% endif %}
-{% if ssl == 1 or ssl == 2 %}
+{% if ssl == 1 %}
   listen 443 ssl spdy;
+{% elif ssl == 2 %}
+  listen 443 ssl {% if nginx_version.stdout >= 1.9 %}http2{% else %}spdy{% endif %};
 {% endif %}
   server_name {{ domain }}{% if alias is defined %}{% for item in alias %} {{ item }}{% endfor %}{% endif %};
   root /var/www/sites/{{ domain }};

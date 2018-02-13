@@ -66,6 +66,12 @@
     tags:
       - start
 
+  - name: Check nginx versin
+    shell: nginx -v 2>&1 > /dev/null | awk '{ print $3 }' | awk -F "/" '{ print $2 }' | sed -En 's/\.[^.]*$//p'
+    register: nginx_version
+    tags:
+      - start
+
   - name: Add Nginx vhost configuration file in sites-available
     # http://docs.ansible.com/template_module.html
     template: src=nginx.conf.j2 dest=/etc/nginx/sites-available/{{ domain }}
