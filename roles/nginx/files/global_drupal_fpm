@@ -45,7 +45,10 @@ location / {
   }
 
   location ^~ /system/files/ {
-    try_files $uri @backend;
+    location ~* ^/(.+)$ {
+      set $drupal_args $1;
+      try_files $uri @backend;
+    }
     log_not_found off;
   }
 
