@@ -1,14 +1,7 @@
----
-target: {{ inventory_hostname }}
-# Remove [] and input user account and website.
-# Example:
-# user_docker:
-#   - { name: 'gloomcheng', website: ['demo.neticrm.tw'] }
-#
-user_docker: []
-
-user_ssh: []
-
-user_sftp: []
-
-user_lock: []
+{
+  "target": "{{ inventory_hostname }}",
+  "user_docker": [ { "name":"jimmy", "website":[] } ],
+  "user_ssh": [],
+  "user_sftp": [],
+  "user_lock": []
+}

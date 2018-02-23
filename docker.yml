@@ -19,11 +19,6 @@
   tasks:
     # create mail account
     - name: Add mail account into vmail file
-      lineinfile: dest=/etc/ansible/target/{{ target }}/vmail
-                  state=present
-                  regexp='^(.*)"}$'
-                  line='\1;{{ domain }}@{{ hostname }}"}'
-                  backup=no
-                  backrefs=yes
+      shell: bash -c "jq '.mailaddr += [\"{{ domain }}@{{ hostname }}\"]' /etc/ansible/target/{{ target }}/vmail > /tmp/vmail_{{ target }}" && bash -c "cp /tmp/vmail_{{ target }} /etc/ansible/target/{{ target }}/vmail"
       tags:
         - start

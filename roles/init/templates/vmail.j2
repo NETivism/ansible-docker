@@ -1,1 +1,7 @@
-{"target":"{{ inventory_hostname }}", "mailname":"{{ hostname }}","mailaddr":"noreply@{{ hostname }}"}
+{
+  "target":"{{ inventory_hostname }}",
+  "mailname":"{{ hostname }}",
+  "mailaddr": [
+    "noreply@{{ hostname }}"
+  ]
+}
