@@ -61,7 +61,7 @@
     - useradd
 
 - name: Grant administrators docker permission
-  user: name={{ item.name }} state=present group=userssh groups=userssh,docker comment=ansible shell=/bin/bash
+  shell: usermod -a -G userssh,docker {{ item.name }}
   with_items: "{{ user_docker }}"
   tags:
     - useradd
