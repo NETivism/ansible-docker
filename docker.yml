@@ -18,7 +18,11 @@
     - dns
   tasks:
     # create mail account
-    - name: Add mail account into vmail file
+    - name: Check if mail account already exists
+      shell: bash -c "cat /etc/ansible/target/{{ target }}/vmail | grep {{ domain }} | wc -l"
+      register: has_account
+    - name: Add mail account into vmail file when not exists
       shell: bash -c "jq '.mailaddr += [\"{{ domain }}@{{ hostname }}\"]' /etc/ansible/target/{{ target }}/vmail > /tmp/vmail_{{ target }}" && bash -c "cp /tmp/vmail_{{ target }} /etc/ansible/target/{{ target }}/vmail"
+      when: "'{{ has_account.stdout }}' == '0'"
       tags:
         - start
