@@ -5,7 +5,7 @@ server {
 {% if ssl == 1 %}
   listen 443 ssl spdy;
 {% elif ssl == 2 %}
-  listen 443 ssl {% if nginx_version.stdout >= 1.9 %}http2{% else %}spdy{% endif %};
+  listen 443 ssl {% if nginx_version.stdout == "1.6" %}spdy{% else %}http2{% endif %};
 {% endif %}
   server_name {{ domain }}{% if alias is defined %}{% for item in alias %} {{ item }}{% endfor %}{% endif %};
   root /var/www/sites/{{ domain }};
