@@ -6,6 +6,9 @@ global $conf, $base_url;
 # HTTP only
 ini_set("session.cookie_httponly", 1);
 
+# https://www.drupal.org/node/2476237
+ini_set('arg_separator.output',     '&');
+
 # we can only reset error_reporting here (after bootstrap env done)
 ini_set('error_reporting', E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED);
 
