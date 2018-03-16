@@ -103,10 +103,10 @@
   - shell: apt-get update
 
   - name: Docker - install
-    shell: apt-get install docker-ce=17.03.0~ce-0~debian-jessie -y
+    shell: apt-get install docker-ce=17.03.0~ce-0~debian-$(lsb_release -cs) -y
     when: ansible_distribution == "Debian"
   - name: Docker - install
-    shell: apt-get install docker-ce=17.03.0~ce-0~ubuntu-xenial -y
+    shell: apt-get install docker-ce=17.03.0~ce-0~ubuntu-$(lsb_release -cs) -y
     when: ansible_distribution == "Ubuntu"
 
   - name: Allow remote user use docker
