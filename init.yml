@@ -19,6 +19,8 @@
       template: src=roles/init/templates/user.j2 dest=/etc/ansible/target/{{ target }}/user
     - name: Create vmail file.
       template: src=roles/init/templates/vmail.j2 dest=/etc/ansible/target/{{ target }}/vmail
+    - name: Create letsencrypt file
+      template: src=roles/init/templates/letsencrypt.j2 dest=/etc/ansible/target/{{ target }}/letsencrypt
     - name: Upgrade debian package
       apt: update_cache=yes cache_valid_time=3600
     - shell: bash -c "apt-get upgrade --assume-yes &> /var/log/system_upgrade.log"

@@ -1,12 +1,6 @@
 ---
-  - name: Add the gcloud distribution URL as a package source
-    apt_repository: repo="deb http://packages.cloud.google.com/apt cloud-sdk-jessie main" state=present
-
-  - name: Import the repo's public key
-    apt_key: url=https://packages.cloud.google.com/apt/doc/apt-key.gpg state=present
-
   - name: Update the list of package available and install gcloud
-    apt: name=google-cloud-sdk update_cache=yes
+    shell: export CLOUD_SDK_REPO="cloud-sdk-$(lsb_release -c -s)" &&  echo "deb http://packages.cloud.google.com/apt $CLOUD_SDK_REPO main" | sudo tee /etc/apt/sources.list.d/packages_cloud_google_com_apt.list && curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add - && sudo apt-get update && sudo apt-get -y install google-cloud-sdk
 
   - name: Create gcloud directory
     file: path=/backup/gcloud state=directory mode=0755
