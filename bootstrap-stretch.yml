@@ -32,6 +32,7 @@
       - nginx-full
       - nginx
       - whois
+      - bc
       - python-setuptools # for python pip
 
   - name: Install Python Pip
