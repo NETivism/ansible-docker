@@ -47,7 +47,7 @@
     shell: >
       /usr/bin/docker run -d
       --name dovecot
-      -p 933:933
+      -p 993:993
       -p 587:587
       -p 25:25
       -p 2525:2525
