@@ -40,6 +40,12 @@
   - name: Remove container (when need rebuild)
     shell: >
       /usr/bin/docker stop dovecot && /usr/bin/docker rm -f dovecot
+    ignore_errors: true
+    tags:
+      - rebuild
+
+  - name: Get latest container (when need rebuild)
+    command: docker pull netivism/docker-postfix-dovecot
     tags:
       - rebuild
 
@@ -61,6 +67,7 @@
       netivism/docker-postfix-dovecot
     tags:
       - create
+      - rebuild
 
   - name: restart container
     shell: >
