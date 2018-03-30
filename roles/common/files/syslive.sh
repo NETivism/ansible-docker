@@ -32,17 +32,27 @@ function smtpr {
     echo "SMTP: $SMTPDOCKER"
   fi
 }
+function imapr {
+  SMTPRUN=`nc -zv 127.0.0.1 993 2>&1 | grep refused`
+  if [ -n "$SMTPRUN" ]; then
+    SMTPDOCKER=`docker ps -a --format "{{.Names}}\t{{.Status}} (Created:{{.CreatedAt}})" | grep dovecot`
+    echo "IMAP: $SMTPDOCKER"
+  fi
+}
 
 MEMP=$(memp)
 DISKP=$(diskp)
 CPUP=$(cpup)
 CRONR=$(cronr)
 SMTPR=$(smtpr)
+IMAPR=$(imapr)
 
 NOTIFY="live"
-if [ $MEMP -gt "90" ] || [ $DISKP -gt "95" ] || [ $CPUP -gt "166" ] || [ -n "$SMTPR" ] || [ -n "$CRONR" ]; then
+if [ $MEMP -gt "90" ] || [ $DISKP -gt "95" ] || [ $CPUP -gt "166" ] || [ -n "$SMTPR" ] || [ -n "$IMAPR" ] || [ -n "$CRONR" ]; then
   NOTIFY=`echo $MEMP $DISKP $CPUP | awk '{printf "M:%d%% D:%d%% C:%d%%", $1, $2, $3}'`
-  NOTIFY="${NOTIFY}${CRONR}\n${SMTPR}"
+  NOTIFY="${NOTIFY}\n${CRONR}\n${SMTPR}\n{$IMAPR}"
 fi
 echo -e $NOTIFY > $LIVE
 echo $MEMP $DISKP $CPUP | awk '{printf "M:%d%% D:%d%% C:%d%%\n", $1, $2, $3}'
+SMTPDOCKER=$(docker ps -a --format "{{.Names}} {{.Status}} (Created:{{.CreatedAt}})" | grep dovecot)
+echo "SMTP: $SMTPDOCKER"
