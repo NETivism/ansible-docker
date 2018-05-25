@@ -9,7 +9,7 @@
   sudo: yes
   tasks:
     - name: Create target directory.
-      file: path=/etc/ansible/target/{{ target }} state=directory
+      file: path=/etc/ansible/target/{{ target }} state=directory owner=www-data group=www-data
 
     - name: Create hostname directory.
       template: src=roles/init/templates/hostname.j2 dest=/etc/ansible/target/{{ target }}/hostname
