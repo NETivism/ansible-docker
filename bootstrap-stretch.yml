@@ -51,6 +51,7 @@
       regexp: '^#cron'
       line: 'cron.* /var/log/cron.log'
   - service: name=rsyslog state=restarted
+  - service: name=cron state=restarted
 
   - name: remove exim4
     service: name=exim4 state=stopped
