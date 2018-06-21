@@ -74,7 +74,7 @@
 
 # upgrade neticrm 7
 - name: upgrade netiCRM 7
-  shell: cd /mnt/neticrm-7/civicrm && git checkout master && git pull
+  shell: cd /mnt/neticrm-7/civicrm && git checkout master && git fetch && git reset --hard origin/master
   tags:
     - upgrade-7
     - upgrade-7-civicrm
@@ -93,7 +93,7 @@
 
 # upgrade neticrm 6
 - name: upgrade netiCRM 6
-  shell: cd /mnt/neticrm-6/civicrm && git checkout master && git pull
+  shell: cd /mnt/neticrm-6/civicrm && git checkout master && git fetch && git reset --hard origin/master
   tags:
     - upgrade-6
     - upgrade-6-civicrm
