@@ -44,11 +44,11 @@ for RUN in `find $WWW_ROOT/*/sites/*/settings.php` ; do
     RUNNING=$(docker ps -q -f name=$SITE)
     if [ -n "$RUNNING" ]; then
       RESULT=$(docker exec $SITE bash -c "drush -l $SITE sqlq \"SHOW VARIABLES LIKE 'innodb_file_format'\"")
+    else
+      echo "!$SITE no container running"
     fi
   fi
   if [ -n "$RESULT" ]; then
     echo "$SITE $RESULT"
-  else
-    echo "!$SITE no result found"
   fi
 done
