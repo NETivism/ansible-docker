@@ -1,0 +1,9 @@
+- hosts: "{{ target }}"                                                            
+  sudo: yes                                                                        
+  roles:
+    - ../roles/common
+  tasks:                                                                           
+  - name: check mysql barracuda
+    shell: check_mysql_param.sh innodb_file_format
+    register: output                                                               
+  - debug: var=output.stdout_lines 

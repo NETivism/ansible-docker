@@ -1,19 +1,21 @@
 ---
   - name: Copy drush execute file
-    copy: src=roles/common/files/drush dest=/usr/local/bin/drush mode=0755 owner=root
+    copy: src=drush dest=/usr/local/bin/drush mode=0755 owner=root
 
   - name: Fetch sites-unavailable repo from github
     git: repo=https://github.com/NETivism/sites-unavailable.git dest=/var/www/sites-unavailable update=yes clone=yes accept_hostkey=true
 
   - name: fstrim file
-    copy: src=roles/common/files/fstrim.sh dest=/usr/local/bin/fstrim.sh mode=0755 owner=root
+    copy: src=fstrim.sh dest=/usr/local/bin/fstrim.sh mode=0755 owner=root
 
   - name: Syslive file
-    copy: src=roles/common/files/syslive.sh dest=/usr/local/bin/syslive.sh mode=0755 owner=root
+    copy: src=syslive.sh dest=/usr/local/bin/syslive.sh mode=0755 owner=root
+
+  - name: Syslive file
+    copy: src=check_mysql_param.sh dest=/usr/local/bin/check_mysql_param.sh mode=0755 owner=root
 
   - name: Update script files
-    copy: src=roles/neticrm/files/drupal_cron.sh dest=/usr/local/bin/drupal_cron.sh mode=0755 owner=answerable
-  - copy: src=roles/neticrm/files/check_module.sh dest=/usr/local/bin/check_module.sh mode=0755 owner=answerable
-  - copy: src=roles/neticrm/files/drupal_cache_clear.sh dest=/usr/local/bin/drupal_cache_clear.sh mode=0755 owner=answerable
-  - copy: src=roles/neticrm/files/neticrm_update.sh dest=/usr/local/bin/neticrm_update.sh mode=0755 owner=answerable
-
+    copy: src=../../neticrm/files/drupal_cron.sh dest=/usr/local/bin/drupal_cron.sh mode=0755 owner=answerable
+  - copy: src=../../neticrm/files/check_module.sh dest=/usr/local/bin/check_module.sh mode=0755 owner=answerable
+  - copy: src=../../neticrm/files/drupal_cache_clear.sh dest=/usr/local/bin/drupal_cache_clear.sh mode=0755 owner=answerable
+  - copy: src=../../neticrm/files/neticrm_update.sh dest=/usr/local/bin/neticrm_update.sh mode=0755 owner=answerable
