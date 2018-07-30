@@ -11,7 +11,7 @@
   - name: Syslive file
     copy: src=syslive.sh dest=/usr/local/bin/syslive.sh mode=0755 owner=root
 
-  - name: Syslive file
+  - name: Mysql Param check file
     copy: src=check_mysql_param.sh dest=/usr/local/bin/check_mysql_param.sh mode=0755 owner=root
 
   - name: Update script files
