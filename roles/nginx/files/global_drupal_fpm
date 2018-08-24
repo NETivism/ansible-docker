@@ -36,14 +36,15 @@ location / {
     return 404;
   }
 
-  # no for private
+  # deny for private
   location ~* /files/private/ {
     internal;
   }
   location ~* sites/[^/]+/private/ {
     internal;
   }
-
+  
+  # allow private file only from drupal path
   location ^~ /system/files/ {
     location ~* ^/(.+)$ {
       set $drupal_args $1;
@@ -94,6 +95,9 @@ location / {
   location ~* ^(.*)(?:.+\.(?:htaccess|make|engine|inc|info|install|module|po|sh|.*sql|sql\.gz|test|theme|tpl(?:\.php)?|xtmpl|patch|php)|code-style\.pl|/Entries.*|/Repository|/Root)$ {
     return 404;
   }
+  location ~ /\. {
+    deny all;
+  }
 
   # special case for drupal 6, force QUERY_STRING empty when access front page
   location ~* ^/$ {
@@ -133,7 +137,7 @@ location @cache {
 
   add_header    Cache-Control  private;
   add_header X-Header "Boost";
-  try_files /cache/normal/$host${uri}_$args.html @backend;
+  try_files /cache/normal/$host${uri}_$args.html /cache/normal/$host${uri}_$args.xml /cache/normal/$host${uri}_$args.json @backend;
 }
 
 location @backend {

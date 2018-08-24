@@ -34,7 +34,7 @@ location / {
     return 404;
   }
 
-  # no for private
+  # deny for private
   location ~* /files/private/ {
     internal;
   }
@@ -42,6 +42,7 @@ location / {
     internal;
   }
 
+  # allow private file only from drupal path
   location ^~ /system/files/ {
     try_files $uri @backend;
     log_not_found off;
@@ -80,6 +81,9 @@ location / {
   # secure all other drupal directory
   location ~* ^/(themes(/.*)?|modules(/.*)?|includes(/.*)?|sites|sites/[^/]*/.+\.php|sites/all/(modules|themes)(/[^/]*)?(/[^/]*)?|sites/(.*)/(modules|themes)(/[^/]*)?(/[^/]*)?)/?$ {
     return 404;
+  }
+  location ~ /\. {
+    deny all;
   }
 
   ## Replicate the Apache <FilesMatch> directive of Drupal standard
