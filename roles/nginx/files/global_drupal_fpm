@@ -96,7 +96,7 @@ location / {
     return 404;
   }
   location ~ /\. {
-    deny all;
+    return 404;
   }
 
   # special case for drupal 6, force QUERY_STRING empty when access front page

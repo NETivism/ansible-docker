@@ -83,7 +83,7 @@ location / {
     return 404;
   }
   location ~ /\. {
-    deny all;
+    return 404;
   }
 
   ## Replicate the Apache <FilesMatch> directive of Drupal standard
