@@ -1,0 +1,9 @@
+- hosts: "{{ target }}"                                                            
+  sudo: yes                                                                        
+  roles:
+    - ../roles/common
+  tasks:                                                                           
+  - name: check neticrm schema version
+    shell: check_module_version.sh neticrm_preset onlycrm
+    register: output
+  - debug: var=output.stdout_lines 
