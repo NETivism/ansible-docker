@@ -29,9 +29,9 @@ if [ -z "$WWW_ROOT" ]; then
 fi
 
 if [ -n "$FINDCRM" ]; then
-  LiST=`find $WWW_ROOT/*/sites/*/civicrm.settings.php`
+  LIST=`find $WWW_ROOT/*/sites/*/civicrm.settings.php`
 else
-  LiST=`find $WWW_ROOT/*/sites/*/settings.php`
+  LIST=`find $WWW_ROOT/*/sites/*/settings.php`
 fi
 for RUN in $LIST ; do
   NAME=${RUN//$WWW_ROOT\//}
@@ -59,9 +59,9 @@ for RUN in $LIST ; do
     fi
   fi
   if [ -n "$RESULT" ]; then
-    echo "$SITE $MODLENAME schema version = $RESULT"
+    echo "$SITE $MODLENAME schema_version $RESULT"
   else
     
-    echo "$SITE $MODLENAME not found"
+    echo "!$SITE $MODLENAME notfound"
   fi
 done
