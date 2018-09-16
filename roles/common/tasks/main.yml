@@ -14,6 +14,9 @@
   - name: Mysql Param check file
     copy: src=check_mysql_param.sh dest=/usr/local/bin/check_mysql_param.sh mode=0755 owner=root
 
+  - name: Mysql Param check file
+    copy: src=check_module_version.sh dest=/usr/local/bin/check_module_version.sh mode=0755 owner=root
+
   - name: Update script files
     copy: src=../../neticrm/files/drupal_cron.sh dest=/usr/local/bin/drupal_cron.sh mode=0755 owner=answerable
   - copy: src=../../neticrm/files/check_module.sh dest=/usr/local/bin/check_module.sh mode=0755 owner=answerable
