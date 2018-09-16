@@ -14,7 +14,7 @@
   - name: Mysql Param check file
     copy: src=check_mysql_param.sh dest=/usr/local/bin/check_mysql_param.sh mode=0755 owner=root
 
-  - name: Mysql Param check file
+  - name: Module schema version check file
     copy: src=check_module_version.sh dest=/usr/local/bin/check_module_version.sh mode=0755 owner=root
 
   - name: Update script files
