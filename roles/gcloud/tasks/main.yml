@@ -1,12 +1,34 @@
 ---
-  - name: Update the list of package available and install gcloud
-    shell: export CLOUD_SDK_REPO="cloud-sdk-$(lsb_release -c -s)" &&  echo "deb http://packages.cloud.google.com/apt $CLOUD_SDK_REPO main" | sudo tee /etc/apt/sources.list.d/packages_cloud_google_com_apt.list && curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add - && sudo apt-get update && sudo apt-get -y install google-cloud-sdk
+  - name: remove old google-cloud-sdk because conflict python-openssl
+    apt: name=google-cloud-sdk state=absent
+    become: yes
+    ignore_errors: true
+
+  - name: remove old apt list
+    shell: rm -f /etc/apt/sources.list.d/packages_cloud_google_com_apt.list
+    become: yes
+    ignore_errors: true
+
+  - name: apt-get update
+    become: yes
+    apt: update_cache=yes
+
+  - name: install standalone google-cloud-sdk
+    become: yes
+    shell: cd /tmp && curl https://dl.google.com/dl/cloudsdk/channels/rapid/install_google_cloud_sdk.bash -o install-google-cloud.sh && chmod 700 install-google-cloud.sh && /tmp/install-google-cloud.sh --disable-prompts --install-dir=/usr/local/src
+
+  - name: install bashrc for google-cloud-sdk
+    shell: echo "source /usr/local/src/google-cloud-sdk/path.bash.inc" >> /root/.bashrc && source /root/bashrc
+    become: yes
 
   - name: Create gcloud directory
     file: path=/backup/gcloud state=directory mode=0755
+    become: yes
 
   - name: Copy gcloud auth configuration file to remote
     copy: src=gcauth.json dest=/backup/gcloud/gcauth.json
+    become: yes
 
   - name: Activite gcloud
     command: gcloud auth activate-service-account --key-file /backup/gcloud/gcauth.json 
+    become: yes
