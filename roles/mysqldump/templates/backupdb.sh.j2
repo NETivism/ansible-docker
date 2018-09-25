@@ -26,12 +26,12 @@ for RUN in `find /var/www/sites/*/sites/*/settings.php -printf "%C@ %p\n" | sort
 
   if [ -n "$RUNNING" ]; then
     docker exec -i $RUNNING bash -c "mysqldump -uroot -p\$INIT_PASSWD --skip-lock-tables \$INIT_DB | gzip -9 -c > /var/www/html/log/backupdb.sql.gz"
-    gsutil -h 'Content-Type: application/gzip' -h 'Content-Disposition:attachment; filename=backupdb.sql.gz' cp -e -c /var/www/sites/$NAME/log/backupdb.sql.gz gs://neticrm/$HOSTNAME/$NAME/db/backupdb-$(date +%u).sql.gz
+    docker run --rm -v /var/www:/var/www --volumes-from gcloud-config netivism/docker-google-cloud-sdk gsutil -h 'Content-Type: application/gzip' -h 'Content-Disposition:attachment; filename=backupdb.sql.gz' cp -e -c /var/www/sites/$NAME/log/backupdb.sql.gz gs://neticrm/$HOSTNAME/$NAME/db/backupdb-$(date +%u).sql.gz
   fi
 done
 
 for RUN in `find /var/www/sites/*/sites/*/settings.php -printf "%C@ %p\n" | sort | awk '{ print $2 }'` ; do
   NAME=${RUN//\/var\/www\/sites\//}
   NAME=${NAME%%/*}
-  gsutil -m rsync -C -r -x 'log|cache|.*\.sql\.gz$|.*\.sql$|sites/.*/files/(styles|imagecache|css|js)|\.git.*' /var/www/sites/$NAME gs://neticrm/$HOSTNAME/$NAME/web/
+  docker run --rm -v /var/www:/var/www --volumes-from gcloud-config netivism/docker-google-cloud-sdk gsutil -m rsync -C -r -x 'log|cache|.*\.sql\.gz$|.*\.sql$|sites/.*/files/(styles|imagecache|css|js)|\.git.*' /var/www/sites/$NAME gs://neticrm/$HOSTNAME/$NAME/web/
 done

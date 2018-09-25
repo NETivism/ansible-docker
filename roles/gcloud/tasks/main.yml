@@ -14,7 +14,7 @@
 
   - name: install google-cloud-sdk container
     become: yes
-    shell: docker pull google/cloud-sdk:latest
+    shell: docker pull netivism/docker-google-cloud-sdk
 
   - name: Create gcloud directory
     file: path=/backup/gcloud state=directory mode=0755
@@ -25,6 +25,6 @@
     become: yes
 
   - name: Activite gcloud
-    shell: docker run -v /backup/gcloud:/backup/gcloud --name gcloud-config google/cloud-sdk gcloud auth activate-service-account --key-file /backup/gcloud/gcauth.json
+    shell: docker run -v /backup/gcloud:/backup/gcloud --name gcloud-config netivism/docker-google-cloud-sdk gcloud auth activate-service-account --key-file /backup/gcloud/gcauth.json
     become: yes
 
