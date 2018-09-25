@@ -5,21 +5,16 @@
     ignore_errors: true
 
   - name: remove old apt list
-    shell: rm -f /etc/apt/sources.list.d/packages_cloud_google_com_apt.list
-    become: yes
+    file: path=/etc/apt/sources.list.d/packages_cloud_google_com_apt.list state=absent
     ignore_errors: true
 
   - name: apt-get update
     become: yes
     apt: update_cache=yes
 
-  - name: install standalone google-cloud-sdk
+  - name: install google-cloud-sdk container
     become: yes
-    shell: cd /tmp && curl https://dl.google.com/dl/cloudsdk/channels/rapid/install_google_cloud_sdk.bash -o install-google-cloud.sh && chmod 700 install-google-cloud.sh && /tmp/install-google-cloud.sh --disable-prompts --install-dir=/usr/local/src
-
-  - name: install bashrc for google-cloud-sdk
-    shell: echo "source /usr/local/src/google-cloud-sdk/path.bash.inc" >> /root/.bashrc && source /root/bashrc
-    become: yes
+    shell: docker pull google/cloud-sdk:latest
 
   - name: Create gcloud directory
     file: path=/backup/gcloud state=directory mode=0755
@@ -30,5 +25,6 @@
     become: yes
 
   - name: Activite gcloud
-    command: gcloud auth activate-service-account --key-file /backup/gcloud/gcauth.json 
+    shell: docker run -v /backup/gcloud:/backup/gcloud --name gcloud-config google/cloud-sdk gcloud auth activate-service-account --key-file /backup/gcloud/gcauth.json
     become: yes
+
