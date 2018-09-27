@@ -26,5 +26,6 @@
 
   - name: Activite gcloud
     shell: docker run -v /backup/gcloud:/backup/gcloud --name gcloud-config netivism/docker-google-cloud-sdk gcloud auth activate-service-account --key-file /backup/gcloud/gcauth.json
+    ignore_errors: true
     become: yes
 
