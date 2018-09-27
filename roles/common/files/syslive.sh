@@ -39,6 +39,12 @@ function imapr {
     echo "IMAP: $SMTPDOCKER"
   fi
 }
+function backupr {
+  BACKUPFAILEDLOG=`cat /backup/log/$(date +%Y-%m-%d).log | grep FAILED`
+  if [ -n "$BACKUPFAILEDLOG" ]; then
+    echo "$BACKUPFAILEDLOG"
+  fi
+}
 
 MEMP=$(memp)
 DISKP=$(diskp)
@@ -46,13 +52,16 @@ CPUP=$(cpup)
 CRONR=$(cronr)
 SMTPR=$(smtpr)
 IMAPR=$(imapr)
+BACKUPR=$(backupr)
 
 NOTIFY="live"
-if [ $MEMP -gt "90" ] || [ $DISKP -gt "95" ] || [ $CPUP -gt "166" ] || [ -n "$SMTPR" ] || [ -n "$IMAPR" ] || [ -n "$CRONR" ]; then
+if [ $MEMP -gt "90" ] || [ $DISKP -gt "95" ] || [ $CPUP -gt "166" ] || [ -n "$SMTPR" ] || [ -n "$IMAPR" ] || [ -n "$CRONR" ] || [ -n "$BACKUPR" ]; then
   NOTIFY=`echo $MEMP $DISKP $CPUP | awk '{printf "M:%d%% D:%d%% C:%d%%", $1, $2, $3}'`
-  NOTIFY="${NOTIFY}\n${CRONR}\n${SMTPR}\n{$IMAPR}"
+  NOTIFY="${NOTIFY}\n${CRONR}\n${SMTPR}\n${IMAPR}\n${BACKUPR}"
 fi
 echo -e $NOTIFY > $LIVE
 echo $MEMP $DISKP $CPUP | awk '{printf "M:%d%% D:%d%% C:%d%%\n", $1, $2, $3}'
 SMTPDOCKER=$(docker ps -a --format "{{.Names}} {{.Status}} (Created:{{.CreatedAt}})" | grep dovecot)
 echo "SMTP: $SMTPDOCKER"
+echo "CRON: `/etc/init.d/cron status | grep Active`"
+if [ -z $BACKUPFAILEDLOG ]; then echo "BACKUP: ALL DONE"; else echo "BACKUP: $BACKUPFAILEDLOG"; fi
