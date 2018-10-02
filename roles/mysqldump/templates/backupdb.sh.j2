@@ -33,15 +33,13 @@ for RUN in `find /var/www/sites/*/sites/*/settings.php -printf "%C@ %p\n" | sort
 
   if [ -n "$RUNNING" ]; then
     docker exec -i $RUNNING bash -c "mysqldump -uroot -p\$INIT_PASSWD --skip-lock-tables \$INIT_DB | gzip -9 -c > /var/www/html/log/backupdb.sql.gz"
-    CMD="docker run --rm -v /var/www:/var/www --volumes-from gcloud-config netivism/docker-google-cloud-sdk gsutil -h 'Content-Type: application/gzip' -h 'Content-Disposition:attachment; filename=backupdb.sql.gz' cp -e -c /var/www/sites/$NAME/log/backupdb.sql.gz gs://neticrm/$HOSTNAME/$NAME/db/backupdb-$(date +%u).sql.gz"
-    $($CMD)
+    docker run --rm -v /var/www:/var/www --volumes-from gcloud-config netivism/docker-google-cloud-sdk gsutil -h 'Content-Type: application/gzip' -h 'Content-Disposition:attachment; filename=backupdb.sql.gz' cp -e -c /var/www/sites/$NAME/log/backupdb.sql.gz gs://neticrm/$HOSTNAME/$NAME/db/backupdb-$(date +%u).sql.gz
     RESULT=$?
     if [ $RESULT -eq 0 ]; then
       echo "SUCCESS $RUNNING db backup upload" >> "$LOG/$DATE.log"
     else
       echo "$DATETIME" >> "$LOG/$DATE.log"
       echo "FAILED $RUNNING db backup upload" >> "$LOG/$DATE.log"
-      echo "FAILED $RUNNING command: $CMD" >> "$LOG/$DATE.log"
     fi
   fi
 done
@@ -49,13 +47,11 @@ done
 for RUN in `find /var/www/sites/*/sites/*/settings.php -printf "%C@ %p\n" | sort | awk '{ print $2 }'` ; do
   NAME=${RUN//\/var\/www\/sites\//}
   NAME=${NAME%%/*}
-  CMD="docker run --rm -v /var/www:/var/www --volumes-from gcloud-config netivism/docker-google-cloud-sdk gsutil -m rsync -C -r -x 'log|cache|.*\.sql\.gz$|.*\.sql$|sites/.*/files/(styles|imagecache|css|js)|\.git.*' /var/www/sites/$NAME gs://neticrm/$HOSTNAME/$NAME/web/"
-  $($CMD)
+  docker run --rm -v /var/www:/var/www -v /var/www:/var/www -v /mnt/neticrm-7:/mnt/neticrm-7 -v /mnt/neticrm-6:/mnt/neticrm-6 --volumes-from gcloud-config netivism/docker-google-cloud-sdk gsutil -m rsync -C -r -x 'log|cache|.*\.sql\.gz$|.*\.sql$|sites/.*/files/(styles|imagecache|css|js)|\.git.*' /var/www/sites/$NAME gs://neticrm/$HOSTNAME/$NAME/web/
   if [ $RESULT -eq 0 ]; then
     echo "SUCCESS $RUNNING website backup sync" >> "$LOG/$DATE.log"
   else
     echo "$DATETIME" >> "$LOG/$DATE.log"
     echo "FAILED $RUNNING website backup sync" >> "$LOG/$DATE.log"
-    echo "FAILED $RUNNING command: $CMD" >> "$LOG/$DATE.log"
   fi
 done
