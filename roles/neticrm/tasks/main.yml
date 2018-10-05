@@ -184,13 +184,6 @@
   become_method: sudo
   tags: upgrade-db
 
-- name: Copy check module to place
-  copy: src=check_module.sh dest=/usr/local/bin/check_module.sh mode=0755 owner=answerable
-  become: yes
-  become_method: sudo
-  tags:
-    - load
-
 - name: Copy enable crm module to place
   copy: src=enable_crm_module.sh dest=/usr/local/bin/enable_crm_module.sh mode=0755 owner=answerable
   become: yes
