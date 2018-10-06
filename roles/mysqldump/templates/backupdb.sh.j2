@@ -50,6 +50,7 @@ for RUN in `find /var/www/sites/*/sites/*/settings.php -printf "%C@ %p\n" | sort
   NAME=${NAME%%/*}
   DATETIME=`date +'%Y-%m-%d %H:%M:%S %a'`
   docker run --rm -v /var/www:/var/www -v /var/www:/var/www -v /mnt/neticrm-7:/mnt/neticrm-7 -v /mnt/neticrm-6:/mnt/neticrm-6 --volumes-from gcloud-config netivism/docker-google-cloud-sdk gsutil -m rsync -C -r -x 'log|cache|.*\.sql\.gz$|.*\.sql$|sites/.*/files/(styles|imagecache|css|js)|\.git.*' /var/www/sites/$NAME gs://neticrm/$HOSTNAME/$NAME/web/
+  RESULT=$?
   echo "$DATETIME" >> "$LOG/$DATE.log"
   if [ $RESULT -eq 0 ]; then
     echo "SUCCESS $NAME website backup sync" >> "$LOG/$DATE.log"
