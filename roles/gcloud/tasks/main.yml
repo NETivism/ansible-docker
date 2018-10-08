@@ -8,10 +8,6 @@
     file: path=/etc/apt/sources.list.d/packages_cloud_google_com_apt.list state=absent
     ignore_errors: true
 
-  - name: apt-get update
-    become: yes
-    apt: update_cache=yes
-
   - name: install google-cloud-sdk container
     become: yes
     shell: docker pull netivism/docker-google-cloud-sdk

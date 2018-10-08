@@ -49,7 +49,13 @@ for RUN in `find /var/www/sites/*/sites/*/settings.php -printf "%C@ %p\n" | sort
   NAME=${RUN//\/var\/www\/sites\//}
   NAME=${NAME%%/*}
   DATETIME=`date +'%Y-%m-%d %H:%M:%S %a'`
-  docker run --rm -v /var/www:/var/www -v /var/www:/var/www -v /mnt/neticrm-7:/mnt/neticrm-7 -v /mnt/neticrm-6:/mnt/neticrm-6 --volumes-from gcloud-config netivism/docker-google-cloud-sdk gsutil -m rsync -C -r -x 'log|cache|.*\.sql\.gz$|.*\.sql$|sites/.*/files/(styles|imagecache|css|js)|\.git.*' /var/www/sites/$NAME gs://neticrm/$HOSTNAME/$NAME/web/
+  RUNNING=$(docker ps -q -f name=^/$NAME$)
+  if [ -n "$RUNNING" ]; then
+    MOUNTS=`docker inspect -f '{{range .Mounts}}{{println "-v" .Source ":" .Destination}}{{end}}' $RUNNING | sed -s 's/ : /:/g' | tr '\n' ' '`
+  else
+    MOUNTS="-v /var/www:/var/www -v /var/www:/var/www -v /mnt/neticrm-7:/mnt/neticrm-7 -v /mnt/neticrm-6:/mnt/neticrm-6"
+  fi
+  docker run --rm $MOUNTS --volumes-from gcloud-config netivism/docker-google-cloud-sdk gsutil -m rsync -C -r -x 'log|cache|.*\.sql\.gz$|.*\.sql$|sites/.*/files/(styles|imagecache|css|js)|\.git.*' /var/www/sites/$NAME gs://neticrm/$HOSTNAME/$NAME/web/
   RESULT=$?
   echo "$DATETIME" >> "$LOG/$DATE.log"
   if [ $RESULT -eq 0 ]; then
