@@ -66,6 +66,6 @@ for RUN in `find /var/www/sites/*/sites/*/settings.php -printf "%C@ %p\n" | sort
     echo "SUCCESS $NAME website backup sync" >> "$LOG/$DATE.log"
   else
     echo "FAILED $NAME website backup sync" >> "$LOG/$DATE.log"
-    echo "$CMD"
+    echo "$CMD" >> "$LOG/$DATE.log"
   fi
 done
