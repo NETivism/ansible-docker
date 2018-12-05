@@ -49,6 +49,13 @@
     tags:
       - rebuild
 
+  - name: Remove last saved vmail_json prevent wrong assignment
+    file: path=/var/vmail/tmp/vmail_json state=absent
+    tags:
+      - create
+      - start
+      - restart
+
   - name: Create container
     shell: >
       /usr/bin/docker run -d
@@ -78,14 +85,23 @@
       - start
 
   - name: Wait for service startup
-    wait_for: port=587 delay=10
+    wait_for: port=587 delay=15 state=started
     tags:
       - create
       - start
       - restart
 
-  - name: Save mail account and password into vmail_json
+  - name: Check vmail_json stat
+    stat: path=/var/vmail/tmp/vmail_json
+    register: vmailjson
+    tags:
+      - create
+      - start
+      - restart
+
+  - name: Save mail account and password into vmail_json when exists
     fetch: src=/var/vmail/tmp/vmail_json dest=/etc/ansible/target/{{ inventory_hostname }}/vmail_json flat=yes
+    when: vmailjson.stat.exists == True
     tags:
       - create
       - start
