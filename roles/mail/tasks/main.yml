@@ -85,7 +85,13 @@
       - start
 
   - name: Wait for service startup
-    wait_for: port=587 delay=15 state=started
+    shell: sleep 10
+    tags:
+      - create
+      - start
+      - restart
+
+  - wait_for: port=587 delay=10 state=started
     tags:
       - create
       - start
