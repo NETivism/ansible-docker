@@ -5,8 +5,6 @@
     - timezone
     - ntp
     - logrotate
-    - gcloud
-    - mysqldump
   vars:
     timezone: Asia/Taipei
     ntp_timezone: Asia/Taipei
