@@ -26,5 +26,6 @@ for RUN in `find /var/www/sites/*/sites/*/civicrm.settings.php` ; do
     fi
     docker exec -i $NAME bash -c "drush -l $SITE neticrm-clear-cache --yes"
     docker exec -i $NAME bash -c "drush -l $SITE neticrm-rebuildmenu --yes"
+    docker exec -i $NAME bash -c "drush -l $SITE cache-clear drush --yes"
   fi
 done
