@@ -148,6 +148,7 @@
   become: yes
   become_method: sudo
   tags:
+    - cache-clear-site
     - upgrade-db
     - load
     - deploy-7
