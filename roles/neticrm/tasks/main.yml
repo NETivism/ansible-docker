@@ -170,6 +170,14 @@
     - upgrade-7
     - upgrade-6
 
+- name: Run drush cache-clear drush prevent neticrms not running
+  shell: bash -c "/usr/local/bin/drupal_cache_clear.sh drush"
+  become: yes
+  become_method: sudo
+  tags:
+    - upgrade-7
+    - upgrade-6
+
 # cache clear
 - name: Clear cache and NOT run upgrade database script
   shell: bash -c "/usr/local/bin/neticrm_update.sh"
