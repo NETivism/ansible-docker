@@ -24,3 +24,6 @@
     copy: src=../../neticrm/files/drupal_cron.sh dest=/usr/local/bin/drupal_cron.sh mode=0755 owner=answerable
   - copy: src=../../neticrm/files/drupal_cache_clear.sh dest=/usr/local/bin/drupal_cache_clear.sh mode=0755 owner=answerable
   - copy: src=../../neticrm/files/neticrm_update.sh dest=/usr/local/bin/neticrm_update.sh mode=0755 owner=answerable
+
+  - name: Update logrotate
+    copy: src=../../logrotate/files/nginx dest=/etc/logrotate.d/nginx mode=0644 owner=root
