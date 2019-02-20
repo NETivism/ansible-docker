@@ -176,7 +176,6 @@
   become_method: sudo
   tags:
     - upgrade-7
-    - upgrade-6
 
 # cache clear
 - name: Clear cache and NOT run upgrade database script
