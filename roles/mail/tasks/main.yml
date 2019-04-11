@@ -138,10 +138,9 @@
 
   - name: Include smtp conf into drupal settings file
     lineinfile:
-      dest="/var/www/sites/{{ domain }}/sites/default/settings.php"
-      regexp=""
-      line="if(is_file(dirname(__FILE__).'/smtp.settings.php')){ @include_once('smtp.settings.php'); }"
-      insertafter=EOF
+      dest: "/var/www/sites/{{ domain }}/sites/default/settings.php"
+      line: "if(is_file(dirname(__FILE__).'/smtp.settings.php')){ @include_once('smtp.settings.php'); }"
+      insertafter: EOF
     when: settings.stat.exists == True
     tags:
       - site-setting
