@@ -13,7 +13,8 @@
   daily
   compress
   delaycompress
-  postrotate
-    /usr/bin/docker restart dovecot > /dev/null 2>/dev/null || true
-  endscript
+  minsize 2M
+  notifempty
+  missingok
+  copytruncate
 }
