@@ -1,8 +1,11 @@
 /var/www/sites/*/log/*.log {
   su root
-  rotate 7
-  daily
+  rotate 4
+  weekly
   compress
   delaycompress
   copytruncate
+  minsize 2M
+  notifempty
+  missingok
 }
