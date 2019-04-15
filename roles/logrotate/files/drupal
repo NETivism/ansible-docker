@@ -4,6 +4,9 @@
   weekly
   compress
   delaycompress
+  minsize 2M
+  notifempty
+  missingok
   copytruncate
   minsize 2M
   notifempty

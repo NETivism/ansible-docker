@@ -27,3 +27,9 @@
 
   - name: Update logrotate
     copy: src=../../logrotate/files/nginx dest=/etc/logrotate.d/nginx mode=0644 owner=root
+
+  - name: Update logrotate drupal
+    copy: src=../../logrotate/files/drupal dest=/etc/logrotate.d/drupal mode=0644 owner=root
+
+  - name: Update logrotate vmail
+    copy: src=../../logrotate/files/vmail dest=/etc/logrotate.d/vmail mode=0644 owner=root
