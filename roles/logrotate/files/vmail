@@ -13,7 +13,6 @@
   daily
   compress
   delaycompress
-  minsize 2M
   notifempty
   missingok
   copytruncate
