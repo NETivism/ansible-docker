@@ -45,8 +45,8 @@ for RUN in `find /var/www/sites/*/sites/*/settings.php -printf "%C@ %p\n" | sort
       echo "SUCCESS $NAME db backup upload" >> "$LOG/$DATE.log"
       if [ ! -d /backup/db/$NAME ]; then
         mkdir -p /backup/db/$NAME
-        mv /var/www/sites/$NAME/log/backupdb.sql.gz /backup/db/$NAME/
       fi
+      mv /var/www/sites/$NAME/log/backupdb.sql.gz /backup/db/$NAME/
     else
       echo "FAILED $NAME db backup upload" >> "$LOG/$DATE.log"
     fi
