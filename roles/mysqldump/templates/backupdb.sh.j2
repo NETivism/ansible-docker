@@ -5,6 +5,7 @@ LOG="/backup/log"
 DATETIME=`date +'%Y-%m-%d %H:%M:%S %a'`
 DATE=`date +%Y-%m-%d`
 echo "" > "$LOG/$DATE.log"
+MONTHDAY=$(date +%d)
 if [ ! -d $LOG ]; then
   mkdir -p $LOG
 fi
@@ -35,10 +36,17 @@ for RUN in `find /var/www/sites/*/sites/*/settings.php -printf "%C@ %p\n" | sort
     docker exec -i $RUNNING bash -c "mysqldump -uroot -p\$INIT_PASSWD --skip-lock-tables \$INIT_DB | gzip -9 -c > /var/www/html/log/backupdb.sql.gz"
     DATETIME=`date +'%Y-%m-%d %H:%M:%S %a'`
     docker run --rm -v /var/www:/var/www --volumes-from gcloud-config netivism/docker-google-cloud-sdk gsutil -h 'Content-Type: application/gzip' -h 'Content-Disposition:attachment; filename=backupdb.sql.gz' cp -e -c /var/www/sites/$NAME/log/backupdb.sql.gz gs://neticrm/$HOSTNAME/$NAME/db/backupdb-$(date +%u).sql.gz
+    if [ "$MONTHDAY" == "01" ]; then
+      docker run --rm -v /var/www:/var/www --volumes-from gcloud-config netivism/docker-google-cloud-sdk gsutil -h 'Content-Type: application/gzip' -h 'Content-Disposition:attachment; filename=backupdb.sql.gz' cp -e -c /var/www/sites/$NAME/log/backupdb.sql.gz gs://neticrm/$HOSTNAME/$NAME/db/backupdb-m$(date +%m).sql.gz
+    fi;
     RESULT=$?
     echo "$DATETIME" >> "$LOG/$DATE.log"
     if [ $RESULT -eq 0 ]; then
       echo "SUCCESS $NAME db backup upload" >> "$LOG/$DATE.log"
+      if [ ! -d /backup/db/$NAME ]; then
+        mkdir -p /backup/db/$NAME
+        mv /var/www/sites/$NAME/log/backupdb.sql.gz /backup/db/$NAME/
+      fi
     else
       echo "FAILED $NAME db backup upload" >> "$LOG/$DATE.log"
     fi
