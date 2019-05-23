@@ -74,15 +74,15 @@
 
 # upgrade neticrm 7
 - name: upgrade netiCRM 7
-  shell: cd /mnt/neticrm-7/civicrm && git checkout master && git fetch && git reset --hard origin/master
+  shell: cd /mnt/neticrm-7/civicrm && bash -c "git rev-parse --abbrev-ref HEAD | grep -q master && git checkout master && git fetch && git reset --hard origin/master"
   tags:
     - upgrade-7
     - upgrade-7-civicrm
-- shell: cd /mnt/neticrm-7/civicrm/neticrm && git checkout 7.x-master && git pull
+- shell: cd /mnt/neticrm-7/civicrm/neticrm && bash -c "git rev-parse --abbrev-ref HEAD | grep -q 7.x-master && git checkout 7.x-master && git pull"
   tags:
     - upgrade-7
     - upgrade-7-neticrm
-- shell: cd /mnt/neticrm-7/civicrm/drupal && git checkout 7.x-master && git pull
+- shell: cd /mnt/neticrm-7/civicrm/drupal && bash -c "git rev-parse --abbrev-ref HEAD | grep -q 7.x-master && git checkout 7.x-master && git pull"
   tags:
     - upgrade-7
     - upgrade-7-drupal
@@ -93,14 +93,18 @@
 
 # upgrade neticrm 6
 - name: upgrade netiCRM 6
-  shell: cd /mnt/neticrm-6/civicrm && git checkout master && git fetch && git reset --hard origin/master
+  shell: cd /mnt/neticrm-6/civicrm && bash -c "git rev-parse --abbrev-ref HEAD | grep -q master && git checkout master && git fetch && git reset --hard origin/master"
   tags:
     - upgrade-6
     - upgrade-6-civicrm
-- shell: cd /mnt/neticrm-6/civicrm/neticrm && git checkout 6.x-master && git pull && cd /mnt/neticrm-6/civicrm/drupal && git checkout 6.x-master && git pull
+- shell: cd /mnt/neticrm-6/civicrm/neticrm && bash -c "git rev-parse --abbrev-ref HEAD | grep -q 6.x-master && git checkout 6.x-master && git pull && cd /mnt/neticrm-6/civicrm/drupal && git checkout 6.x-master && git pull"
   tags:
     - upgrade-6
     - upgrade-6-neticrm
+- shell: cd /mnt/neticrm-6/civicrm/drupal && bash -c "git rev-parse --abbrev-ref HEAD | grep -q 6.x-master && git checkout 6.x-master && git pull"
+  tags:
+    - upgrade-6
+    - upgrade-6-drupal
 - shell: cd /mnt/neticrm-6/neticrmp && git fetch --all && git reset --hard origin/6.x-master
   tags:
     - upgrade-6
