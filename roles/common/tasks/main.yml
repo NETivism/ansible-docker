@@ -37,7 +37,7 @@
   - name: Add neticrms drush check 
     copy: src=../../neticrm/files/neticrms_drush_check.sh dest=/usr/local/bin/neticrms_drush_check.sh mode=0755 owner=answerable
   - name: Add cron job for neticrm drush check
-    cron: name="check drush neticrms" minute="33" hour="*/6" cron_file="neticrms_drush_check" user="root" job="bash -c /usr/local/bin/neticrm_drush_check.sh > /var/log/neticrm_drush_check.log"
+    cron: name="check drush neticrms" minute="33" hour="*/6" cron_file="neticrms_drush_check" user="root" job="bash -c /usr/local/bin/neticrms_drush_check.sh > /var/log/neticrm_drush_check.log"
   - name: Copy logrotate to system
     copy: src=../../logrotate/files/neticrm dest=/etc/logrotate.d/neticrm mode=0644 owner=root
 
