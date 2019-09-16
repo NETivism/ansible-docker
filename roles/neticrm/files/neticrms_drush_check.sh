@@ -1,14 +1,4 @@
 #!/bin/bash
-if [ -z "$1" ]; then
-  echo "  Usage: "
-  echo "    $0 module_name"
-  exit 1
-fi
-
-if [ -n "$1" ]; then
-  MODULE="$1"
-fi
-
 WWW_ROOT=$WWW_ROOT
 if [ -z "$WWW_ROOT" ]; then
   if [ -d "/var/www/sites" ]; then
@@ -41,10 +31,10 @@ for RUN in `find $WWW_ROOT/*/sites/*/civicrm.settings.php` ; do
   RUNNING=$(docker ps -q -f name=$SITE)
   if [ -n "$RUNNING" ]; then
     echo "Checking drush neticrms for $SITE ..."
-    LINE=/usr/bin/docker exec -i $RUNNING bash -c "drush -l $SITE neticrms 2>&1" | grep run_civimail | wc -l
+    LINE=$(/usr/bin/docker exec -i $RUNNING bash -c "drush -l $SITE neticrms 2>&1" | grep run_civimail | wc -l)
     if [ -z "$LINE" ]; then
       echo "neticrms NOT found. clear drush ..."
-      /usr/bin/docker exec -i $RUNNING bash -c "drush -l $SITE cc drush"
+      $(/usr/bin/docker exec -i $RUNNING bash -c "drush -l $SITE cc drush")
     else
       echo "neticrms found, go to next site."
     fi
