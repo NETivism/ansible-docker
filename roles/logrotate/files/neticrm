@@ -1,0 +1,12 @@
+/var/log/drupal_cron.log
+/var/log/neticrm_drush_check.log
+{
+  rotate 4
+  weekly
+  compress
+  delaycompress
+  minsize 2M
+  notifempty
+  missingok
+  copytruncate
+}
