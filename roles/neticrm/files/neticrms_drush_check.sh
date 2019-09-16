@@ -32,7 +32,7 @@ for RUN in `find $WWW_ROOT/*/sites/*/civicrm.settings.php` ; do
   if [ -n "$RUNNING" ]; then
     echo "Checking drush neticrms for $SITE ..."
     LINE=$(/usr/bin/docker exec -i $RUNNING bash -c "drush -l $SITE neticrms 2>&1" | grep run_civimail | wc -l)
-    if [ -z "$LINE" ]; then
+    if [ $LINE == 0 ]; then
       echo "neticrms NOT found. clear drush ..."
       $(/usr/bin/docker exec -i $RUNNING bash -c "drush -l $SITE cc drush")
     else
