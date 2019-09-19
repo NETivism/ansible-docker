@@ -46,7 +46,7 @@ server {
   }
 }
 server {
-  listen 443 ssl spdy default_server;
+  listen 443 ssl http2 default_server;
   server_name _;
   ssl_certificate      ssl/neticrm.tw/neticrm.tw.crt;
   ssl_certificate_key  ssl/neticrm.tw/neticrm.tw.key;

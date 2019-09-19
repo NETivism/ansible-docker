@@ -1,7 +1,7 @@
 {% for redirect in redirects %}
 server {
   listen 80;
-  listen 443 ssl spdy;
+  listen 443 ssl {% if nginx_version.stdout == "1.6" %}spdy{% else %}http2{% endif %};
   server_name {{ redirect.source }};
   include /etc/nginx/include/ssl.conf;
   return 301 $scheme://{{ redirect.dest }}$request_uri;

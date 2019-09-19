@@ -3,7 +3,7 @@ server {
   listen 80;
 {% endif %}
 {% if ssl == 1 %}
-  listen 443 ssl spdy;
+  listen 443 ssl {% if nginx_version.stdout == "1.6" %}spdy{% else %}http2{% endif %};
 {% elif ssl == 2 %}
   listen 443 ssl {% if nginx_version.stdout == "1.6" %}spdy{% else %}http2{% endif %};
 {% endif %}
@@ -34,7 +34,7 @@ server {
 {% endif %}
 {% if ssl == 0 %}
 server {
-  listen 443 ssl spdy;
+  listen 443 ssl {% if nginx_version.stdout == "1.6" %}spdy{% else %}http2{% endif %};
   server_name {{ domain }}{% if alias is defined %}{% for item in alias %} {{ item }}{% endfor %}{% endif %};
   ssl_certificate      {{ ssl_crt }};
   ssl_certificate_key  {{ ssl_key }};
