@@ -10,6 +10,8 @@ docker_cron_run_neticrm(){
   docker exec -i $1 bash -c "cd /var/www/html && drush -l $2 neticrms run_contact_greeting_update"
   docker exec -i $1 bash -c "cd /var/www/html && drush -l $2 neticrms run_participant_processor"
   docker exec -i $1 bash -c "cd /var/www/html && drush -l $2 neticrms run_membership_status_update"
+  # prevent upload dir being root
+  docker exec -i $1 bash -c "ls -ld /tmp/$1 | grep -v 'www-data www-data' | awk '{ print \$NF }' | xargs chown -R www-data:www-data"
 }
 
 # make sure we have
