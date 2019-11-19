@@ -1,12 +1,9 @@
 /var/www/sites/*/log/*.log {
-  su root
+  su root www-data
   rotate 4
   weekly
   compress
   delaycompress
-  minsize 2M
-  notifempty
-  missingok
   copytruncate
   minsize 2M
   notifempty
