@@ -14,7 +14,7 @@ let skip_defaults_vim = 1
 " Set more options (overwrites settings from /usr/share/vim/vim80/defaults.vim)
 " Add as many options as you whish
 
-" Set the mouse mode to 'r'
+" Set the mouse mode to ''
 if has('mouse')
-  set mouse=r
+  set mouse=
 endif
