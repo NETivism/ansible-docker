@@ -1,0 +1,5 @@
+[DEFAULT]
+postfix_log = /var/vmail/log/mail.warn
+postfix_backend = %(default_backend)s
+dovecot_log = /var/vmail/log/dovecot
+dovecot_backend = %(default_backend)s

@@ -1,0 +1,21 @@
+# Fail2Ban configuration file
+#
+# Regexp to catch known spambots and software alike. Please verify
+# that it is your intent to block IPs which were driven by
+# above mentioned bots.
+
+
+[Definition]
+
+failregex = ^\S+ <HOST> -.*"(GET|POST|HEAD).*HTTP[^"]+"\s(40\d|50\d)\s.*"$
+
+ignoreregex =
+
+[Init]
+datepattern = \[%%d/%%b/%%Y:%%H:%%M:%%S +%%z\]
+
+# DEV Notes:
+# List of bad bots fetched from http://www.user-agents.org
+# Generated on Thu Nov  7 14:23:35 PST 2013 by files/gen_badbots.
+#
+# Author: Yaroslav Halchenko
