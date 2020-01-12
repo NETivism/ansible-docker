@@ -3,8 +3,8 @@
     - '/etc/ansible/target/all/security'
   sudo: yes
   roles:
-  - firewall
   - fail2ban
+  - firewall
   tasks:
   - name: Disallow root login by sshd
     lineinfile:
