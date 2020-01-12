@@ -47,14 +47,6 @@ logpath = %(sshd_log)s
 backend = %(sshd_backend)s
 maxretry = 10
 
-[sshd-ddos]
-
-enabled = true
-port    = ssh
-logpath = %(sshd_log)s
-backend = %(sshd_backend)s
-maxretry = 20
-
 #
 # HTTP servers
 #
@@ -72,7 +64,7 @@ enabled = true
 port     = http,https
 logpath  = %(nginx_access_log)s
 maxretry = 10
-bantime  = 300
+bantime  = 600
 
 [nginx-badattempt]
 
@@ -86,7 +78,7 @@ action = %(action_lg)s
 
 [postfix]
 
-enabled = true
+enabled = false
 port     = 25,465,587,993,2525
 logpath  = %(postfix_log)s
 backend  = %(postfix_backend)s
@@ -100,7 +92,7 @@ enabled = true
 port     = 25,465,587,993,2525
 logpath = %(dovecot_log)s
 backend = %(dovecot_backend)s
-maxretry = 10
+maxretry = 5
 
 
 [postfix-sasl]
@@ -110,6 +102,6 @@ port     = 25,465,587,993,2525
 # You might consider monitoring /var/log/mail.warn instead if you are
 # running postfix since it would provide the same log lines at the
 # "warn" level but overall at the smaller filesize.
-logpath  = %(postfix_log)s
+logpath  = %(postfix_warn_log)s
 backend  = %(postfix_backend)s
-maxretry = 10
+maxretry = 5
