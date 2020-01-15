@@ -71,6 +71,9 @@
     register: nginx_version
     tags:
       - start
+      - reload
+      - suspend
+      - remove
 
   - name: Add Nginx vhost configuration file in sites-available
     # http://docs.ansible.com/template_module.html
