@@ -19,7 +19,7 @@ types {
   text/csv csv;
   text/x-markdown md;
 }
-gzip_types text/plain text/css application/x-javascript application/javascript text/javascript ext/xml application/xml application/xml+rss application/json text/csv application/vnd.ms-fontobject application/x-font-ttf font/opentype;
+gzip_types text/plain text/css application/x-javascript application/javascript text/javascript ext/xml application/xml application/xml+rss application/json text/csv application/x-font-ttf font/opentype;
 
 # scope server
 server {

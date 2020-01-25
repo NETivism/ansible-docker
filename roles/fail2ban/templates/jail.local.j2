@@ -66,6 +66,16 @@ logpath  = %(nginx_access_log)s
 maxretry = 10
 bantime  = 600
 
+[nginx-sql-attack]
+
+enabled = true
+port     = http,https
+logpath  = %(nginx_access_log)s
+findtime  = 7200
+bantime  = 43200
+maxretry = 10
+action = %(action_lg)s
+
 [nginx-badattempt]
 
 enabled = true
@@ -73,7 +83,7 @@ port     = http,https
 logpath  = %(nginx_access_log)s
 findtime  = 1800
 maxretry = 50
-action = %(action_lg)s
+bantime  = 3600
 
 # Mail servers
 

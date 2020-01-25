@@ -49,6 +49,7 @@ function backupr {
 function fail2banr {
   FAILLOG=`cat /var/log/fbanned.log | grep Fail2Ban`
   if [ -n "$FAILLOG" ]; then
+    FAILLOG=`cat /var/log/fbanned.log | grep -A 3 Fail2Ban`
     echo "$FAILLOG"
   fi
 }
