@@ -51,6 +51,8 @@ function fail2banr {
   if [ -n "$FAILLOG" ]; then
     FAILLOG=`cat /var/log/fbanned.log | grep -A 3 Fail2Ban`
     echo "$FAILLOG"
+    cp /var/log/fbanned.log /var/log/fbanned.log.1
+    echo "" > /var/log/fbanned.log
   fi
 }
 
