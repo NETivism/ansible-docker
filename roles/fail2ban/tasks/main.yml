@@ -21,5 +21,9 @@
   - name: Add jail configuration file and bring default variables
     template: src=jail.local.j2 dest=/etc/fail2ban/jail.local
 
+  - name: Prepare mail.warn
+    shell: mkdir -p /var/vmail/log && touch /var/vmail/log/mail.warn
+    ignore_errors: true
+
   - name: Restart fail2ban
     service: name=fail2ban state=restarted enabled=yes
