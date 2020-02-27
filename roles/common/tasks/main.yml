@@ -20,6 +20,9 @@
   - name: Module schema version check file
     copy: src=check_module_version.sh dest=/usr/local/bin/check_module_version.sh mode=0755 owner=root
 
+  - name: dove-expunge file
+    copy: src=dove-expunge.sh dest=/usr/local/bin/dove-expunge.sh mode=0755 owner=root
+
   - name: Update script files
     copy: src=../../neticrm/files/drupal_cron.sh dest=/usr/local/bin/drupal_cron.sh mode=0755 owner=answerable
   - copy: src=../../neticrm/files/drupal_cache_clear.sh dest=/usr/local/bin/drupal_cache_clear.sh mode=0755 owner=answerable
@@ -43,3 +46,6 @@
 
   - name: Correct debian 9 vim mouse behaviour
     copy: src=vimrc.local dest=/etc/vim/vimrc.local mode=0644 owner=root
+
+  - name: Add cron job for dove-expunge
+    cron: name="dovecot expunge" minute="45" hour="7" cron_file="dove_expunge" user="root" job="bash -c /usr/local/bin/dove-expunge.sh > /dev/null 2>&1"

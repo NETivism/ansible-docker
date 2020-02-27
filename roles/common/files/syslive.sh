@@ -46,6 +46,16 @@ function backupr {
   fi
 }
 
+function fail2banr {
+  FAILLOG=`cat /var/log/fbanned.log | grep Fail2Ban`
+  if [ -n "$FAILLOG" ]; then
+    FAILLOG=`cat /var/log/fbanned.log | grep -A 3 Fail2Ban`
+    echo "$FAILLOG"
+    cp /var/log/fbanned.log /var/log/fbanned.log.1
+    echo "" > /var/log/fbanned.log
+  fi
+}
+
 MEMP=$(memp)
 DISKP=$(diskp)
 CPUP=$(cpup)
@@ -53,15 +63,22 @@ CRONR=$(cronr)
 SMTPR=$(smtpr)
 IMAPR=$(imapr)
 BACKUPR=$(backupr)
+FAIL2BANR=$(fail2banr)
 
 NOTIFY="live"
-if [ $MEMP -gt "90" ] || [ $DISKP -gt "95" ] || [ $CPUP -gt "166" ] || [ -n "$SMTPR" ] || [ -n "$IMAPR" ] || [ -n "$CRONR" ] || [ -n "$BACKUPR" ]; then
-  NOTIFY=`echo $MEMP $DISKP $CPUP | awk '{printf "M:%d%% D:%d%% C:%d%%", $1, $2, $3}'`
-  NOTIFY="${NOTIFY}\n${CRONR}\n${SMTPR}\n${IMAPR}\n${BACKUPR}"
+if [ $MEMP -gt "90" ] || [ $DISKP -gt "95" ] || [ $CPUP -gt "166" ] || [ -n "$SMTPR" ] || [ -n "$IMAPR" ] || [ -n "$CRONR" ] || [ -n "$BACKUPR" ] || [ -n "$FAIL2BANR" ]; then
+  NOTIFYR=`echo $MEMP $DISKP $CPUP | awk '{printf "M:%d%% D:%d%% C:%d%%", $1, $2, $3}'`
+  NOTIFY="${NOTIFYR}"
+  if [ -n "$CRONR" ];then NOTIFY="${NOTIFY}\n$CRONR"; fi
+  if [ -n "$SMTPR" ];then NOTIFY="${NOTIFY}\n$SMTPR"; fi
+  if [ -n "$IMAPR" ];then NOTIFY="${NOTIFY}\n$IMAPR"; fi
+  if [ -n "$BACKUPR" ];then NOTIFY="${NOTIFY}\n$BACKUPR"; fi
+  if [ -n "$FAIL2BANR" ];then NOTIFY="${NOTIFY}\n$FAIL2BANR"; fi
 fi
 echo -e $NOTIFY > $LIVE
 echo $MEMP $DISKP $CPUP | awk '{printf "M:%d%% D:%d%% C:%d%%\n", $1, $2, $3}'
 SMTPDOCKER=$(docker ps -a --format "{{.Names}} {{.Status}} (Created:{{.CreatedAt}})" | grep dovecot)
 echo "SMTP: $SMTPDOCKER"
 echo "CRON: `/etc/init.d/cron status | grep Active`"
-if [ -z $BACKUPFAILEDLOG ]; then echo "BACKUP: ALL DONE"; else echo "BACKUP: $BACKUPFAILEDLOG"; fi
+if [ -z "$BACKUPFAILEDLOG" ]; then echo "BACKUP: ALL DONE"; else echo "BACKUP: $BACKUPFAILEDLOG"; fi
+if [ -z "$FAIL2BANR" ]; then echo "NO fail2ban"; else echo "FAIL2BAN: $FAIL2BANR"; fi

@@ -3,6 +3,7 @@
     - '/etc/ansible/target/all/security'
   sudo: yes
   roles:
+  - fail2ban
   - firewall
   tasks:
   - name: Disallow root login by sshd
@@ -54,5 +55,15 @@
       - { regexp: '^  AllowTcpForwarding no', line: '  AllowTcpForwarding no' }
       - { regexp: '^  X11Forwarding no', line: '  X11Forwarding no' }
 
+  - name: Force answerable login only with pubkey
+    lineinfile:
+      dest: /etc/ssh/sshd_config
+      regexp: "^  AuthenticationMethods publickey"
+      insertafter: '^Match User answerable'
+      line: '  AuthenticationMethods publickey'
+
   - name: Reload SSHD
     service: name=sshd state=reloaded
+
+
+

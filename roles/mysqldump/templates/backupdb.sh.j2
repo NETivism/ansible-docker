@@ -86,3 +86,21 @@ for RUN in `find /var/www/sites/*/sites/*/settings.php -printf "%C@ %p\n" | sort
     echo "$CMD" >> "$LOG/$DATE.log"
   fi
 done
+
+for RUN in `find /var/www/sites/*/log/dobackup -printf "%C@ %p\n" | sort | awk '{ print $2 }'` ; do
+  NAME=${RUN//\/var\/www\/sites\//}
+  NAME=${NAME%%/*}
+  DATETIME=`date +'%Y-%m-%d %H:%M:%S %a'`
+  RUNNING=$(docker ps -q -f name=^/$NAME$)
+  MOUNTS="-v /var/www:/var/www -v /mnt/neticrm-7:/mnt/neticrm-7 -v /mnt/neticrm-6:/mnt/neticrm-6"
+  docker run --rm $MOUNTS --volumes-from gcloud-config netivism/docker-google-cloud-sdk gsutil -m rsync -e -C -r -x 'log|cache|.*\.sql\.gz$|.*\.sql$|sites/.*/files/(styles|imagecache|css|js)|\.git.*' /var/www/sites/$NAME gs://neticrm/$HOSTNAME/$NAME/web/
+  RESULT=$?
+  CMD="docker run --rm $MOUNTS --volumes-from gcloud-config netivism/docker-google-cloud-sdk gsutil -m rsync -e -C -r -x 'log|cache|.*\.sql\.gz$|.*\.sql$|sites/.*/files/(styles|imagecache|css|js)|\.git.*' /var/www/sites/$NAME gs://neticrm/$HOSTNAME/$NAME/web/"
+  echo "$DATETIME" >> "$LOG/$DATE.log"
+  if [ $RESULT -eq 0 ]; then
+    echo "SUCCESS $NAME special website backup sync" >> "$LOG/$DATE.log"
+  else
+    echo "FAILED $NAME special website backup sync" >> "$LOG/$DATE.log"
+    echo "$CMD" >> "$LOG/$DATE.log"
+  fi
+done

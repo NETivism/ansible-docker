@@ -1,0 +1,29 @@
+---
+  - name: Install fail2ban
+    become: yes
+    apt:
+      update_cache: yes
+      cache_valid_time: 3600
+      pkg: fail2ban
+      state: installed
+
+  - name: Install *.local files
+    copy: src={{ item }} dest=/etc/fail2ban/ owner=root mode=644
+    with_fileglob:
+      - ./*
+  - copy: src={{ item }} dest=/etc/fail2ban/action.d/ owner=root mode=644
+    with_fileglob:
+      - ./action.d/*
+  - copy: src={{ item }} dest=/etc/fail2ban/filter.d/ owner=root mode=644
+    with_fileglob:
+      - ./filter.d/*
+
+  - name: Add jail configuration file and bring default variables
+    template: src=jail.local.j2 dest=/etc/fail2ban/jail.local
+
+  - name: Prepare mail.warn
+    shell: mkdir -p /var/vmail/log && touch /var/vmail/log/mail.warn
+    ignore_errors: true
+
+  - name: Restart fail2ban
+    service: name=fail2ban state=restarted enabled=yes

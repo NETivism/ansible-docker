@@ -1,0 +1,118 @@
+[DEFAULT]
+
+# "ignoreip" can be an IP address, a CIDR mask or a DNS host. Fail2ban will not
+# ban a host which matches an address in this list. Several addresses can be
+# defined using space (and/or comma) separator.
+ignoreip = 127.0.0.0/8 10.0.0.0/8 172.16.0.0/12 192.168.0.0/16 {% for addr in firewall_allowed_ip %}{{ addr }} {% endfor %}
+
+# "bantime" is the number of seconds that a host is banned.
+bantime  = 1800
+
+# A host is banned if it has generated "maxretry" during the last "findtime"
+# seconds.
+findtime  = 600
+
+# "maxretry" is the number of failures before a host get banned.
+maxretry = 30
+
+# "usedns" specifies if jails should trust hostnames in logs,
+#   warn when DNS lookups are performed, or ignore all hostnames in logs
+#
+# yes:   if a hostname is encountered, a DNS lookup will be performed.
+# warn:  if a hostname is encountered, a DNS lookup will be performed,
+#        but it will be logged as a warning.
+# no:    if a hostname is encountered, will not be used for banning,
+#        but it will be logged as info.
+# raw:   use raw value (no hostname), allow use it for no-host filters/actions (example user)
+usedns = raw
+
+# custom action - log
+action_lg = %(banaction)s[name=%(__name__)s, bantime="%(bantime)s", port="%(port)s", protocol="%(protocol)s", chain="%(chain)s"]
+            simplelog[name=%(__name__)s, bantime="%(bantime)s", port="%(port)s", protocol="%(protocol)s", chain="%(chain)s"]
+
+# Choose default action.  To change, just override value of 'action' with the
+# interpolation to the chosen action shortcut (e.g.  action_mw, action_mwl, etc) in jail.local
+# globally (section [DEFAULT]) or per specific section
+action = %(action_)s
+
+#
+# SSH servers
+#
+
+[sshd]
+
+enabled = true
+port    = ssh
+logpath = %(sshd_log)s
+backend = %(sshd_backend)s
+maxretry = 10
+
+#
+# HTTP servers
+#
+
+[nginx-limit-req]
+
+port    = http,https
+logpath = %(nginx_error_log)s
+maxretry = 5
+action = %(action_lg)s
+
+[nginx-badbots]
+
+enabled = true
+port     = http,https
+logpath  = %(nginx_access_log)s
+maxretry = 10
+bantime  = 600
+
+[nginx-sql-attack]
+
+enabled = true
+port     = http,https
+logpath  = %(nginx_access_log)s
+findtime  = 7200
+bantime  = 1800
+maxretry = 10
+action = %(action_lg)s
+
+[nginx-badattempt]
+
+enabled = true
+port     = http,https
+logpath  = %(nginx_access_log)s
+findtime  = 1800
+maxretry = 50
+bantime  = 3600
+
+# Mail servers
+
+[postfix]
+
+enabled = false
+port     = 25,465,587,993,2525
+logpath  = %(postfix_log)s
+backend  = %(postfix_backend)s
+maxretry = 10
+
+# dovecot defaults to logging to the mail syslog facility
+# but can be set by syslog_facility in the dovecot configuration.
+[dovecot]
+
+enabled = true
+port     = 25,465,587,993,2525
+logpath = %(dovecot_log)s
+backend = %(dovecot_backend)s
+maxretry = 5
+
+
+[postfix-sasl]
+
+enabled = true
+port     = 25,465,587,993,2525
+# You might consider monitoring /var/log/mail.warn instead if you are
+# running postfix since it would provide the same log lines at the
+# "warn" level but overall at the smaller filesize.
+logpath  = %(postfix_warn_log)s
+backend  = %(postfix_backend)s
+maxretry = 5

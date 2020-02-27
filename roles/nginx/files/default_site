@@ -5,7 +5,7 @@ client_max_body_size 100M;
 # security
 server_tokens off;
 limit_req_zone $binary_remote_addr zone=phpip:10m rate=3r/s;
-limit_req_zone $server_name zone=phpserver:10m rate=12r/s;
+limit_req_zone $server_name zone=phpserver:10m rate=24r/s;
 
 # type
 types {
@@ -19,7 +19,7 @@ types {
   text/csv csv;
   text/x-markdown md;
 }
-gzip_types text/plain text/css application/x-javascript application/javascript text/javascript ext/xml application/xml application/xml+rss application/json text/csv application/vnd.ms-fontobject application/x-font-ttf font/opentype;
+gzip_types text/plain text/css application/x-javascript application/javascript text/javascript ext/xml application/xml application/xml+rss application/json text/csv application/x-font-ttf font/opentype;
 
 # scope server
 server {
