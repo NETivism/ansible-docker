@@ -2,7 +2,7 @@
 # file: nginx.yml
 - hosts: '{{ target }}'
   vars_files:
-    - '/etc/ansible/target/{{ inventory_hostname }}/redirect'
+    - '/etc/ansible/target/{{ target }}/redirect'
   sudo: yes
   roles:
     - nginx
