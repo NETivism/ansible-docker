@@ -8,22 +8,8 @@
   connection: local
   sudo: yes
   tasks:
-    - name: Create target directory.
-      file: path=/etc/ansible/target/{{ target }} state=directory owner=www-data group=www-data
-
-    - name: Create hostname directory.
-      template: src=roles/init/templates/hostname.j2 dest=/etc/ansible/target/{{ target }}/hostname
-    - name: Create redirect file.
-      template: src=roles/init/templates/redirect.j2 dest=/etc/ansible/target/{{ target }}/redirect
-    - name: Create user file.
-      template: src=roles/init/templates/user.j2 dest=/etc/ansible/target/{{ target }}/user
-    - name: Create vmail file.
-      template: src=roles/init/templates/vmail.j2 dest=/etc/ansible/target/{{ target }}/vmail
-    - name: Create letsencrypt file
-      template: src=roles/init/templates/letsencrypt.j2 dest=/etc/ansible/target/{{ target }}/letsencrypt
     - name: Upgrade debian package
       apt: update_cache=yes cache_valid_time=3600
     - shell: bash -c "apt-get upgrade --assume-yes &> /var/log/system_upgrade.log"
+      ignore_errors: yes
 
-    - name: Copy hostname to remote
-      shell: echo "{{ hostname }}" > /etc/ansible/fqdn

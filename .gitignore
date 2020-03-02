@@ -5,6 +5,8 @@
 *.crt
 *.orig
 *.swp
+*.retry
+files
 public_keys
 init.yml
 production
