@@ -29,6 +29,7 @@
       - python-dev
       - nginx-full
       - nginx
+      - libnginx-mod-http-uploadprogress
       - whois
       - bc
       - python-setuptools # for python pip
