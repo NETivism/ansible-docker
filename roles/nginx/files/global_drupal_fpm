@@ -99,6 +99,8 @@ location / {
     return 404;
   }
 
+  include /etc/nginx/include/upload_progress.conf;
+
   # special case for drupal 6, force QUERY_STRING empty when access front page
   location ~* ^/$ {
     # boost detect

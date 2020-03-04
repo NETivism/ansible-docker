@@ -2,6 +2,10 @@
 # allows file uploads up to 20 megabytes
 client_max_body_size 100M;
 
+## For the filefield_nginx_progress module to work. From the
+## README. Reserve 1MB under the name 'uploads' to track uploads.
+upload_progress uploads 1m;
+
 # security
 server_tokens off;
 limit_req_zone $binary_remote_addr zone=phpip:10m rate=3r/s;
