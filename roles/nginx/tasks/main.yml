@@ -11,7 +11,7 @@
       - reload
 
   - name: Copy override config file
-    file: path=/etc/nginx/include state=directory mode=0755 owner=answerable
+    file: path=/etc/nginx/include state=directory mode=0755 owner=debian
     tags:
       - start
       - reload
