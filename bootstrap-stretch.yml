@@ -113,12 +113,6 @@
       groups: docker
       append: yes
 
-  - name: Allow remote user use docker
-    user:
-      name: debian
-      groups: docker
-      append: yes
-
   - name: Make sure docker is running
     service:
       name: docker
