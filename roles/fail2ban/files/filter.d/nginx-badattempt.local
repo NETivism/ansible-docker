@@ -7,7 +7,7 @@
 
 [Definition]
 
-failregex = ^\S+ <HOST> -.*"(GET|POST|HEAD).*HTTP[^"]+"\s(40\d|50\d)\s.*"$
+failregex = ^\S+ <HOST> -.*"(GET|POST|HEAD).*(^\.png|\.jpg|\.PNG|\.JPG)\sHTTP[^"]+"\s(40\d|50\d)\s.*"$
 
 ignoreregex =
 
