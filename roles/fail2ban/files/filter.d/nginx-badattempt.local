@@ -7,9 +7,9 @@
 
 [Definition]
 
-failregex = ^\S+ <HOST> -.*"(GET|POST|HEAD).*(^\.png|\.jpg|\.PNG|\.JPG)\sHTTP[^"]+"\s(40\d|50\d)\s.*"$
+failregex = ^\S+ <HOST> -.*"(GET|POST|HEAD).*\sHTTP[^"]+"\s(40\d|50\d)\s.*"$
 
-ignoreregex =
+ignoreregex = (\.png|\.jpg|\.PNG|\.JPG)\sHTTP[^"]+"
 
 [Init]
 datepattern = \[%%d/%%b/%%Y:%%H:%%M:%%S +%%z\]
