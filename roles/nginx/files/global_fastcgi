@@ -34,3 +34,4 @@ fastcgi_hide_header X-Powered-By;
 fastcgi_hide_header X-Generator;
 fastcgi_hide_header Server;
 
+track_uploads uploads 60s;
