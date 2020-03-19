@@ -28,6 +28,13 @@
       - start
       - reload 
 
+  - name: copy default file to upload servers
+    copy: src=/etc/ansible/playbooks/roles/nginx/files/default_site_without_http2 dest=/etc/nginx/include/default_site owner=root mode=644
+    when: inventory_hostname in groups['load']
+    tags:
+      - start
+      - reload
+
   - name: Remove default nginx file prevent duplicate
     file: path=/etc/nginx/sites-enabled/0_default state=absent
     tags:
