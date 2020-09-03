@@ -25,5 +25,13 @@
     shell: mkdir -p /var/vmail/log && touch /var/vmail/log/mail.warn
     ignore_errors: true
 
+  - name: Limit Python call stack to limit fail2ban memory usage
+    become: yes
+    lineinfile:
+      dest: /etc/default/fail2ban
+      state: present
+      regexp: '^ulimit'
+      line: 'ulimit -s 256'
+
   - name: Restart fail2ban
     service: name=fail2ban state=restarted enabled=yes
