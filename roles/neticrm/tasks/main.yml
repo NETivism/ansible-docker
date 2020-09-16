@@ -8,8 +8,26 @@
     - deploy-7
     - deploy-6
 
-- name: Cron - setup cronjob
-  copy: src=drupal_cron dest=/etc/cron.d/drupal_cron mode=0644 owner=root
+- name: Cron - copy to specify location
+  copy: src=neticrm_cron.sh dest=/usr/local/bin/neticrm_cron.sh mode=0755 owner=answerable
+  become: yes
+  become_method: sudo
+  tags:
+    - load
+    - deploy-7
+    - deploy-6
+
+- name: Cron - setup cronjob for drupal
+  cron: name="drupal cron" minute="*/10" hour="*" cron_file="drupal_cron" user="root" job="bash -c /usr/local/bin/drupal_cron.sh > /dev/null 2>&1"
+  become: yes
+  become_method: sudo
+  tags:
+    - load
+    - deploy-7
+    - deploy-6
+
+- name: Cron - setup cronjob for neticrm
+  cron: name="neticrm cron" minute="*/7" hour="*" cron_file="neticrm_cron" user="root" job="bash -c /usr/local/bin/neticrm_cron.sh > /dev/null 2>&1"
   become: yes
   become_method: sudo
   tags:

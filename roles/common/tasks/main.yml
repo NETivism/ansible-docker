@@ -27,8 +27,9 @@
     copy: src=../../neticrm/files/drupal_cron.sh dest=/usr/local/bin/drupal_cron.sh mode=0755 owner=answerable
   - copy: src=../../neticrm/files/drupal_cache_clear.sh dest=/usr/local/bin/drupal_cache_clear.sh mode=0755 owner=answerable
   - copy: src=../../neticrm/files/neticrm_update.sh dest=/usr/local/bin/neticrm_update.sh mode=0755 owner=answerable
+  - copy: src=../../neticrm/files/neticrm_cron.sh dest=/usr/local/bin/neticrm_cron.sh mode=0755 owner=answerable
 
-  - name: Update logrotate
+  - name: Update logrotate nginx
     copy: src=../../logrotate/files/nginx dest=/etc/logrotate.d/nginx mode=0644 owner=root
 
   - name: Update logrotate drupal
@@ -37,15 +38,20 @@
   - name: Update logrotate vmail
     copy: src=../../logrotate/files/vmail dest=/etc/logrotate.d/vmail mode=0644 owner=root
 
+  - name: Update logrotate neticrm
+    copy: src=../../logrotate/files/vmail dest=/etc/logrotate.d/neticrm mode=0644 owner=root
+
   - name: Add neticrms drush check 
     copy: src=../../neticrm/files/neticrms_drush_check.sh dest=/usr/local/bin/neticrms_drush_check.sh mode=0755 owner=answerable
+
   - name: Add cron job for neticrm drush check
     cron: name="check drush neticrms" minute="33" hour="*/6" cron_file="neticrms_drush_check" user="root" job="bash -c /usr/local/bin/neticrms_drush_check.sh > /var/log/neticrms_drush_check.log"
-  - name: Copy logrotate to system
-    copy: src=../../logrotate/files/neticrm dest=/etc/logrotate.d/neticrm mode=0644 owner=root
 
   - name: Correct debian 9 vim mouse behaviour
     copy: src=vimrc.local dest=/etc/vim/vimrc.local mode=0644 owner=root
 
   - name: Add cron job for dove-expunge
     cron: name="dovecot expunge" minute="45" hour="7" cron_file="dove_expunge" user="root" job="bash -c /usr/local/bin/dove-expunge.sh > /dev/null 2>&1"
+
+  - name: Add cron job for neticrm
+    cron: name="neticrm cron" minute="*/7" hour="*" cron_file="neticrm_cron" user="root" job="bash -c /usr/local/bin/neticrm_cron.sh > /dev/null 2>&1"

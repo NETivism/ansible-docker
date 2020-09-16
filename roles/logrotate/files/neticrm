@@ -1,5 +1,6 @@
 /var/log/drupal_cron.log
 /var/log/neticrm_drush_check.log
+/var/log/neticrm_cron.log
 {
   rotate 4
   weekly
