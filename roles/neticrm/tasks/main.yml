@@ -27,7 +27,7 @@
     - deploy-6
 
 - name: Cron - setup cronjob for neticrm
-  cron: name="neticrm cron" minute="*/7" hour="*" cron_file="neticrm_cron" user="root" job="bash -c /usr/local/bin/neticrm_cron.sh > /dev/null 2>&1"
+  cron: name="neticrm cron" minute="*/5" hour="*" cron_file="neticrm_cron" user="root" job="bash -c /usr/local/bin/neticrm_cron.sh > /dev/null 2>&1"
   become: yes
   become_method: sudo
   tags:

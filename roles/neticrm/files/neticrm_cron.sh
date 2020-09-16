@@ -29,6 +29,7 @@ for RUN in `find /var/www/sites/*/sites/*/civicrm.settings.php -mmin +$LIMIT_MIN
       echo "Excceed $LIMIT_NUM of sites in each cron"
       break
     fi
+    sleep $(( ( RANDOM % 3 )  + 1 ))
     touch $RUN
     echo "$(date +"%Y-%m-%d %H:%M:%S") $NAME neticrm cron run" >> /var/log/neticrm_cron.log
 

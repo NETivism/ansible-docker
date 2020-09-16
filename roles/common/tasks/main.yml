@@ -54,4 +54,4 @@
     cron: name="dovecot expunge" minute="45" hour="7" cron_file="dove_expunge" user="root" job="bash -c /usr/local/bin/dove-expunge.sh > /dev/null 2>&1"
 
   - name: Add cron job for neticrm
-    cron: name="neticrm cron" minute="*/7" hour="*" cron_file="neticrm_cron" user="root" job="bash -c /usr/local/bin/neticrm_cron.sh > /dev/null 2>&1"
+    cron: name="neticrm cron" minute="*/5" hour="*" cron_file="neticrm_cron" user="root" job="bash -c /usr/local/bin/neticrm_cron.sh > /dev/null 2>&1"
