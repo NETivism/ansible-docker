@@ -45,6 +45,7 @@ for RUN in `find /var/www/sites/*/sites/*/settings.php -mmin +$LIMIT_MIN -printf
       break
     fi
     echo "$(date +"%Y-%m-%d %H:%M:%S") $NAME cron run" >> /var/log/drupal_cron.log
+    sleep $(( ( RANDOM % 3 )  + 1 ))
     touch $RUN
     docker_cron_run $NAME $SITE
     CRMSETTING=${RUN/settings.php/civicrm.settings.php}
