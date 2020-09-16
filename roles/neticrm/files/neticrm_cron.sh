@@ -4,7 +4,7 @@ COUNT=0
 
 # make sure we can run 5 sites per 5 mins
 LIMIT_NUM=5
-LIMIT_MIN=5
+LIMIT_MIN=4
 
 for RUN in `find /var/www/sites/*/sites/*/civicrm.settings.php -mmin +$LIMIT_MIN -printf "%C@ %p\n" | sort | awk '{ print $2 }'` ; do
   NAME=${RUN//\/var\/www\/sites\//}
@@ -29,12 +29,12 @@ for RUN in `find /var/www/sites/*/sites/*/civicrm.settings.php -mmin +$LIMIT_MIN
       echo "Excceed $LIMIT_NUM of sites in each cron"
       break
     fi
-    sleep $(( ( RANDOM % 3 )  + 1 ))
     touch $RUN
-    echo "$(date +"%Y-%m-%d %H:%M:%S") $NAME neticrm cron run" >> /var/log/neticrm_cron.log
+    sleep $(( ( RANDOM % 3 )  + 1 ))
 
     BATCH_RUN_OUTPUT=$(docker exec -i $NAME bash -c "cd /var/www/html && drush -l $SITE neticrm-batch-run" 2>&1)
     if [[ $BATCH_RUN_OUTPUT = *"[ok]"* ]]; then
+      echo "$(date +"%Y-%m-%d %H:%M:%S") $NAME neticrm cron run" >> /var/log/neticrm_cron.log
       COUNT=$(($COUNT+1))
     fi
     echo $COUNT
