@@ -27,11 +27,24 @@
       - mysql-client
       - git
       - python-dev
-      - nginx-full
-      - nginx
       - whois
       - bc
       - python-setuptools # for python pip
+
+  - name: Install nginx from PHP Sury
+    shell: add-apt-repository "deb https://packages.sury.org/nginx/ stretch main"
+    when: ansible_distribution == "Debian"
+
+  - shell: curl -fsSL https://packages.sury.org/nginx/apt.gpg | sudo apt-key add -
+  - apt:
+      update_cache: yes
+      cache_valid_time: 3600
+      pkg: "{{ item }}"
+      state: installed
+    with_items:
+      - nginx
+      - nginx-full
+    when: ansible_distribution == "Debian"
 
   - name: Install Python Pip
     # http://stackoverflow.com/questions/27341064/how-do-i-fix-importerror-cannot-import-name-incompleteread
