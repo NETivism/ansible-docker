@@ -6,9 +6,12 @@ global $conf, $base_url;
 # HTTP only
 ini_set("session.cookie_httponly", 1);
 
-# Limit to 5 login attempts from one IP address per 30 minutes
+# Limit to 5 login attempts from one IP address/user per 10 minutes
 $conf['user_failed_login_ip_limit'] = 5;
-$conf['user_failed_login_ip_window'] = 1800;
+$conf['user_failed_login_ip_window'] = 600;
+$conf['user_failed_login_user_limit'] = 5;
+$conf['user_failed_login_user_window'] = 600;
+$conf['user_failed_login_identifier_uid_only'] = 0;
 
 # we can only reset error_reporting here (after bootstrap env done)
 ini_set('error_reporting', E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED);
