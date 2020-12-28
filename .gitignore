@@ -1,3 +1,5 @@
+# Ignore Dirs
+private/
 # Ignore files
 *.pub
 *.bak
