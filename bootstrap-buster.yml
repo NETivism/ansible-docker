@@ -1,0 +1,194 @@
+---
+- hosts: '{{ target }}'
+  become: yes
+  roles:
+    - timezone
+    - ntp
+    - logrotate
+  vars:
+    timezone: Asia/Taipei
+    ntp_timezone: Asia/Taipei
+  tasks:
+  - name: Install other packages we need
+    apt:
+      update_cache: yes
+      cache_valid_time: 3600
+      pkg: "{{ item }}"
+      state: installed
+    with_items:
+      - pwgen
+      - vim
+      - realpath
+      - curl
+      - bash-completion
+      - apt-transport-https
+      - ca-certificates
+      - software-properties-common
+      - mysql-client
+      - git
+      - python-dev
+      - whois
+      - bc
+      - python-setuptools # for python pip
+
+  - name: Install nginx from PHP Sury
+    shell: add-apt-repository "deb https://packages.sury.org/nginx/ stretch main"
+    when: ansible_distribution == "Debian"
+
+  - shell: curl -fsSL https://packages.sury.org/nginx/apt.gpg | sudo apt-key add -
+  - apt:
+      update_cache: yes
+      cache_valid_time: 3600
+      pkg: "{{ item }}"
+      state: installed
+    with_items:
+      - nginx
+      - nginx-full
+    when: ansible_distribution == "Debian"
+
+  - name: Install Python Pip
+    # http://stackoverflow.com/questions/27341064/how-do-i-fix-importerror-cannot-import-name-incompleteread
+    easy_install:
+      name: pip
+
+  - name: Make sure nginx started when os boot
+    service: name=nginx state=started enabled=yes
+
+
+# Misc
+  - name: Separate cron to single log
+    lineinfile:
+      dest: /etc/rsyslog.conf
+      regexp: '^#cron'
+      line: 'cron.* /var/log/cron.log'
+  - service: name=rsyslog state=restarted
+  - service: name=cron state=restarted
+
+  - name: remove exim4
+    service: name=exim4 state=stopped
+    ignore_errors: yes
+  - apt: name=exim4 state=absent
+    ignore_errors: true 
+  - apt: name=exim4-base state=absent
+    ignore_errors: true 
+  - apt: name=exim4-config state=absent
+    ignore_errors: true 
+  - apt: name=exim4-daemon-light state=absent
+    ignore_errors: true 
+
+  - name: Check if dhparams exists
+    file: path=/etc/nginx/ssl state=directory
+  - stat: path=/etc/nginx/ssl/dhparams.pem
+    register: dhparams
+
+  - name: Generate dhparams when necessery (needs wait awhile)
+    shell: openssl dhparam -out /etc/nginx/ssl/dhparams.pem 2048
+    when: dhparams.stat.isreg is not defined
+
+  - name: Nginx log format
+    replace:
+      dest: /etc/nginx/nginx.conf
+      regexp: '^\s*(access_log\s[^;]*access\.log);$'
+      replace: "\tlog_format vcombined '$host $remote_addr - $remote_user [$time_local] \"$request\" $status $body_bytes_sent \"$http_referer\" \"$http_user_agent\"';\n\t\\1 vcombined;"
+  - name: Remove default nginx file prevent duplicate
+    file: path=/etc/nginx/sites-enabled/default state=absent
+
+  - name: Alias 'cd' to 'cd -P'
+    lineinfile: dest=/etc/bash.bashrc line="alias cd='cd -P'"
+
+  - name: Add auto completion
+    lineinfile: dest=/root/.bashrc line="[ -f /etc/bash_completion ] && . /etc/bash_completion"
+
+# docker related below
+# we install docker last because third-party dependency
+  - name: Docker - prepare install
+    shell: curl -fsSL https://download.docker.com/linux/debian/gpg | sudo apt-key add -
+    when: ansible_distribution == "Debian"
+  - name: Docker - prepare install
+    shell: curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+    when: ansible_distribution == "Ubuntu"
+
+  - shell: add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/debian $(lsb_release -cs) stable"
+    when: ansible_distribution == "Debian"
+  - shell: add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+    when: ansible_distribution == "Ubuntu"
+
+  - shell: apt-get update
+
+  - name: Docker - install
+    shell: apt-get install docker-ce=19.03.14~ce-0~debian-$(lsb_release -cs) -y
+    when: ansible_distribution == "Debian"
+  - name: Docker - install
+    shell: apt-get install docker-ce=19.03.14~ce-0~ubuntu-$(lsb_release -cs) -y
+    when: ansible_distribution == "Ubuntu"
+
+  - name: Allow remote user use docker
+    user:
+      name: answerable
+      groups: docker
+      append: yes
+
+  - name: Make sure docker is running
+    service:
+      name: docker
+      state: started
+
+  - name: Install Docker-py
+    pip:
+      name: docker-py
+      version: 1.2.3
+      state: present
+
+  - name: Clone docker-sh git repository
+    # http://docs.ansible.com/git_module.html
+    git: repo=https://github.com/NETivism/docker-sh.git dest=/etc/ansible/docker-sh accept_hostkey=yes
+
+  - name: Create the directory for docker repository
+    # http://docs.ansible.com/file_module.html
+    file: path=/etc/ansible/docker owner=root group=root mode=0755 state=directory
+
+  - name: Create the directory for place sites and databases
+    # http://docs.ansible.com/file_module.html
+    file:
+      path: "{{ item }}"
+      mode: 0755
+      state: directory
+    with_items:
+      - "/var/www/sites"
+      - "/var/mysql/sites"
+
+# some rolling upgrade here
+  - name: Remove default nginx file prevent duplicate
+    file: path=/etc/nginx/sites-enabled/0_default state=absent
+
+  - name: include directory should exists
+    file: path=/etc/nginx/include state=directory
+
+  - name: Copy default file to nginx
+    copy: src=roles/nginx/files/default_site dest=/etc/nginx/include/default_site owner=root mode=644
+
+  - name: Link default file
+    file: src=/etc/nginx/include/default_site dest=/etc/nginx/sites-enabled/0_default state=link
+
+  - name: Update logrotate
+    copy: src=roles/logrotate/files/vmail dest=/etc/logrotate.d/vmail
+
+  - name: fstrim file
+    copy: src=roles/common/files/fstrim.sh dest=/usr/local/bin/fstrim.sh mode=0755 owner=root
+
+  - name: fstrim cron
+    cron: name="release used space by container" minute="10" hour="2" weekday="0" cron_file="fstrim" user="root" job="bash -c /usr/local/bin/fstrim.sh > /dev/null 2>&1"
+
+  - name: Allow remote user use docker
+    user:
+      name: answerable
+      shell: /bin/bash
+      groups: docker
+      append: yes
+
+  - name: Syslive file
+    copy: src=roles/common/files/syslive.sh dest=/usr/local/bin/syslive.sh mode=0755 owner=root
+
+  - name: Syslive cron
+    cron: name="system usage live status" minute="*/6" hour="*" cron_file="syslive" user="root" job="bash -c /usr/local/bin/syslive.sh > /dev/null 2>&1"
+
