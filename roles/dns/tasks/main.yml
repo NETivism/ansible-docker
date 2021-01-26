@@ -44,7 +44,7 @@
       - alias
 
   - name: Get total pages of domain
-    shell: linode-cli --format "id,name" domains records-list {{ domain_id.stdout }} | grep -o "^Page [0-9] of [0-9]" | awk '{ print $4 }'
+    shell: bash -c "PAGE=\$(linode-cli --format 'id,name' domains records-list {{ domain_id.stdout }} | grep -o '^Page [0-9] of [0-9]' | awk '{ print \$4 }') && [[ -z \"\$PAGE\" ]] && echo 1 || echo \$PAGE"
     when: "'{{ domain_id.stdout }}' != '' and '{{ main_domain }}' in '{{ domain }}'"
     register: page
     tags:
@@ -53,18 +53,13 @@
       - suspend
       - remove
 
-  - name: Set total pages to 1 when no total pages
-    shell: echo 1
-    when: "'{{ domain_id.stdout }}' != '' and '{{ main_domain }}' in '{{ domain }}' and '{{ page.stdout }}' == ''"
-    register: page
+  - debug:
+      msg: "{{ page }}"
     tags:
       - findrecord
-      - offline
-      - suspend
-      - remove
 
   - name: Find record id when multiple pages
-    shell: bash -c "i=1; while [[ \$i -lt 10 ]]; do linode-cli --text --suppress-warnings --no-headers --format 'id,name' domains records-list {{ domain_id.stdout }} --page=\$i; if [[ \$i -eq {{page.stdout}} ]]; then break; fi; ((i++)); done;" | grep -P "\t{{ sub.0 }}$" | awk '{ print $1 }';
+    shell: bash -c "i=1; while [[ \$i -lt 10 ]]; do linode-cli --text --suppress-warnings --no-headers --format 'id,name' domains records-list {{ domain_id.stdout }} --page=\$i; if [[ \$i -eq {{ page.stdout }} ]]; then break; fi; ((i++)); done;" | grep -P "\t{{ sub.0 }}$" | awk '{ print $1 }';
     when: "'{{ domain_id.stdout }}' != '' and '{{ main_domain }}' in '{{ domain }}' and '{{ page.stdout }}' != ''"
     register: record_id
     tags:
