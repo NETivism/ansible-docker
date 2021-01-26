@@ -2,7 +2,7 @@
 # file: put_hostname.yml
 - hosts: "{{ target }}"
   remote_user: answerable
-  sudo: yes
+  become: yes
   vars_files:
     - '/etc/ansible/target/{{ inventory_hostname }}/hostname'
   tasks:

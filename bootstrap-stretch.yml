@@ -1,6 +1,6 @@
 ---
 - hosts: '{{ target }}'
-  sudo: yes
+  become: yes
   roles:
     - timezone
     - ntp

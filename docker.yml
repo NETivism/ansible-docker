@@ -1,7 +1,7 @@
 ---
 # file: docker.yml
 - hosts: '{{ target }}'
-  sudo: yes
+  become: yes
   vars_files:
     - '/etc/ansible/target/{{ inventory_hostname }}/hostname'
     - '/etc/ansible/target/{{ inventory_hostname }}/{{ domain }}'
@@ -11,7 +11,7 @@
 
 - hosts: localhost
   connection: local
-  sudo: yes
+  become: yes
   vars_files:
     - '/etc/ansible/target/{{ target }}/hostname'
   roles:

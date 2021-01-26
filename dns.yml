@@ -2,6 +2,6 @@
 # file: dns.yml
   - hosts: localhost
     connection: local
-    sudo: yes
+    become: yes
     roles:
       - dns

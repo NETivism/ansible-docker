@@ -1,5 +1,5 @@
 - hosts: '{{ target }}'
-  sudo: yes
+  become: yes
   tasks:
   - name: Create ping.netivism.com.tw directory
     file: path=/var/www/sites/ping.netivism.com.tw state=directory

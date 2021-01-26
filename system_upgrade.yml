@@ -1,7 +1,7 @@
 ---
 # file: system_upgrade.yml
 - hosts: "{{ target }}"
-  sudo: yes
+  become: yes
   tasks:
     - apt: update_cache=yes cache_valid_time=3600
     - shell: bash -c "DEBIAN_FRONTEND=noninteractive apt-get upgrade --assume-yes &> /var/log/system_upgrade.log"

@@ -1,6 +1,6 @@
 ---
 # file: watchtower.yml
   - hosts: "{{ target }}"
-    sudo: yes
+    become: yes
     roles:
       - watchtower

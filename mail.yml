@@ -1,7 +1,7 @@
 ---
 # Mail Server from docker container
 - hosts: "{{ target }}"
-  sudo: yes
+  become: yes
   vars_files:
     - '/etc/ansible/target/{{ inventory_hostname }}/hostname'
     - '/etc/ansible/target/{{ inventory_hostname }}/vmail'

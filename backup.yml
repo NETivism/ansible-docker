@@ -1,7 +1,7 @@
 ---
 # file: backup.yml
   - hosts: "{{ target }}"
-    sudo: yes
+    become: yes
     roles:
       - { role: 'gcloud', tags: [ 'gcloud' ] }
       - { role: 'mysqldump', tags: [ 'mysqldump'] }

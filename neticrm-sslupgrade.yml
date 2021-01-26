@@ -1,6 +1,6 @@
 # file: docker.yml
 - hosts: "{{ target }}"
-  sudo: yes
+  become: yes
   handlers:
     - include: roles/nginx/handlers/main.yml
   tasks:

@@ -3,6 +3,6 @@
 - hosts: '{{ target }}'
   vars_files:
     - '/etc/ansible/target/{{ inventory_hostname }}/redirect'
-  sudo: yes
+  become: yes
   roles:
     - nginx

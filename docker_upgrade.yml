@@ -1,6 +1,6 @@
 ---
 # file: docker_upgrade.yml
 - hosts: "{{ target }}"
-  sudo: yes
+  become: yes
   tasks:
     - include: roles/common/tasks/update_docker.yml

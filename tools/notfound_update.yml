@@ -2,7 +2,7 @@
 # file: rolling_upgrade.yml
 - hosts: "{{ target }}"
   remote_user: answerable
-  sudo: yes
+  become: yes
   tasks:
     - name: Remove default nginx file prevent duplicate
       file: path=/etc/nginx/sites-enabled/default state=absent

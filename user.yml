@@ -1,7 +1,7 @@
 ---
 # file: user.yml
 - hosts: '{{ target }}'
-  sudo: yes
+  become: yes
   vars_files:
     - '/etc/ansible/target/{{ inventory_hostname }}/user'
   roles:

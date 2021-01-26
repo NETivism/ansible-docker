@@ -1,5 +1,5 @@
 - hosts: "{{ target }}"                                                            
-  sudo: yes                                                                        
+  become: yes                                                                        
   tasks:                                                                           
   - name: check neticrm schema version
     shell: check_module_version.sh neticrm_update onlycrm

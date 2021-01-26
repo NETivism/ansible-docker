@@ -1,5 +1,5 @@
 - hosts: "{{ target }}"                                                            
-  sudo: yes                                                                        
+  become: yes                                                                   
   roles:
     - ../roles/common
   tasks:                                                                           
