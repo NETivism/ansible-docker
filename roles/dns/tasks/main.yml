@@ -53,11 +53,6 @@
       - suspend
       - remove
 
-  - debug:
-      msg: "{{ page }}"
-    tags:
-      - findrecord
-
   - name: Find record id when multiple pages
     shell: bash -c "i=1; while [[ \$i -lt 10 ]]; do linode-cli --text --suppress-warnings --no-headers --format 'id,name' domains records-list {{ domain_id.stdout }} --page=\$i; if [[ \$i -eq {{ page.stdout }} ]]; then break; fi; ((i++)); done;" | grep -P "\t{{ sub.0 }}$" | awk '{ print $1 }';
     when: "'{{ domain_id.stdout }}' != '' and '{{ main_domain }}' in '{{ domain }}' and '{{ page.stdout }}' != ''"
