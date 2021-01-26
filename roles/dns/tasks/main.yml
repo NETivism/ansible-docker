@@ -3,6 +3,7 @@
     set_fact:
       sub: "{{ domain | split('.') }}"
     tags:
+      - findrecord
       - create
       - start
       - alias
@@ -10,24 +11,24 @@
       - suspend 
       - remove
 
-  - name: Check if master domain not exist.
-    shell: linode domain show {{ main_domain }} | grep find
-    register: domain_check
-    ignore_errors: true
-    tags:
-      - create
+        #  - name: Check if master domain not exist.
+        #    shell: linode-cli --text --suppress-warnings --no-headers --format "id,domain" domains list | grep {{ main_domain }}
+        #    register: domain_check
+        #    ignore_errors: true
+        #    tags:
+        #      - create
 
-  - name: Create a master domain.
-    shell: linode domain create {{ main_domain }} mis@netivism.com.tw
-    when: domain_check.stderr != ""
-    tags:
-      - create
+        #  - name: Create a master domain.
+        #    shell: linode-cli domains create --type master --domain {{ main_domain }} --soa_email mis@netivism.com.tw
+        #    when: domain_check.stderr != ""
+        #    tags:
+      #      - create
 
-  - name:  Check if domain record not exist.
-    shell: bash -c "linode domain record-list {{ main_domain }} | grep {{ sub.0 }} | wc -l"
-    register: domain_record_check
-    ignore_errors: true
+  - name:  Get main domain id
+    shell: linode-cli --text --suppress-warnings --no-headers --format "id" domains list --domain {{ main_domain }}
+    register: domain_id
     tags:
+      - findrecord
       - start
       - offline
       - suspend
@@ -35,24 +36,61 @@
       - alias
 
   - name: Create domain record.
-    shell: linode domain record-create -l {{ main_domain }} -t CNAME -n {{ domain }} -R {{ hostname }}
-    when: "'{{ domain_record_check.stdout }}' == '0' and '{{ main_domain }}' in '{{ domain }}'"
+    shell: linode-cli --text --no-headers domains records-create {{ domain_id.stdout }} --type CNAME --name {{ sub.0 }} --target {{ hostname }}
+    when: "'{{ domain_id.stdout }}' != '' and '{{ main_domain }}' in '{{ domain }}'"
     ignore_errors: true
     tags:
       - start
       - alias
 
-  - name: Make domain offline.
-    shell: linode domain record-update -l {{ main_domain }} -t CNAME -m {{ sub.0 }} -R offline.neticrm.tw
-    when: "'{{ domain_record_check.stdout }}' == '1' and '{{ main_domain }}' in '{{ domain }}'"
+  - name: Get total pages of domain
+    shell: linode-cli --format "id,name" domains records-list {{ domain_id.stdout }} | grep -o "^Page [0-9] of [0-9]" | awk '{ print $4 }'
+    when: "'{{ domain_id.stdout }}' != '' and '{{ main_domain }}' in '{{ domain }}'"
+    register: page
+    tags:
+      - findrecord
+      - offline
+      - suspend
+      - remove
+
+  - name: Set total pages to 1 when no total pages
+    shell: echo 1
+    when: "'{{ domain_id.stdout }}' != '' and '{{ main_domain }}' in '{{ domain }}' and '{{ page.stdout }}' == ''"
+    register: page
+    tags:
+      - findrecord
+      - offline
+      - suspend
+      - remove
+
+  - name: Find record id when multiple pages
+    shell: bash -c "i=1; while [[ \$i -lt 10 ]]; do linode-cli --text --suppress-warnings --no-headers --format 'id,name' domains records-list {{ domain_id.stdout }} --page=\$i; if [[ \$i -eq {{page.stdout}} ]]; then break; fi; ((i++)); done;" | grep -P "\t{{ sub.0 }}$" | awk '{ print $1 }';
+    when: "'{{ domain_id.stdout }}' != '' and '{{ main_domain }}' in '{{ domain }}' and '{{ page.stdout }}' != ''"
+    register: record_id
+    tags:
+      - findrecord
+      - offline
+      - suspend
+      - remove
+
+  - debug:
+      msg: "{{ record_id }}"
+    tags:
+      - findrecord
+
+  - name: Remove exists domain record.
+    shell: linode-cli domains record-delete {{ domain_id.stdout }} {{ record_id.stdout }}
+    when: "'{{ domain_id.stdout }}' != '' and '{{ main_domain }}' in '{{ domain }}' and '{{ record_id.stdout }}' != ''"
     ignore_errors: true
     tags:
       - offline
       - suspend
+      - remove
 
-  - name: Remove domain record.
-    shell: linode domain record-delete -l {{ main_domain }} -t CNAME -m {{ sub.0 }}
-    when: "'{{ domain_record_check.stdout }}' == '1' and '{{ main_domain }}' in '{{ domain }}'"
+  - name: Make new record but cname to offline
+    shell: linode-cli --text --no-headers domains records-create {{ domain_id.stdout }} --type CNAME --name {{ sub.0 }} --target offline.neticrm.tw
+    when: "'{{ domain_id.stdout }}' != '' and '{{ main_domain }}' in '{{ domain }}' and '{{ record_id.stdout }}' != ''"
     ignore_errors: true
     tags:
-      - remove
+      - offline
+      - suspend
