@@ -18,13 +18,11 @@
     with_items:
       - pwgen
       - vim
-      - realpath
       - curl
       - bash-completion
       - apt-transport-https
       - ca-certificates
       - software-properties-common
-      - mysql-client
       - git
       - python-dev
       - whois
@@ -47,9 +45,11 @@
     when: ansible_distribution == "Debian"
 
   - name: Install Python Pip
-    # http://stackoverflow.com/questions/27341064/how-do-i-fix-importerror-cannot-import-name-incompleteread
-    easy_install:
-      name: pip
+    apt:
+      pkg: "{{ item }}"
+      state: installed
+    with_items:
+      - python-pip
 
   - name: Make sure nginx started when os boot
     service: name=nginx state=started enabled=yes
@@ -116,10 +116,10 @@
   - shell: apt-get update
 
   - name: Docker - install
-    shell: apt-get install docker-ce=19.03.14~ce-0~debian-$(lsb_release -cs) -y
+    shell: apt-get install docker-ce=5:19.03.14~3-0~debian-$(lsb_release -cs) -y
     when: ansible_distribution == "Debian"
   - name: Docker - install
-    shell: apt-get install docker-ce=19.03.14~ce-0~ubuntu-$(lsb_release -cs) -y
+    shell: apt-get install docker-ce=5:19.03.14~3-0~ubuntu-$(lsb_release -cs) -y
     when: ansible_distribution == "Ubuntu"
 
   - name: Allow remote user use docker
@@ -136,7 +136,6 @@
   - name: Install Docker-py
     pip:
       name: docker-py
-      version: 1.2.3
       state: present
 
   - name: Clone docker-sh git repository
