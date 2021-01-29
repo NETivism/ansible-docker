@@ -15,4 +15,4 @@ authorized_keys
 id_rsa
 node_modules
 *.json
-files/ssl
+roles/nginx/files/ssl*
