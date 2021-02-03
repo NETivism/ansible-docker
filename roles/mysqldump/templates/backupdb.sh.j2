@@ -33,7 +33,7 @@ for RUN in `find /var/www/sites/*/sites/*/settings.php -printf "%C@ %p\n" | sort
   RUNNING=$(docker ps -q -f name=^/$NAME$)
 
   if [ -n "$RUNNING" ]; then
-    docker exec -i $RUNNING bash -c "mysqldump -uroot -p\$INIT_PASSWD --skip-lock-tables \$INIT_DB | gzip -9 -c > /var/www/html/log/backupdb.sql.gz"
+    dumpResult=$(docker exec -i $RUNNING bash -c "mysqldump -uroot -p\$INIT_PASSWD --max_allowed_packet=128M --skip-lock-tables \$INIT_DB | gzip -9 -c > /var/www/html/log/backupdb.sql.gz" 2>&1)
     DATETIME=`date +'%Y-%m-%d %H:%M:%S %a'`
     docker run --rm -v /var/www:/var/www --volumes-from gcloud-config netivism/docker-google-cloud-sdk gsutil -h 'Content-Type: application/gzip' -h 'Content-Disposition:attachment; filename=backupdb.sql.gz' cp -e -c /var/www/sites/$NAME/log/backupdb.sql.gz gs://neticrm/$HOSTNAME/$NAME/db/backupdb-$(date +%u).sql.gz
     if [ "$MONTHDAY" == "01" ]; then
@@ -41,7 +41,7 @@ for RUN in `find /var/www/sites/*/sites/*/settings.php -printf "%C@ %p\n" | sort
     fi;
     RESULT=$?
     echo "$DATETIME" >> "$LOG/$DATE.log"
-    if [ $RESULT -eq 0 ]; then
+    if [ $RESULT -eq 0 ] && [ -z "$dumpResult" ]; then
       echo "SUCCESS $NAME db backup upload" >> "$LOG/$DATE.log"
       if [ ! -d /backup/db/$NAME ]; then
         mkdir -p /backup/db/$NAME
@@ -49,6 +49,7 @@ for RUN in `find /var/www/sites/*/sites/*/settings.php -printf "%C@ %p\n" | sort
       mv /var/www/sites/$NAME/log/backupdb.sql.gz /backup/db/$NAME/
     else
       echo "FAILED $NAME db backup upload" >> "$LOG/$DATE.log"
+      echo "$dumpResult" >> "$LOG/$DATE.log"
     fi
   fi
 done

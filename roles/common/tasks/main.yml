@@ -49,6 +49,11 @@
 
   - name: Correct debian 9 vim mouse behaviour
     copy: src=vimrc.local dest=/etc/vim/vimrc.local mode=0644 owner=root
+    when: (ansible_distribution == "Debian" and ansible_distribution_major_version == "9")
+
+  - name: Correct debian 10 vim mouse behaviour
+    copy: src=vimrc81.local dest=/etc/vim/vimrc.local mode=0644 owner=root
+    when: (ansible_distribution == "Debian" and ansible_distribution_major_version == "10")
 
   - name: Add cron job for dove-expunge
     cron: name="dovecot expunge" minute="45" hour="7" cron_file="dove_expunge" user="root" job="bash -c /usr/local/bin/dove-expunge.sh > /dev/null 2>&1"
