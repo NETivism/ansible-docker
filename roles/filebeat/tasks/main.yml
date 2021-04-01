@@ -5,14 +5,18 @@
 
   - name: Add filebeat.yml config into dir
     become: yes
-    template: src=filebeat.yml.j2 dest=/etc/filebeat/filebeat.yml
+    template:
+      src: filebeat.yml.j2
+      dest: /etc/filebeat/filebeat.yml
       mode: 0600
   
   - name: Add postfix modules into filebeat
     become: yes
     synchronize: 
       src: postfix
-      dest: /usr/share/filebeat/module/postfix
+      dest: /usr/share/filebeat/module/
+  - shell: chown -R root:root /usr/share/filebeat/module/postfix && chmod -R g-ws /usr/share/filebeat/module/postfix
+    become: yes
 
   - name: Add modules into filebeat modules.d
     become: yes
@@ -31,6 +35,8 @@
   - name: Setup filebeat - this will take a while...
     become: yes
     shell: filebeat setup
+    ignore_errors: true
 
   - name: Start service
+    become: yes
     service: name=filebeat state=restarted
