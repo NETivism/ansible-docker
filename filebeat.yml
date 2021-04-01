@@ -1,0 +1,7 @@
+# file: docker.yml
+- hosts: '{{ target }}'
+  vars_files:
+    - '/etc/ansible/target/all/elastic-cloud'
+  become: yes
+  roles:
+    - filebeat
