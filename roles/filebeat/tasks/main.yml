@@ -9,28 +9,40 @@
       src: filebeat.yml.j2
       dest: /etc/filebeat/filebeat.yml
       mode: 0600
+    tags:
+      - reload
   
   - name: Add postfix modules into filebeat
     become: yes
     synchronize: 
       src: postfix
       dest: /usr/share/filebeat/module/
+    tags:
+      - reload
   - shell: chown -R root:root /usr/share/filebeat/module/postfix && chmod -R g-ws /usr/share/filebeat/module/postfix
     become: yes
+    tags:
+      - reload
 
   - name: Add modules into filebeat modules.d
     become: yes
     copy: src={{ item }} dest=/etc/filebeat/modules.d/ owner=root mode=644
     with_fileglob:
       - ./modules.d/*
+    tags:
+      - reload
   
   - name: Enable module nginx
     become: yes
     shell: filebeat modules enable nginx
+    tags:
+      - reload
 
   - name: Enable module postfix
     become: yes
     shell: filebeat modules enable postfix
+    tags:
+      - reload
   
   - name: Setup filebeat - this will take a while...
     become: yes
@@ -40,3 +52,5 @@
   - name: Start service
     become: yes
     service: name=filebeat state=restarted
+    tags:
+      - reload

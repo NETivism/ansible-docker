@@ -9,10 +9,13 @@
     # Set custom paths for the log files. If left empty,
     # Filebeat will choose the paths depending on your OS.
     var.paths: ["/var/log/nginx/access.log"]
+    input:
+      exclude_lines: ['\/live\/live\.htm']
+
 
   # Error logs
   error:
-    enabled: true
+    enabled: false
 
     # Set custom paths for the log files. If left empty,
     # Filebeat will choose the paths depending on your OS.
