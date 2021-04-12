@@ -50,11 +50,11 @@
     tags:
       - reload
 
-  - name: Enable module postfix
-    become: yes
-    shell: filebeat modules enable postfix
-    tags:
-      - reload
+        #  - name: Enable module postfix
+        #    become: yes
+        #    shell: filebeat modules enable postfix
+        #    tags:
+        #      - reload
   
   - name: Setup filebeat - this will take a while...
     become: yes
