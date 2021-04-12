@@ -24,6 +24,18 @@
     tags:
       - reload
 
+  - name: Disable module nginx before cp file
+    become: yes
+    shell: filebeat modules disable nginx
+    tags:
+      - reload
+
+  - name: Disable module postfix before cp file
+    become: yes
+    shell: filebeat modules disable postfix
+    tags:
+      - reload
+
   - name: Add modules into filebeat modules.d
     become: yes
     copy: src={{ item }} dest=/etc/filebeat/modules.d/ owner=root mode=644
@@ -31,7 +43,7 @@
       - ./modules.d/*
     tags:
       - reload
-  
+
   - name: Enable module nginx
     become: yes
     shell: filebeat modules enable nginx
