@@ -10,7 +10,7 @@
     # Filebeat will choose the paths depending on your OS.
     var.paths: ["/var/log/nginx/access.log"]
     input:
-      exclude_lines: ['\/live\/live\.htm']
+      exclude_lines: ['\/live\/live\.htm', 'Googlebot', 'adsbot\.html', 'facebookexternalhit', 'bingbot', 'Baidu', 'Sogou', 'YandexBot', 'crawler']
 
 
   # Error logs
