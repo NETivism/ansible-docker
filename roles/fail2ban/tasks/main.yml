@@ -31,7 +31,7 @@
       dest: /etc/default/fail2ban
       state: present
       regexp: '^ulimit'
-      line: 'ulimit -s 256'
+      line: 'ulimit -s 128'
 
   - name: Restart fail2ban
     service: name=fail2ban state=restarted enabled=yes
