@@ -15,7 +15,7 @@
 
 # update to lastest container
 - name: update container
-  shell: docker ps -q -f "name={{ domain }}" | xargs --no-run-if-empty -I{} bash -c 'docker exec -i {} bash -c "supervisorctl stop all" && docker stop {} && docker rm {}'
+  shell: docker ps -q -f "name=/{{ domain }}" | xargs --no-run-if-empty -I{} bash -c 'docker exec -i {} bash -c "supervisorctl stop all" && docker stop {} && docker rm {}'
 # comment above line, uncomment below line if you meet problem.
 #  shell: docker stop {{ domain }} && docker rm {{ domain }}
   tags:
