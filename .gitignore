@@ -16,3 +16,4 @@ id_rsa
 node_modules
 *.json
 roles/nginx/files/ssl*
+tools
