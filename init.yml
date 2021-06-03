@@ -1,12 +1,19 @@
 ---
 # Initial linode image and create remote user account for ansible.
 - hosts: "{{ target }}"
+  become: yes
   roles:
     - init
+  tasks:
+    - name: Upgrade debian package
+      apt: update_cache=yes cache_valid_time=3600
+    - shell: bash -c "apt-get upgrade --assume-yes &> /var/log/system_upgrade.log"
+    - name: Copy hostname to remote
+      shell: mkdir /etc/ansible && echo "{{ hostname }}" > /etc/ansible/fqdn
 
 - hosts: localhost
   connection: local
-  sudo: yes
+  become: yes
   tasks:
     - name: Create target directory.
       file: path=/etc/ansible/target/{{ target }} state=directory owner=www-data group=www-data
@@ -21,9 +28,3 @@
       template: src=roles/init/templates/vmail.j2 dest=/etc/ansible/target/{{ target }}/vmail
     - name: Create letsencrypt file
       template: src=roles/init/templates/letsencrypt.j2 dest=/etc/ansible/target/{{ target }}/letsencrypt
-    - name: Upgrade debian package
-      apt: update_cache=yes cache_valid_time=3600
-    - shell: bash -c "apt-get upgrade --assume-yes &> /var/log/system_upgrade.log"
-
-    - name: Copy hostname to remote
-      shell: echo "{{ hostname }}" > /etc/ansible/fqdn

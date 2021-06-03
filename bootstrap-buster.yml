@@ -27,10 +27,12 @@
       - python-dev
       - whois
       - bc
+      - jq
+      - rsync
       - python-setuptools # for python pip
 
   - name: Install nginx from PHP Sury
-    shell: add-apt-repository "deb https://packages.sury.org/nginx/ stretch main"
+    shell: add-apt-repository "deb https://packages.sury.org/nginx/ buster main"
     when: ansible_distribution == "Debian"
 
   - shell: curl -fsSL https://packages.sury.org/nginx/apt.gpg | sudo apt-key add -
